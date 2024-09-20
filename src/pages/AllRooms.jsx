@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import PlaceCard from "../components/Places/PlaceCard";
+import OrderPopup from "../components/OrderPopup/OrderPopup";  // Import the OrderPopup component
 import roomsData from '../assets/RoomsData';
-
 import Img1 from "../assets/places/boat.jpg";
 
-const AllRooms = ({ handleOrderPopup }) => {
+const AllRooms = () => {
   const [selectedLocation, setSelectedLocation] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [orderPopup, setOrderPopup] = useState(false); // State to control popup visibility
+  const [selectedRoom, setSelectedRoom] = useState(null); // State to store selected room details
 
   // Function to handle location filter change
   const handleLocationChange = (location) => {
@@ -24,6 +26,12 @@ const AllRooms = ({ handleOrderPopup }) => {
         ? prev.filter((a) => a !== amenity)
         : [...prev, amenity]
     );
+  };
+
+  // Function to handle popup opening
+  const handleOrderPopup = (room) => {
+    setSelectedRoom(room); // Set the selected room
+    setOrderPopup(true);   // Show the popup
   };
 
   // Filter rooms based on selected criteria
@@ -46,6 +54,7 @@ const AllRooms = ({ handleOrderPopup }) => {
           <h1 className="text-4xl font-bold">Browse Rooms</h1>
         </div>
       </div>
+
       <section className="container mx-auto px-4">
         {/* Filters Section */}
         <div className="mb-8">
@@ -82,6 +91,7 @@ const AllRooms = ({ handleOrderPopup }) => {
             </div>
           </div>
         </div>
+
         {/* Rooms Listing */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {filteredRooms.map((room, index) => (
@@ -92,11 +102,20 @@ const AllRooms = ({ handleOrderPopup }) => {
               description={room.description}
               price={room.price}
               minutesAway={room.minutesAway}
-              handleOrderPopup={handleOrderPopup}
+              amenities={room.amenities}
+              handleOrderPopup={() => handleOrderPopup(room)}  // Pass room data to popup
             />
           ))}
         </div>
       </section>
+
+      {/* Show the popup if a room is selected */}
+      {orderPopup && selectedRoom && (
+        <OrderPopup
+          room={selectedRoom} // Pass selected room data to popup
+          setOrderPopup={setOrderPopup} // Function to close the popup
+        />
+      )}
     </div>
   );
 };

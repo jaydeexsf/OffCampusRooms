@@ -13,7 +13,9 @@ const Layout = () => {
   return (
     <>
       <Navbar handleOrderPopup={handleOrderPopup} />
-      <Outlet />
+      <div className="pt-8">
+       <Outlet />
+      </div>
       <Footer />
       <OrderPopup orderPopup={orderPopup} setOrderPopup={setOrderPopup} />
     </>

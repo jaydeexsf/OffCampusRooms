@@ -1,11 +1,11 @@
 import React from "react";
 
 const Hero = () => {
-  const [priceValue, setPriceValue] = React.useState(500);
+  const [priceValue, setPriceValue] = React.useState(2000);
 
   return (
-    <div className=" bg-black/20 pt-16 h-full">
-      <div className="h-full flex justify-center items-center p-4 bg-primary/10">
+    <div className=" bg-black/20 pt-16 flex justify-center h-full">
+      <div className="h-full flex justify-center items-center p-4">
         <div className="container grid grid-cols-1 gap-4">
           <div className="text-white">
             <p data-aos="fade-up" className="text-sm">
@@ -22,24 +22,12 @@ const Hero = () => {
           <div
             data-aos="fade-up"
             data-aos-delay="600"
-            className="space-y-4 bg-white rounded-md p-4 relative"
+            className="space-y-4 w-full bg-white rounded-md p-4 relative"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-3">
-              <div>
-                <label htmlFor="destination" className="opacity-70">
-                  Searh Rooms
-                </label>
-                <input
-                  type="text"
-                  name="RoomName"
-                  id="RoomName"
-                  placeholder="10 minutes from gate 2"
-                  className="w-full bg-gray-100 my-2 range accent-primary focus:outline-primary focus:outline outline-1 py-[10px] rounded-[40px] p-2"
-                />
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-3">
               <div>
                 <label htmlFor="section" className="opacity-70">
-                  Sort By Section
+                  Sort By Location
                 </label>
                 <select name="section" className="w-full mt-3 bg-gray-100 my-2 range accent-primary focus:outline-primary focus:outline outline-1 py-[10px] rounded-[40px] px-2" id="">
                   <option value="All">All</option>
@@ -62,7 +50,7 @@ const Hero = () => {
                     name="destination"
                     id="destination"
                     className="appearance-none w-full bg-gradient-to-r from-primary to-secondary h-2 rounded-full my-2"
-                    min="500"
+                    min="600"
                     max="5000"
                     value={priceValue}
                     step="10"

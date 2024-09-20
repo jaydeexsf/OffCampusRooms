@@ -59,9 +59,9 @@ const Navbar = ({ handleBookRoomPopup }) => {
         </div>
         <div className="container py-3 sm:py-0">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4 font-bold text-2xl">
+            <div className="flex items-center gap-4 font-bold text-8xl">
               <Link to="/" onClick={() => window.scrollTo(0, 0)}>
-                <img src={Logo} alt="StudentRooms Logo" className="h-16" />
+                <img src={Logo} alt="StudentRooms Logo" className="h-[100px]" />
               </Link>
             </div>
             <div className="hidden md:block">

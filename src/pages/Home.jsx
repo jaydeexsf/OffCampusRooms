@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Hero from "../components/Hero/Hero";
 import NatureVid from "../assets/video/main.mp4";
 import Places from "../components/Places/Places";
@@ -8,33 +8,42 @@ import BannerPic from "../components/BannerPic/BannerPic";
 import BannerImg from "../assets/cover-women.jpg";
 import Banner2 from "../assets/travel-cover2.jpg";
 import OrderPopup from "../components/OrderPopup/OrderPopup";
+import roomsData from "../assets/RoomsData"; 
 
 const Home = () => {
-  const [orderPopup, setOrderPopup] = React.useState(false);
+  const [orderPopup, setOrderPopup] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
-  const handleOrderPopup = () => {
-    setOrderPopup(!orderPopup);
+  const handleOrderPopup = (room) => {
+    setSelectedRoom(room);
+    setOrderPopup(true);
   };
+
   return (
     <>
-      <div>
-        <div className="h-[550px] relative">
+      <div  className="-mt-8">
+        <div className="h-[550px] lg:h-[600px] relative">
           <video
             autoPlay
             loop
             muted
-            className="absolute right-0 top-0 h-[550px] w-full object-cover z-[-1]"
+            className="absolute right-0 top-0 h-[550px] lg:h-[600px] w-full object-cover z-[-1]"
           >
             <source src={NatureVid} type="video/mp4" />
           </video>
           <Hero />
         </div>
-        <Places handleOrderPopup={handleOrderPopup} />
-        <BannerPic img={BannerImg} />
-        <Banner />
-        <BannerPic img={Banner2} />
-        <Testimonial />
-        <OrderPopup orderPopup={orderPopup} setOrderPopup={setOrderPopup} />
+        <div>
+          <Places handleOrderPopup={handleOrderPopup} />
+          <Banner />
+          <BannerPic img={Banner2} />
+          <Testimonial />
+          <OrderPopup
+            orderPopup={orderPopup}
+            setOrderPopup={setOrderPopup}
+            roomDetails={selectedRoom}
+          />
+        </div>
       </div>
     </>
   );
