@@ -58,8 +58,8 @@ const PlaceCard = ({
           <div className="opacity-70">
             <p>{minutesAway} minutes away from UL campus</p>
           </div>
-          <div className="rounded-md text-white bg-sky-500 p-2">
-              <p className="text-[12px] font-bold">
+          <div className="rounded-md text-black flex flex-shrink-0 bg-sky-100 p-2">
+              <p className="text-[12px] flex-shrink-0 font-bold">
                 R {price.toLocaleString('en-US').replace(/,/g, ' ')} /month
               </p>
             </div>

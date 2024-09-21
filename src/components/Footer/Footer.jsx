@@ -46,7 +46,7 @@ const Footer = () => {
           <div className="grid md:grid-cols-3 py-5 bg-white/80 backdrop-blur-sm rounded-t-xl">
             {/* Contact Information */}
             <div className="py-8 px-4">
-              <h1 className="flex items-center gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
+              <h1 className="flex items-center  mb-4 gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
                 <img src={FooterLogo} alt="logo" className="max-h-[60px]" />
                 {/* University Rooms */}
               </h1>
@@ -65,16 +65,16 @@ const Footer = () => {
               {/* Social handles */}
               <div className="flex items-center gap-3 mt-6">
                 <a href="https://wa.me/+2772192664">
-                  <FaWhatsapp className="text-3xl" />
+                  <FaWhatsapp className="text-xl" />
                 </a>
                 <a href="#">
-                  <FaInstagram className="text-3xl" />
+                  <FaInstagram className="text-xl" />
                 </a>
                 <a href="#">
-                  <FaFacebook className="text-3xl" />
+                  <FaFacebook className="text-xl" />
                 </a>
                 <a href="#">
-                  <FaLinkedin className="text-3xl" />
+                  <FaLinkedin className="text-xl" />
                 </a>
               </div>
             </div>
@@ -128,7 +128,7 @@ const Footer = () => {
             </div>
           </div>
           {/* Footer Bottom Text */}
-          <div className="text-center py-5 border-t-2 border-gray-300/50 bg-primary text-white">
+          <div className="text-center py-4 text-sm border-t-2 border-gray-300/50 bg-primary text-white">
             &copy; 2024 All rights reserved || Built for UL Students by Johannes M.
           </div>
         </div>

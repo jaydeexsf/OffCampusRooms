@@ -11,16 +11,16 @@ const FaqPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-36">
-      <h1 className="text-4xl font-bold text-center mb-8">Frequently Asked Questions</h1>
-      <div className="bg-white shadow-lg rounded-lg p-6 space-y-6 max-w-3xl mx-auto">
+    <div className="container mx-auto px-4 py-[40px]">
+      <h1 className="text-[24px] font-bold text-center mb-8">Frequently Asked Questions</h1>
+      <div className="bg-white shadow-lg rounded-lg p-4 space-y-4 max-w-3xl mx-auto">
         {FAQData.map((faq, index) => (
-          <div key={index} className="border-b pb-4">
+          <div key={index} className="border-b pb-2">
             <div
               className="flex justify-between items-center cursor-pointer"
               onClick={() => toggleFAQ(index)}
             >
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-[16px] font-semibold text-gray-800">
                 {faq.question}
               </h2>
               <span>

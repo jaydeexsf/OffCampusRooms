@@ -22,12 +22,12 @@ const Home = () => {
   return (
     <>
       <div  className="-mt-8">
-        <div className="h-[550px] lg:h-[600px] relative">
+        <div className="h-[450px] lg:h-[500px] relative">
           <video
             autoPlay
             loop
             muted
-            className="absolute right-0 top-0 h-[550px] lg:h-[600px] w-full object-cover z-[-1]"
+            className="absolute right-0 top-0 h-[450px] lg:h-[500px] w-full object-cover z-[-1]"
           >
             <source src={NatureVid} type="video/mp4" />
           </video>

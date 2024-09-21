@@ -50,18 +50,18 @@ const Navbar = ({ handleBookRoomPopup }) => {
     <>
       <nav className="fixed top-0 right-0 w-full z-50 bg-white dark:bg-gray-900 backdrop-blur-sm text-black dark:text-white shadow-md">
         <div className="bg-gradient-to-r from-primary to-secondary text-white">
-          <div className="container py-[2px] sm:block hidden">
-            <div className="flex items-center justify-between">
-              <p className="text-sm">Exclusive student deals on room bookings!</p>
+          <div className="container py-[3px] sm:block hidden">
+            <div className="flex text-[12px] items-center justify-between">
+              <p className="">Exclusive student deals on room bookings!</p>
               <p>Call us at: +27 79 219 2664</p>
             </div>
           </div>
         </div>
-        <div className="container py-3 sm:py-0">
+        <div className="container py-2 md:py-0">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4 font-bold text-8xl">
+            <div className="flex items-center gap-4 font-bold text-6xl">
               <Link to="/" onClick={() => window.scrollTo(0, 0)}>
-                <img src={Logo} alt="StudentRooms Logo" className="h-[100px]" />
+                <img src={Logo} alt="StudentRooms Logo" className="h-[50px]" />
               </Link>
             </div>
             <div className="hidden md:block">
@@ -97,7 +97,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
             </div>
             <div className="flex items-center gap-4">
               <button
-                className="bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
+                className="bg-gradient-to-r text-[12px] from-primary to-secondary hover:from-secondary hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
                 onClick={() => {
                   handleBookRoomPopup();
                 }}

@@ -15,10 +15,10 @@ import FaqPage from "./pages/FAQ's";
 const App = () => {
   React.useEffect(() => {
     AOS.init({
-      offset: 100,
+      offset: 40,
       duration: 800,
       easing: "ease-in-sine",
-      delay: 90,
+      delay: 40,
     });
     AOS.refresh();
   }, []);
