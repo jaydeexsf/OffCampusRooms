@@ -15,7 +15,7 @@ const amenitiesLabels = {
   wifi: "Free WiFi",
   shower: "Shower",
   bathtub: "Bathtub",
-  table: "Table",
+  table: "Table & Chair",
   bed: "Bed",
   electricity: "Electricity",
 };
@@ -54,11 +54,11 @@ const PlaceCard = ({
             ) : null
           )}
         </div>
-        <div className="flex items-center text-[15px] justify-between border-t-2 py-3 !mt-3">
+        <div className="flex items-center text-[12px] justify-between border-t-2 pt-2 !mt-3">
           <div className="opacity-70">
             <p>{minutesAway} minutes away from UL campus</p>
           </div>
-          <div className="rounded-full p-2">
+          <div className="rounded-md text-white bg-sky-500 p-2">
               <p className="text-[12px] font-bold">
                 R {price.toLocaleString('en-US').replace(/,/g, ' ')} /month
               </p>

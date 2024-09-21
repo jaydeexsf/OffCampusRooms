@@ -1,5 +1,5 @@
 import React from "react";
-import { IoCloseOutline } from "react-icons/io5";
+import { IoBed, IoCloseOutline, IoWifi } from "react-icons/io5";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FaWifi, FaShower, FaBed, FaTable, FaBolt } from "react-icons/fa"; // Importing available icons
 import 'swiper/css';
@@ -17,7 +17,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     <>
       {orderPopup && (
         <div className="h-screen w-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 shadow-md bg-white dark:bg-gray-900 rounded-md w-[400px] md:w-[600px] duration-200">
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 shadow-md bg-white dark:bg-gray-900 rounded-md w-[400px] md:w-[500px] duration-200">
             {/* Header */}
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold text-black/70">{title}</h1>
@@ -36,16 +36,16 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
             </Swiper>
             {/* Room Details */}
             <div className="mt-4">
-              <p className="text-gray-700 dark:text-gray-300 mb-2">{description}</p>
+              {/* <p className="text-gray-700 dark:text-gray-300 mb-2">{description}</p> */}
               <p className="font-semibold">Price: R{price}</p>
               <p className="mt-2 font-semibold">Status: {availabilityStatus}</p>
               <p className="mt-2 font-semibold">Amenities:</p>
               <div className="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
-                <div className="flex items-center"><FaWifi /> <span className="ml-1">{amenities.wifi ? "Wifi" : "No Wifi"}</span></div>
-                <div className="flex items-center"><FaShower /> <span className="ml-1">{amenities.shower ? "Shower" : "No Shower"}</span></div>
-                <div className="flex items-center"><FaTable /> <span className="ml-1">{amenities.table ? "Table" : "No Table"}</span></div>
-                <div className="flex items-center"><FaBed /> <span className="ml-1">{amenities.bed ? "Bed" : "No Bed"}</span></div>
-                <div className="flex items-center"><FaBolt /> <span className="ml-1">{amenities.electricity ? "Electricity" : "No Electricity"}</span></div>
+                <div className="flex items-center"><IoWifi className="text-sky-400" title="Free WiFi" /> <span className="ml-1">{amenities.wifi ? "Wifi" : "No Wifi"}</span></div>
+                <div className="flex items-center"><FaShower className="text-green-400" title="Shower" /> <span className="ml-1">{amenities.shower ? "Shower" : "No Shower"}</span></div>
+                <div className="flex items-center"><span className="text-yellow-400" title="Table">🪑</span> <span className="ml-1">{amenities.table ? "Table" : "No Table & Chair"}</span></div>
+                <div className="flex items-center"><IoBed className="text-red-400" title="Bed" /> <span className="ml-1">{amenities.bed ? "Bed" : "No Bed"}</span></div>
+                <div className="flex items-center"><span className="text-orange-400" title="Electricity">⚡</span> <span className="ml-1">{amenities.electricity ? "Electricity" : "No Electricity"}</span></div>
               </div>
 
               {/* Contact Information */}
