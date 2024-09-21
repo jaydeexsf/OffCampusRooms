@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PlaceCard from "../components/Places/PlaceCard";
-import OrderPopup from "../components/OrderPopup/OrderPopup";  // Import the OrderPopup component
+import OrderPopup from "../components/OrderPopup/OrderPopup"; // Import the OrderPopup component
 import roomsData from '../assets/RoomsData';
 import Img1 from "../assets/places/boat.jpg";
 
@@ -9,6 +9,8 @@ const AllRooms = () => {
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [orderPopup, setOrderPopup] = useState(false); // State to control popup visibility
   const [selectedRoom, setSelectedRoom] = useState(null); // State to store selected room details
+  const [searchTerm, setSearchTerm] = useState(""); // Search term state
+  const [selectedDistance, setSelectedDistance] = useState(null); // Filter by distance state
 
   // Function to handle location filter change
   const handleLocationChange = (location) => {
@@ -28,6 +30,11 @@ const AllRooms = () => {
     );
   };
 
+  // Function to handle distance filter change
+  const handleDistanceChange = (distance) => {
+    setSelectedDistance(distance);
+  };
+
   // Function to handle popup opening
   const handleOrderPopup = (room) => {
     setSelectedRoom(room); // Set the selected room
@@ -35,15 +42,19 @@ const AllRooms = () => {
   };
 
   // Filter rooms based on selected criteria
-  const filteredRooms = roomsData.filter((room) => {
-    const locationMatch =
-      selectedLocation.length === 0 || selectedLocation.includes(room.location);
-    const amenitiesMatch = selectedAmenities.every((amenity) =>
-      room.amenities[amenity]
-    );
+  const filteredRooms = roomsData
+    .filter((room) => {
+      const locationMatch =
+        selectedLocation.length === 0 || selectedLocation.includes(room.location);
+      const amenitiesMatch = selectedAmenities.every((amenity) => room.amenities[amenity]);
+      const searchMatch =
+        room.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        room.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const distanceMatch =
+        selectedDistance === null || room.minutesAway <= selectedDistance;
 
-    return locationMatch && amenitiesMatch;
-  });
+      return locationMatch && amenitiesMatch && searchMatch && distanceMatch;
+    });
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 py-10">
@@ -55,11 +66,22 @@ const AllRooms = () => {
         </div>
       </div>
 
-      <section className="container mx-auto px-4">
-        {/* Filters Section */}
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-4 mb-4">
-            <div>
+      <section className="container md:mx-auto px-0">
+        <div className="flex flex-row">
+          {/* Filters Section */}
+          <div className="md:w-1/4 w-[40%] sticky top-0 p-4 bg-white dark:bg-gray-800 shadow-lg max-h-screen overflow-y-auto">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Search</h2>
+              <input
+                type="text"
+                placeholder="Search by title or description"
+                className="w-full p-2 border rounded mt-2"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-4">
               <h2 className="text-lg font-semibold">Filter by Location</h2>
               <div className="flex flex-col gap-2 mt-2">
                 {["Gate 1", "Gate 2", "Gate 3", "Motintane", "Nearby", "Hostel"].map((loc) => (
@@ -74,7 +96,8 @@ const AllRooms = () => {
                 ))}
               </div>
             </div>
-            <div>
+
+            <div className="mb-4">
               <h2 className="text-lg font-semibold">Filter by Amenities</h2>
               <div className="flex flex-col gap-2 mt-2">
                 {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map((amenity) => (
@@ -89,23 +112,49 @@ const AllRooms = () => {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Rooms Listing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredRooms.map((room, index) => (
-            <PlaceCard
-              key={index}
-              img={room.img}
-              title={room.title}
-              description={room.description}
-              price={room.price}
-              minutesAway={room.minutesAway}
-              amenities={room.amenities}
-              handleOrderPopup={() => handleOrderPopup(room)}  // Pass room data to popup
-            />
-          ))}
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Filter by Distance (minutes away)</h2>
+              <div className="flex flex-col gap-2 mt-2">
+                {[5, 10, 20, 30].map((distance) => (
+                  <label key={distance} className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="distance"
+                      checked={selectedDistance === distance}
+                      onChange={() => handleDistanceChange(distance)}
+                    />
+                    <span>{distance} minutes or less</span>
+                  </label>
+                ))}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="distance"
+                    checked={selectedDistance === null}
+                    onChange={() => handleDistanceChange(null)}
+                  />
+                  <span>Any distance</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Rooms Listing */}
+          <div className="md:w-[100%] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+            {filteredRooms.map((room, index) => (
+              <PlaceCard
+                key={index}
+                img={room.img}
+                title={room.title}
+                description={room.description}
+                price={room.price}
+                minutesAway={room.minutesAway}
+                amenities={room.amenities}
+                handleOrderPopup={() => handleOrderPopup(room)} // Pass room data to popup
+              />
+            ))}
+          </div>
         </div>
       </section>
 

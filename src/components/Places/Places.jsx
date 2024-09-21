@@ -13,7 +13,7 @@ const Places = ({ handleOrderPopup }) => {
           <Link className="py-4" to="all">View All Rooms</Link>
           </span>
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {roomsData.map((item, index) => (
             <PlaceCard
               key={index}

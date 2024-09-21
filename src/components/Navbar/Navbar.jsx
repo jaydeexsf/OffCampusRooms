@@ -20,7 +20,7 @@ export const NavbarLinks = [
   },
   {
     name: "FAQs",
-    link: "/faqs",
+    link: "/frequetly-asked-questions",
   },
 ];
 
