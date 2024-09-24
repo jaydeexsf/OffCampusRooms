@@ -26,8 +26,8 @@ export const GlobalProvider = ({ children }) => {
     // Fetch Best Rooms on default or when user visits /best-rooms
     const fetchBestRooms = async () => {
         try {
-            const response = await axios.get("/api/rooms/best-rooms");
-            setBestRooms(response.data);
+            const response = await axios.get("http://localhost:5000/api/rooms/best-rooms");
+            setBestRooms(response.data.bestRooms);
         } catch (error) {
             console.error('Error fetching best rooms:', error);
         } finally {
@@ -35,17 +35,59 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
+    // const fetchAllRooms = async () => {
+    //     setIsRoomLoading(true);
+    //     try {
+    //         const response = await axios.get("http://localhost:5000/api/rooms/all");
+    //         const rooms = response.data.rooms; 
+    //         setAllRooms(rooms); 
+    //     } catch (error) {
+    //         console.error('Error fetching all rooms:', error);
+    //     } finally {
+    //         setGolbalLoader(false);
+    //     }
+    // };
+
+    ///////////////////////////////////////////
+    useEffect(() => {
+        const fetchAllRooms = async () => {
+          try {
+            const response = await axios.get('http://localhost:5000/api/rooms/all'); // Specify the full URL
+            const rooms = response.data.rooms; 
+            setAllRooms(rooms); // Set the fetched rooms data
+          } catch (error) {
+            console.error("Error fetching room data:", error);
+          } finally {
+            setLoading(false); // Ensure loading is set to false whether the fetch was successful or not
+          }
+        };
+    
+        fetchAllRooms();
+      }, []);
+
+    ////////////////////////////////
+
+
     useEffect(()=> {
         fetchBestRooms()
+        console.log(allRooms)
     }, [])
+
+    console.log(allRooms)
+    console.log('data')
+
+
+    // if (allRooms) {
+    //     console.log(allRooms)
+    // }
 
     // Fetch All Rooms on /all-rooms route
     useEffect(()=> {
         const fetchAllRooms = async () => {
             setIsRoomLoading(true);
             try {
-                const response = await axios.get("/api/rooms/all");
-                setAllRooms(response.data);
+                const response = await axios.get("http://localhost:5000/api/rooms/all");
+                setAllRooms(response.data.rooms);
             } catch (error) {
                 console.error('Error fetching all rooms:', error);
             } finally {
@@ -57,7 +99,7 @@ export const GlobalProvider = ({ children }) => {
         const fetchFAQs = async () => {
             setIsFaqLoading(true);
             try {
-                const response = await axios.get("/api/faq/questions");
+                const response = await axios.get("http://localhost:5000/api/faq/questions");
                 setFaqs(response.data);
             } catch (error) {
                 console.error('Error fetching FAQs:', error);
@@ -79,10 +121,10 @@ export const GlobalProvider = ({ children }) => {
     const addRoom = async (newRoom) => {
         setIsAddingRoom(true);
         try {
-            const response = await axios.post("/api/rooms/add-room", newRoom);
+            const response = await axios.post("http://localhost:5000/api/rooms/add-room", newRoom);
             setAllRooms((prevRooms) => [...prevRooms, response.data]);
         } catch (error) {
-            console.error('Error adding room:', error);
+            console.error('Error adding room jjjj:', error);
         } finally {
             setIsAddingRoom(false);
         }
@@ -92,7 +134,7 @@ export const GlobalProvider = ({ children }) => {
     const updateRoom = async (roomId, updatedRoom) => {
         setIsUpdatingRoom(true);
         try {
-            const response = await axios.put(`/api/rooms/update-room/${roomId}`, updatedRoom);
+            const response = await axios.put(`http://localhost:5000/api/rooms/update-room/${roomId}`, updatedRoom);
             setAllRooms((prevRooms) =>
                 prevRooms.map((room) => (room._id === roomId ? response.data : room))
             );
@@ -107,7 +149,7 @@ export const GlobalProvider = ({ children }) => {
     const deleteRoom = async (roomId) => {
         setIsDeletingRoom(true);
         try {
-            await axios.delete(`/api/rooms/delete-room/${roomId}`);
+            await axios.delete(`http://localhost:5000/api/rooms/delete-room/${roomId}`);
             setAllRooms((prevRooms) => prevRooms.filter((room) => room._id !== roomId));
         } catch (error) {
             console.error('Error deleting room:', error);
@@ -121,7 +163,7 @@ export const GlobalProvider = ({ children }) => {
     const addFaq = async (newFaq) => {
         setIsPostingFaq(true);
         try {
-            const response = await axios.post("/api/faq/add-qanda", newFaq);
+            const response = await axios.post("http://localhost:5000/api/faq/add-qanda", newFaq);
             setFaqs((prevFaqs) => [...prevFaqs, response.data]);
         } catch (error) {
             console.error('Error adding FAQ:', error);
@@ -133,7 +175,7 @@ export const GlobalProvider = ({ children }) => {
     // Delete FAQ
     const deleteFaq = async (faqId) => {
         try {
-            await axios.delete(`/api/rooms/del-faq/${faqId}`);
+            await axios.delete(`http://localhost:5000/api/rooms/del-faq/${faqId}`);
             setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== faqId));
         } catch (error) {
             console.error('Error deleting FAQ:', error);

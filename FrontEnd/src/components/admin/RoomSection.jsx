@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import UpdateRoom from './UpdateRoom';
 import AddRoom from './AddRoom';
+import { GlobalContext } from '../GlobalContext';
 
-const RoomsSection = ({ rooms, deleteRoom }) => {
+const RoomsSection = () => {
   const [isAddRoomOpen, setAddRoomOpen] = useState(false);
   const [isEditRoomOpen, setEditRoomOpen] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
 
+  const { allRooms } = useContext(GlobalContext);
+console.log(allRooms)
+  // Use the rooms from the GlobalContext
+//   const { rooms } = useContext(GlobalContext);
+
+  // Ensure rooms is properly initialized before trying to map over it
+  if (!allRooms || allRooms.length === 0) {
+    return <p>Loading rooms...</p>;
+  }
+
   const handleCancel = () => {
     setEditRoomOpen(false);
-};
+  };
 
   return (
     <div className="rooms-section">
@@ -21,7 +32,7 @@ const RoomsSection = ({ rooms, deleteRoom }) => {
       </button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {rooms.map((room) => (
+        {allRooms.map((room) => (
           <div key={room._id} className="bg-white p-4 rounded shadow-md">
             <img src={room.img} alt={room.title} className="h-40 w-full object-cover mb-4 rounded" />
             <h3 className="text-xl font-semibold mb-2">{room.title}</h3>
@@ -46,12 +57,16 @@ const RoomsSection = ({ rooms, deleteRoom }) => {
         ))}
       </div>
 
-      {isAddRoomOpen && <AddRoom onClose={() => setAddRoomOpen(false)}  />}
-      {isEditRoomOpen && <UpdateRoom onCancel={handleCancel}  room={currentRoom} onClose={() => setEditRoomOpen(false)} />}
+      {isAddRoomOpen && <AddRoom onClose={() => setAddRoomOpen(false)} />}
+      {isEditRoomOpen && (
+        <UpdateRoom
+          onCancel={handleCancel}
+          room={currentRoom}
+          onClose={() => setEditRoomOpen(false)}
+        />
+      )}
     </div>
   );
 };
 
 export default RoomsSection;
-
-  

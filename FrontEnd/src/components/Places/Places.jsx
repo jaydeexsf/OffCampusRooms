@@ -11,7 +11,7 @@ const Places = ({ handleOrderPopup }) => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/all'); // Specify the full URL
+        const response = await axios.get('http://localhost:5000/api/rooms/all'); // Specify the full URL
         const rooms = response.data.rooms; 
         setBestRooms(rooms); // Set the fetched rooms data
       } catch (error) {
@@ -24,7 +24,7 @@ const Places = ({ handleOrderPopup }) => {
     fetchRooms();
   }, []);
 
-  console.log(bestRooms); // Log the fetched rooms for debugging
+  // console.log(bestRooms); 
 
   if (loading) {
     return <div className="dark:bg-gray-900 dark:text-white bg-gray-50 py-10">Loading...</div>;

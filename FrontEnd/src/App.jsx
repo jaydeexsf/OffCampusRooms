@@ -1,19 +1,21 @@
-import React from "react";
-
+import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GlobalContext } from './components/GlobalContext'; // Import GlobalContext
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import NoPage from "./pages/NoPage";
 import PlacesRoute from "./pages/PlacesRoute";
 import About from "./pages/About";
-// import BlogsDetails from "./pages/BlogsDetails";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import AllRooms from "./pages/AllRooms";
 import FaqPage from "./pages/FAQ's";
 import AdminPanel from "./pages/admin/adminPanel";
+import Loader from "./pages/Loader";
 
 const App = () => {
+  const { globalLoader } = useContext(GlobalContext); // Access globalLoader from context
+
   React.useEffect(() => {
     AOS.init({
       offset: 40,
@@ -23,13 +25,14 @@ const App = () => {
     });
     AOS.refresh();
   }, []);
+
   return (
     <>
       <BrowserRouter>
+        {globalLoader && <Loader />} {/* Conditionally render Loader */}
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            {/* <Route path="blogs/:id" element={<BlogsDetails />} /> */}
             <Route path="best-places" element={<PlacesRoute />} />
             <Route path="about" element={<About />} />
             <Route path="all" element={<AllRooms />} />
@@ -44,3 +47,4 @@ const App = () => {
 };
 
 export default App;
+

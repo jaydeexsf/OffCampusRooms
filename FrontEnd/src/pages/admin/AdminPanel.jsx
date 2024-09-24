@@ -4,16 +4,16 @@ import RoomsSection from '../../components/admin/RoomSection';
 import FaqsSection from '../../components/admin/FAQSection';
 
 const AdminPanel = () => {
-  const { rooms, faqs, fetchRooms, fetchFaqs } = useContext(GlobalContext);
+  const { allRooms, faqs } = useContext(GlobalContext);
   const [activeTab, setActiveTab] = useState('rooms');
 
-  useEffect(() => {
-    fetchRooms();
-    fetchFaqs();
-  }, [fetchRooms, fetchFaqs]);
+//   useEffect(() => {
+//     fetchAllRooms();
+//     fetchFaqs();
+//   }, [fetchRooms, fetchFaqs]);
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 pt-36 bg-gray-100 min-h-screen">
       {/* Tabs */}
       <div className="flex justify-center space-x-6 mb-8">
         <button
@@ -38,7 +38,7 @@ const AdminPanel = () => {
 
       {/* Conditional rendering based on active tab */}
       {activeTab === 'rooms' ? (
-        <RoomsSection rooms={rooms} />
+        <RoomsSection />
       ) : (
         <FaqsSection faqs={faqs} />
       )}
