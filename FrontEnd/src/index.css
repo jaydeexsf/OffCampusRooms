@@ -7,3 +7,13 @@
     @apply text-primary;
   }
 }
+
+.custom-underline {
+  content: '';
+  position: absolute;
+  bottom: -4px; /* Adjust based on your design */
+  left: 0;
+  width: 100%;
+  height: 4px; /* Thicker underline */
+  background-color: black;
+}

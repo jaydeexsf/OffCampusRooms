@@ -27,19 +27,107 @@ const getAllBestRooms = async (req, res) => {
   }
 };
 
-module.exports = { getAllRooms, getAllBestRooms };
+const addRoom = async (req, res) => {
+  const {
+      title,
+      img,
+      description,
+      price,
+      minutesAway,
+      location,
+      amenities,
+      contact,
+      images,
+      availableRooms,
+      bestRoom
+  } = req.body;
 
+  if (!title || !price || !location) {
+      return res.status(400).json({ message: 'Title, price, and location are required.' });
+  }
 
-// const Room = require("../models/roomModel");
+  try {
+      const room = new Room({
+          title,
+          img,
+          description,
+          price,
+          minutesAway,
+          location,
+          amenities,
+          contact,
+          images,
+          availableRooms,
+          bestRoom
+      });
+      
+      await room.save();
 
-// // Get rooms where bestRoom is true
-// const getAllBestRooms = async (req, res) => {
-//   try {
-//     const rooms = await Room.find({ bestRoom: true }); // Fetch rooms where bestRoom is true
-//     res.status(200).json(rooms); // Send the filtered rooms data as JSON
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching rooms in the roomcontroller", error });
-//   }
-// };
+      res.status(201).json({ message: 'Room added successfully', room });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error adding room' });
+  }
+};
 
-// module.exports = { getAllBestRooms };
+const updateRoom = async (req, res) => {
+  const {
+      title,
+      img, 
+      description,
+      price,
+      minutesAway,
+      location,
+      amenities,
+      contact, 
+      images,
+      availableRooms,
+      bestRoom
+  } = req.body; 
+
+  const roomId = req.params.id
+
+  try {
+      const room = await Room.findByIdAndUpdate(
+          roomId,
+          { 
+              title,
+              img,
+              description,
+              price,
+              minutesAway,
+              location,
+              amenities,
+              contact,
+              images,
+              availableRooms,
+              bestRoom
+          },
+          { new: true, runValidators: true }
+      );
+
+      if (!room) {
+          return res.status(404).json({ message: "Room not found" });
+      }
+
+      res.status(200).json({ message: "Room updated successfully", room });
+  } catch (err) {
+      console.error(err); // Log the error for debugging
+      res.status(500).json({ message: "Error updating room" });
+  }
+};
+
+// deleting rpoom
+const deleteRoom = async (req, res)=> {
+  const roomId = req.params.id
+  try {
+    const droom = await Room.findByIdAndDelete(roomId)
+    res.status(200).json({message: "room updated succesfully", droom})
+  } catch (err) {
+    console.log( 'there was an error deleting room' + err)
+    res.status(400).json({message: "there was a problem deleting room"})
+  }
+}
+
+module.exports = { getAllRooms, getAllBestRooms, updateRoom, addRoom, deleteRoom };
+

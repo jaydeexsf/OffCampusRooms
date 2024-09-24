@@ -27,7 +27,7 @@ const roomsData = [
       email: "contact@gate1hostel.com",
     },
     images: [Img1, Img2, Img3],
-    availableRooms: 3, // Added available rooms
+    availableRooms: 3,
   },
   {
     img: Img2,
@@ -50,7 +50,7 @@ const roomsData = [
       email: "contact@gate2lodge.com",
     },
     images: [Img4, Img5, Img6],
-    availableRooms: 0, // Updated to zero rooms available
+    availableRooms: 0, 
   },
   {
     img: Img3,

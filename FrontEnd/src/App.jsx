@@ -11,6 +11,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import AllRooms from "./pages/AllRooms";
 import FaqPage from "./pages/FAQ's";
+import AdminPanel from "./pages/admin/adminPanel";
 
 const App = () => {
   React.useEffect(() => {
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="about" element={<About />} />
             <Route path="all" element={<AllRooms />} />
             <Route path="frequetly-asked-questions" element={<FaqPage />} />
+            <Route path="admin" element={<AdminPanel />} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>
