@@ -122,6 +122,8 @@ export const GlobalProvider = ({ children }) => {
         setIsAddingRoom(true);
         try {
             const response = await axios.post("http://localhost:5000/api/rooms/add-room", newRoom);
+            console.log(newRoom)
+            console.log('ss')
             setAllRooms((prevRooms) => [...prevRooms, response.data]);
         } catch (error) {
             console.error('Error adding room jjjj:', error);

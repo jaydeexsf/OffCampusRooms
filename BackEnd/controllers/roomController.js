@@ -27,48 +27,86 @@ const getAllBestRooms = async (req, res) => {
   }
 };
 
+
 const addRoom = async (req, res) => {
-  const {
+  try {
+    // Destructure the room data from req.body
+    const {
       title,
-      img,
       description,
       price,
       minutesAway,
       location,
-      amenities,
-      contact,
-      images,
+      amenities, 
+      contact,  
       availableRooms,
-      bestRoom
-  } = req.body;
+      images,   
+    } = req.body;
 
-  if (!title || !price || !location) {
-      return res.status(400).json({ message: 'Title, price, and location are required.' });
-  }
+    // Create a new Room instance
+    const newRoom = new Room({
+      title,
+      description,
+      price,
+      minutesAway,
+      location,
+      amenities,        
+      contact,           
+      images: images, 
+      availableRooms,
+    });
 
-  try {
-      const room = new Room({
-          title,
-          img,
-          description,
-          price,
-          minutesAway,
-          location,
-          amenities,
-          contact,
-          images,
-          availableRooms,
-          bestRoom
-      });
-      
-      await room.save();
-
-      res.status(201).json({ message: 'Room added successfully', room });
-  } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error adding room' });
+    await newRoom.save();
+    
+    res.status(201).json(newRoom);
+  } catch (error) {
+    console.error('Error adding room:', error); // Log the error for debugging
+    res.status(500).json({ error: 'Failed to add room' });
   }
 };
+
+// const addRoom = async (req, res) => {
+//   const {
+//       title,
+//       img,
+//       description,
+//       price,
+//       minutesAway,
+//       location,
+//       amenities,
+//       contact,
+//       images,
+//       availableRooms,
+//       bestRoom
+//   } = req.body;
+
+//   if (!title || !price || !location) {
+//       return res.status(400).json({ message: 'Title, price, and location are required.' });
+//   }
+
+//   try {
+//       const room = new Room({
+//           title,
+//           img,
+//           description,
+//           price,
+//           minutesAway,
+//           location,
+//           amenities,
+//           contact,
+//           images,
+//           availableRooms,
+//           bestRoom
+//       });
+      
+//       await room.save();
+
+//       res.status(201).json({ message: 'Room added successfully', room });
+//   } catch (err) {
+//       console.error(err);
+//       res.status(500).json({ message: 'Error adding room' });
+//   }
+// };
 
 const updateRoom = async (req, res) => {
   const {

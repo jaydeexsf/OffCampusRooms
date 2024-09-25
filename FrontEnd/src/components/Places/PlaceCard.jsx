@@ -21,7 +21,7 @@ const amenitiesLabels = {
 };
 
 const PlaceCard = ({
-  img,
+  images,
   title,
   description,
   price,
@@ -36,7 +36,7 @@ const PlaceCard = ({
     >
       <div className="overflow-hidden">
         <img
-          src={img}
+          src={images}
           alt="Room"
           className="mx-auto h-[220px] w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
         />

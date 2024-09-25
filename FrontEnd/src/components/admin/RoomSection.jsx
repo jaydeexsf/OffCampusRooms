@@ -2,20 +2,32 @@ import React, { useContext, useState, useEffect } from 'react';
 import UpdateRoom from './UpdateRoom';
 import AddRoom from './AddRoom';
 import { GlobalContext } from '../GlobalContext';
+import { Link, NavLink } from 'react-router-dom'
 
 const RoomsSection = () => {
   const [isAddRoomOpen, setAddRoomOpen] = useState(false);
   const [isEditRoomOpen, setEditRoomOpen] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
 
-  const { allRooms } = useContext(GlobalContext);
+  const { allRooms, deleteRoom } = useContext(GlobalContext);
 console.log(allRooms)
   // Use the rooms from the GlobalContext
 //   const { rooms } = useContext(GlobalContext);
 
   // Ensure rooms is properly initialized before trying to map over it
-  if (!allRooms || allRooms.length === 0) {
+  if (!allRooms) {
     return <p>Loading rooms...</p>;
+  }
+
+  if (allRooms.lenth === 0 ){
+    <div>
+       <NavLink to="/add-room"><button
+        className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 mb-4"
+        onClick={() => setAddRoomOpen(true)} // Open the add room form
+      >
+        Add New Room
+      </button></NavLink>
+    </div>
   }
 
   const handleCancel = () => {
@@ -24,17 +36,17 @@ console.log(allRooms)
 
   return (
     <div className="rooms-section">
-      <button
+      <NavLink to="/add-room"><button
         className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 mb-4"
         onClick={() => setAddRoomOpen(true)} // Open the add room form
       >
         Add New Room
-      </button>
+      </button></NavLink>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {allRooms.map((room) => (
           <div key={room._id} className="bg-white p-4 rounded shadow-md">
-            <img src={room.img} alt={room.title} className="h-40 w-full object-cover mb-4 rounded" />
+            <img src={room.images} alt={room.title} className="h-40 w-full object-cover mb-4 rounded" />
             <h3 className="text-xl font-semibold mb-2">{room.title}</h3>
             <div className="flex space-x-4">
               <button

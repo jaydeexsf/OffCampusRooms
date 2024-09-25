@@ -12,6 +12,7 @@ import AllRooms from "./pages/AllRooms";
 import FaqPage from "./pages/FAQ's";
 import AdminPanel from "./pages/admin/adminPanel";
 import Loader from "./pages/Loader";
+import AddRoomForm from "./components/admin/AddRoom";
 
 const App = () => {
   const { globalLoader } = useContext(GlobalContext); // Access globalLoader from context
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="all" element={<AllRooms />} />
             <Route path="frequetly-asked-questions" element={<FaqPage />} />
             <Route path="admin" element={<AdminPanel />} />
+            <Route path='add-room' element={<AddRoomForm />} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>
