@@ -30,10 +30,6 @@ const DropdownLinks = [
     link: "/#student-tips",
   },
   {
-    name: "Roommate Matching",
-    link: "/#roommate-matching",
-  },
-  {
     name: "Contact Us",
     link: "/#contact-us",
   },
@@ -96,14 +92,14 @@ const Navbar = ({ handleBookRoomPopup }) => {
               </ul>
             </div>
             <div className="flex items-center gap-4">
-              <button
+              <NavLink to="/bookinginfo"><button
                 className="bg-gradient-to-r text-[12px] from-primary to-secondary hover:from-secondary hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
                 onClick={() => {
                   handleBookRoomPopup();
                 }}
               >
                 Book a Room
-              </button>
+              </button> </NavLink>
               <div className="md:hidden block">
                 {showMenu ? (
                   <HiMenuAlt1 onClick={toggleMenu} className="cursor-pointer transition-all" size={30} />

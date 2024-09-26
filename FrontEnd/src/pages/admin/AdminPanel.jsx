@@ -13,7 +13,7 @@ const AdminPanel = () => {
 //   }, [fetchRooms, fetchFaqs]);
 
   return (
-    <div className="p-6 pt-36 bg-gray-100 min-h-screen">
+    <div className="p-6 pt-16 bg-gray-100 min-h-screen">
       {/* Tabs */}
       <div className="flex justify-center space-x-6 mb-8">
         <button
