@@ -61,8 +61,19 @@ const AllRooms = () => {
       {/* Banner Section */}
       <div className="relative">
         <img src={Img1} alt="Banner" className="w-full h-[200px] object-cover" />
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 text-white">
-          <h1 className="text-4xl font-bold">Browse Rooms</h1>
+        <div className="absolute top-[0px] left-0 w-full h-full flex items-center justify-center bg-black/50 text-white">
+          <h1 className="text-4xl mb-12 font-bold">Browse Rooms</h1>
+        </div>
+
+        {/* Move Search Bar to the Top of the Image */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-[50%]">
+          <input
+            type="text"
+            placeholder="Search by title or description"
+            className="w-full p-2 border text-white focus:outline-none focus:shadow-dark focus:shadow-md focus:border-dark bg-slate-900 border-gray-500 rounded"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
 
@@ -71,21 +82,10 @@ const AllRooms = () => {
           {/* Filters Section */}
           <div className="md:w-1/4 w-[40%] sticky top-0 p-4 bg-white dark:bg-gray-800 shadow-lg max-h-screen overflow-y-auto">
             <div className="mb-4">
-              <h2 className="text-lg font-semibold">Search</h2>
-              <input
-                type="text"
-                placeholder="Search by title or description"
-                className="w-full p-2 border rounded mt-2"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-
-            <div className="mb-4">
               <h2 className="text-lg font-semibold">Filter by Location</h2>
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1 mt-2 text-sm"> {/* Smaller text */}
                 {["Gate 1", "Gate 2", "Gate 3", "Motintane", "Nearby", "Hostel"].map((loc) => (
-                  <label key={loc} className="flex items-center gap-2">
+                  <label key={loc} className="flex items-center gap-1">
                     <input
                       type="checkbox"
                       checked={selectedLocation.includes(loc)}
@@ -99,9 +99,9 @@ const AllRooms = () => {
 
             <div className="mb-4">
               <h2 className="text-lg font-semibold">Filter by Amenities</h2>
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1 mt-2 text-sm"> {/* Smaller text */}
                 {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map((amenity) => (
-                  <label key={amenity} className="flex items-center gap-2">
+                  <label key={amenity} className="flex items-center gap-1">
                     <input
                       type="checkbox"
                       checked={selectedAmenities.includes(amenity)}
@@ -115,9 +115,9 @@ const AllRooms = () => {
 
             <div className="mb-4">
               <h2 className="text-lg font-semibold">Filter by Distance (minutes away)</h2>
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1 mt-2 text-sm"> {/* Smaller text */}
                 {[5, 10, 20, 30].map((distance) => (
-                  <label key={distance} className="flex items-center gap-2">
+                  <label key={distance} className="flex items-center gap-1">
                     <input
                       type="radio"
                       name="distance"
@@ -127,7 +127,7 @@ const AllRooms = () => {
                     <span>{distance} minutes or less</span>
                   </label>
                 ))}
-                <label className="flex items-center gap-2">
+                <label className="flex items-center gap-1">
                   <input
                     type="radio"
                     name="distance"
@@ -161,8 +161,9 @@ const AllRooms = () => {
       {/* Show the popup if a room is selected */}
       {orderPopup && selectedRoom && (
         <OrderPopup
-          room={selectedRoom} // Pass selected room data to popup
-          setOrderPopup={setOrderPopup} // Function to close the popup
+          roomDetails={selectedRoom} // Pass selected room data to popup
+          setOrderPopup={setOrderPopup} 
+          orderPopup={orderPopup}// Pass function to close the popup
         />
       )}
     </div>

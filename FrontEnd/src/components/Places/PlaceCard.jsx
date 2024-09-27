@@ -31,7 +31,7 @@ const PlaceCard = ({
 }) => {
   return (
     <div
-      className="shadow-lg relative transition-all duration-500 hover:shadow-xl dark:bg-slate-950 dark:text-white cursor-pointer"
+      className="shadow-lg relative transition-all duration-500 hover:shadow-2xl dark:bg-slate-950 dark:text-white cursor-pointer"
       onClick={handleOrderPopup}
     >
       <div className="overflow-hidden">
@@ -58,7 +58,7 @@ const PlaceCard = ({
           <div className="opacity-70">
             <p>{minutesAway} minutes away from UL campus</p>
           </div>
-          <div className="rounded-md text-black flex flex-shrink-0 bg-sky-100 p-2">
+          <div className="rounded-md text-black flex flex-shrink-0 shadow-black/40 shadow-md bg-black/10 p-2">
               <p className="text-[12px] flex-shrink-0 font-bold">
                 R {price.toLocaleString('en-US').replace(/,/g, ' ')} /month
               </p>

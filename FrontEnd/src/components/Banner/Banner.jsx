@@ -21,7 +21,7 @@ const Banner = () => {
               </div>
               {/* text content section */}
               <div className="flex flex-col justify-center gap-6 sm:pt-0 lg:px-16">
-                <h1 data-aos="fade-up" className="text-3xl sm:text-4xl font-bold">
+                <h1 data-aos="fade-up" className="text-2xl sm:text-3xl font-bold">
                   Find the Best Rooms Near University of Limpopo
                 </h1>
                 <p data-aos="fade-up" className="text-sm text-gray-500 tracking-wide leading-8">

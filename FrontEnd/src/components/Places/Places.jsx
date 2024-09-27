@@ -34,8 +34,8 @@ const Places = ({ handleOrderPopup }) => {
     <div className="dark:bg-gray-900 dark:text-white bg-gray-50 pt-0 py-4">
       <section data-aos="fade-up" className="container">
         <h1 className="my-8 flex items-center justify-between py-2 pl-2 text-2xl md:text-3xl font-bold">
-          <span className="md:border-l-8 border-l-[6px] border-primary/50">Best Rooms to Rent</span>
-          <span className="hover:bg-gradient-to-r transition-all duration-[0.2s] hover:cursor-pointer text-xs lg:text-[13px] from-primary to-secondary bg-sky-100 border border-primary hover:from-secondary hover:bg-primary duration-600 hover:text-white px-3 py-2 md:py- rounded-full">
+          <span className="md:border-l-8 border-l-[6px] border-primary/40 ">   Best Rooms to Rent</span>
+          <span className="hover:bg-gradient-to-r transition-all duration-[0.2s] hover:cursor-pointer text-xs lg:text-[13px] bg-gradient-r from-primary to-secondary bg-dark/10 border border-primary hover:from-secondary hover:bg-primary duration-600 hover:text-white px-3 py-2 md:py- rounded-full">
             <Link className="py-12 md:py-4" to="all">View All Rooms</Link>
           </span>
         </h1>
