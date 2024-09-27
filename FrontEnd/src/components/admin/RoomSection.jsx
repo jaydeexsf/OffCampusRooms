@@ -96,7 +96,7 @@ const RoomsSection = () => {
                 </button>
                <div className="rounded-md absolute top-2 right-2  text-black flex flex-shrink-0 bg-sky-100 p-2">
                    <p className="text-[12px] flex-shrink-0 font-bold">
-                     R {room.price.toLocaleString('en-US').replace(/,/g, ' ')} /month
+                     R {room.price} /month
                    </p>
                 </div>
              </div>
