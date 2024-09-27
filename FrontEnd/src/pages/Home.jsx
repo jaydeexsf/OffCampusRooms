@@ -8,7 +8,7 @@ import BannerPic from "../components/BannerPic/BannerPic";
 import BannerImg from "../assets/cover-women.jpg";
 import Banner2 from "../assets/travel-cover2.jpg";
 import OrderPopup from "../components/OrderPopup/OrderPopup";
-import roomsData from "../assets/RoomsData"; 
+// import roomsData from "../assets/RoomsData"; 
 
 const Home = () => {
   const [orderPopup, setOrderPopup] = useState(false);
@@ -21,13 +21,13 @@ const Home = () => {
 
   return (
     <>
-      <div  className="-mt-8">
-        <div className="h-[450px] lg:h-[500px] relative">
+      <div  className="mt-">
+        <div className="h-[500px] lg:h-[500px] relative">
           <video
             autoPlay
             loop
             muted
-            className="absolute right-0 top-0 h-[450px] lg:h-[500px] w-full object-cover z-[-1]"
+            className="absolute right-0 top-0 h-[500px] lg:h-[500px] w-full object-cover z-[-1]"
           >
             <source src={NatureVid} type="video/mp4" />
           </video>

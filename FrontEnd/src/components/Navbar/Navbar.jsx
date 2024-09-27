@@ -64,7 +64,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
               <ul className="flex items-center gap-6">
                 {NavbarLinks.map((link) => (
                   <li key={link.name} className="py-4">
-                    <NavLink to={link.link} activeClassName="active" className="hover:text-primary transition-all">
+                    <NavLink to={link.link} activeClassName="active" className="hover:text-dark focus:text-dark transition-all">
                       {link.name}
                     </NavLink>
                   </li>
@@ -93,7 +93,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
             </div>
             <div className="flex items-center gap-4">
               <NavLink to="/bookinginfo"><button
-                className="bg-gradient-to-r text-[12px] from-primary to-secondary hover:from-secondary hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
+                className="bg-gradient-to-r text-[12px] from-primary to-dark hover:from-dark hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
                 onClick={() => {
                   handleBookRoomPopup();
                 }}

@@ -103,14 +103,14 @@ const AddRoomForm = () => {
     };
 
     return (
-        <div className="relative pt-12 pb-16">
-            <button onClick={() => navigate(-1)} className="absolute top-4 left-4 text-gray-700 hover:text-gray-900">
+        <div className="relative text-white bg-slate-900 pt-[100px] pb-16">
+            <button onClick={() => navigate(-1)} className="absolute top-[70px] left-4 text-gray-100 hover:text-gray-300">
                 <IoArrowBack size={24} />
             </button>
 
-            <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-2xl mx-auto">
+            <div className="bg-slate-950 p-8  rounded-md shadow-lg w-full max-w-2xl mx-auto">
                 <form onSubmit={handleSubmit} className="space-y-4" aria-labelledby="add-room-form">
-                    <h2 className="text-2xl font-bold text-gray-700 text-center mb-6" id="add-room-form">Add a New Room</h2>
+                    <h2 className="text-2xl font-bold text-gray-200 text-center mb-6" id="add-room-form">Add a New Room</h2>
 
                     <input
                         type="text"
@@ -119,7 +119,7 @@ const AddRoomForm = () => {
                         value={newRoom.title}
                         onChange={(e) => setNewRoom({ ...newRoom, title: e.target.value })}
                         required
-                        className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                         aria-label="Room Title"
                     />
 
@@ -129,7 +129,7 @@ const AddRoomForm = () => {
                         value={newRoom.description}
                         onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
                         required
-                        className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                         aria-label="Room Description"
                     ></textarea>
 
@@ -141,7 +141,7 @@ const AddRoomForm = () => {
                             value={newRoom.price}
                             onChange={(e) => setNewRoom({ ...newRoom, price: Math.max(0, e.target.value) })} // Prevent negative price
                             required
-                            className="border border-gray-300 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            className="border border-gray-700 bg-slate-900 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="Room Price"
                         />
 
@@ -152,13 +152,13 @@ const AddRoomForm = () => {
                             value={newRoom.minutesAway}
                             onChange={(e) => setNewRoom({ ...newRoom, minutesAway: e.target.value })}
                             required
-                            className="border border-gray-300 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            className="border border-gray-700 bg-slate-900 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="Minutes Away from Campus"
                         />
                     </div>
 
                     <select
-                        className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border border-gray-700 text-gray-300 bg-slate-900 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-sky-700"
                         onChange={(e) => setNewRoom({ ...newRoom, location: e.target.value })}
                         aria-label="Room Location"
                     >
@@ -169,11 +169,12 @@ const AddRoomForm = () => {
                     </select>
 
                     <div className="space-y-2">
-                        <h4 className="font-semibold text-gray-700">Amenities:</h4>
+                        <h4 className="font-semibold text-lg text-gray-200">Amenities:</h4>
                         <div className="grid grid-cols-2 gap-2">
                             {Object.keys(newRoom.amenities).map((amenity) => (
-                                <label key={amenity} className="flex items-center space-x-2">
+                                <label key={amenity} className="flex text-gray-400 items-center space-x-2">
                                     <input
+                                    className="bg-green-700 focus:bg-green-900 text-red-700 mr-2"
                                         type="checkbox"
                                         name={amenity}
                                         checked={newRoom.amenities[amenity]}
@@ -183,7 +184,6 @@ const AddRoomForm = () => {
                                                 amenities: { ...newRoom.amenities, [amenity]: e.target.checked }
                                             })
                                         }
-                                        className="mr-2"
                                         aria-label={`Amenity: ${amenity.charAt(0).toUpperCase() + amenity.slice(1)}`}
                                     />
                                     <span>{amenity.charAt(0).toUpperCase() + amenity.slice(1)}</span>
@@ -192,7 +192,7 @@ const AddRoomForm = () => {
                         </div>
                     </div>
 
-                    <h4 className="font-semibold text-gray-700">Contact Information:</h4>
+                    <h4 className="font-semibold text-lg text-gray-200">Contact Information:</h4>
                     <div className="flex flex-col gap-4">
                         <input
                             type="text"
@@ -200,7 +200,7 @@ const AddRoomForm = () => {
                             placeholder="Phone Number"
                             value={newRoom.contact.phone}
                             onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, phone: e.target.value } })}
-                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="Phone Number"
                         />
                         <input
@@ -209,7 +209,7 @@ const AddRoomForm = () => {
                             placeholder="WhatsApp Number"
                             value={newRoom.contact.whatsapp}
                             onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, whatsapp: e.target.value } })}
-                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="WhatsApp Number"
                         />
                         <input
@@ -219,7 +219,7 @@ const AddRoomForm = () => {
                             value={newRoom.contact.email}
                             onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, email: e.target.value } })}
                             required
-                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="Email Address"
                         />
                     </div>
@@ -229,7 +229,7 @@ const AddRoomForm = () => {
                         accept="image/*"
                         multiple
                         onChange={handleImageUpload}
-                        className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border border-gray-700 bg-slate-900 text-gray-700 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                         aria-label="Upload Room Images"
                     />
                     
@@ -248,7 +248,7 @@ const AddRoomForm = () => {
                         value={newRoom.availableRooms}
                         onChange={(e) => setNewRoom({ ...newRoom, availableRooms: Math.max(0, e.target.value) })} // Prevent negative available rooms
                         required
-                        className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border bg-slate-900 border-gray-700 text-white rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                         aria-label="Number of Available Rooms"
                     />
 

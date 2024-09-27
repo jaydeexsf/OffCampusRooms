@@ -74,62 +74,62 @@ const UpdateRoom = ({ room, onCancel }) => {
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             {/* Title */}
-            <label htmlFor="title">Title</label>
+            <label htmlFor="title" className="block text-gray-700">Title</label>
             <input
                 type="text"
                 name="title"
                 value={updatedRoom.title}
                 onChange={handleChange}
                 required
-                className="border rounded p-1 w-full"
+                className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
 
             {/* Description */}
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description" className="block text-gray-700">Description</label>
             <textarea
                 name="description"
                 value={updatedRoom.description}
                 onChange={handleChange}
                 required
-                className="border rounded p-1 w-full"
+                className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
 
             {/* Price and Location in the same line */}
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="price">Price</label>
+                    <label htmlFor="price" className="block text-gray-700">Price</label>
                     <input
                         type="number"
                         name="price"
                         value={updatedRoom.price}
                         onChange={handleChange}
                         required
-                        className="border rounded p-1 w-full"
+                        className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
                 </div>
                 <div>
-                    <label htmlFor="location">Location</label>
+                    <label htmlFor="location" className="block text-gray-700">Location</label>
                     <input
                         type="text"
                         name="location"
                         value={updatedRoom.location}
                         onChange={handleChange}
                         required
-                        className="border rounded p-1 w-full"
+                        className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
                 </div>
             </div>
 
             {/* Images */}
             <div>
-                <label htmlFor="images">Images (up to 6)</label>
+                <label htmlFor="images" className="block text-gray-700">Images (up to 6)</label>
                 <input
                     type="file"
                     name="images"
                     accept="image/*"
                     multiple
                     onChange={handleImageChange}
-                    className="border rounded p-1 w-full"
+                    className="border rounded p-2 w-full bg-gray-50"
                 />
             </div>
 
@@ -149,7 +149,7 @@ const UpdateRoom = ({ room, onCancel }) => {
 
             {/* Amenities */}
             <div>
-                <h4 className="font-semibold">Amenities:</h4>
+                <h4 className="font-semibold text-gray-700">Amenities:</h4>
                 {Object.keys(updatedRoom.amenities).map((amenity) => (
                     <label key={amenity} className="inline-block mr-4">
                         <input
@@ -157,6 +157,7 @@ const UpdateRoom = ({ room, onCancel }) => {
                             name={amenity}
                             checked={updatedRoom.amenities[amenity]}
                             onChange={handleChange}
+                            className="mr-1"
                         />
                         {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
                     </label>
@@ -180,10 +181,10 @@ const UpdateRoom = ({ room, onCancel }) => {
 
             {/* Submit and Cancel buttons */}
             <div className="flex space-x-4">
-                <button type="submit" disabled={isUpdatingRoom} className="bg-blue-500 text-white py-1 px-3 rounded">
+                <button type="submit" disabled={isUpdatingRoom} className="bg-indigo-600 hover:bg-indigo-700 text-white py-1 px-3 rounded shadow-lg transition-colors">
                     {isUpdatingRoom ? 'Updating Room...' : 'Update Room'}
                 </button>
-                <button type="button" onClick={onCancel} className="bg-gray-300 text-gray-700 py-1 px-3 rounded">
+                <button type="button" onClick={onCancel} className="bg-gray-300 text-gray-700 py-1 px-3 rounded shadow-lg hover:bg-gray-400 transition-colors">
                     Cancel
                 </button>
             </div>

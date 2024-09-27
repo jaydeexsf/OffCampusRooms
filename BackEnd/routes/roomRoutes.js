@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllBestRooms, updateRoom, deleteRoom, addRoom } = require("../controllers/roomController");
+const { getAllBestRooms, updateRoom, deleteRoom, addRoom, searchRooms } = require("../controllers/roomController");
 const { getAllRooms } = require("../controllers/roomController")
 const path = require('path');
 const multer = require('multer');
@@ -28,6 +28,8 @@ router.post("/add-room", addRoom);
 
 //api for deleting a room
 router.delete('/delete-room/:id', deleteRoom)
+
+router.get("/search", searchRooms)
 
 //emnpomnt for updating QandA // i will create this later
 // router.put('/update-questions', );

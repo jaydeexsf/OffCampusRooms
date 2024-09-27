@@ -167,5 +167,23 @@ const deleteRoom = async (req, res)=> {
   }
 }
 
-module.exports = { getAllRooms, getAllBestRooms, updateRoom, addRoom, deleteRoom };
+const searchRooms = async (req, res) => {
+  try {
+      const { location, maxPrice } = req.query; // Get query parameters
+
+      // Fetch rooms from your database
+      let query = {};
+      if (location !== "All") query.location = location.toLowerCase();
+      if (maxPrice) query.price = { $lte: maxPrice };
+
+      const rooms = await Room.find(query); // Assuming Room is your MongoDB model
+      res.json(rooms);
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+module.exports = { getAllRooms, getAllBestRooms, updateRoom, addRoom, deleteRoom, searchRooms };
 

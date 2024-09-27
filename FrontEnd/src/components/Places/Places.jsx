@@ -31,7 +31,7 @@ const Places = ({ handleOrderPopup }) => {
   }
 
   return (
-    <div className="dark:bg-gray-900 dark:text-white bg-gray-50 py-10">
+    <div className="dark:bg-gray-900 dark:text-white bg-gray-50 pt-0 py-4">
       <section data-aos="fade-up" className="container">
         <h1 className="my-8 flex items-center justify-between py-2 pl-2 text-2xl md:text-3xl font-bold">
           <span className="md:border-l-8 border-l-[6px] border-primary/50">Best Rooms to Rent</span>

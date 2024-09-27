@@ -52,14 +52,14 @@ const RoomsSection = () => {
       <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 ${isEditRoomOpen ? 'filter blur-md' : ''}`}>
         {allRooms.map((room) => (
            <div
-           className="shadow-lg relative transition-all duration-500 hover:shadow-xl dark:bg-slate-950 dark:text-white cursor-pointer"
+           className="shadow-md relative transition-all duration-500 hover:shadow-primary bg-slate-900 rounded-md hover:shadow-xl dark:bg-slate-950 dark:text-white cursor-pointer"
           //  onClick={handleOrderPopup}
          >
            <div className="overflow-hidden">
              <img
                src={room.images}
                alt="Room"
-               className="mx-auto h-[250px] w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
+               className="mx-auto h-[250px] rounded-md w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
              />
            </div>
      
