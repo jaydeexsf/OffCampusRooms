@@ -1,8 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../GlobalContext';
+import { useNavigate } from 'react-router-dom'; // For navigation
 
 const UpdateRoom = ({ room, onCancel }) => {
     const { updateRoom, isUpdatingRoom } = useContext(GlobalContext);
+    const navigate = useNavigate();
 
     const [updatedRoom, setUpdatedRoom] = useState({
         img: room.img,
@@ -12,12 +14,11 @@ const UpdateRoom = ({ room, onCancel }) => {
         minutesAway: room.minutesAway,
         location: room.location,
         amenities: room.amenities,
-        bestRoom: room.bestRoom,
-        images: room.images || [],  // Current images
+        images: room.images || [], // Current images
     });
 
     const [previewImages, setPreviewImages] = useState(updatedRoom.images);
-    const [selectedImage, setSelectedImage] = useState(null);  // For full-screen view
+    const [selectedImage, setSelectedImage] = useState(null); // For full-screen view
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -48,10 +49,10 @@ const UpdateRoom = ({ room, onCancel }) => {
                 newImages.push(reader.result);
                 if (newImages.length === files.length) {
                     const combinedImages = [...updatedRoom.images, ...newImages].slice(0, 6);
-                    setPreviewImages(combinedImages);  // Update image preview
+                    setPreviewImages(combinedImages); // Update image preview
                     setUpdatedRoom((prevRoom) => ({
                         ...prevRoom,
-                        images: combinedImages,  // Store in the room data
+                        images: combinedImages, // Store in the room data
                     }));
                 }
             };
@@ -60,12 +61,14 @@ const UpdateRoom = ({ room, onCancel }) => {
     };
 
     const handleImageClick = (image) => {
-        setSelectedImage(image);  // Show full-screen modal with the selected image
+        setSelectedImage(image); // Show full-screen modal with the selected image
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        updateRoom(room._id, updatedRoom);
+        await updateRoom(room._id, updatedRoom);
+        navigate(-1); // Redirect to the previous URL after successful update
+        window.location.reload(); // Reload the page
     };
 
     return (
@@ -91,27 +94,31 @@ const UpdateRoom = ({ room, onCancel }) => {
                 className="border rounded p-1 w-full"
             />
 
-            {/* Price */}
-            <label htmlFor="price">Price</label>
-            <input
-                type="number"
-                name="price"
-                value={updatedRoom.price}
-                onChange={handleChange}
-                required
-                className="border rounded p-1 w-full"
-            />
-
-            {/* Location */}
-            <label htmlFor="location">Location</label>
-            <input
-                type="text"
-                name="location"
-                value={updatedRoom.location}
-                onChange={handleChange}
-                required
-                className="border rounded p-1 w-full"
-            />
+            {/* Price and Location in the same line */}
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label htmlFor="price">Price</label>
+                    <input
+                        type="number"
+                        name="price"
+                        value={updatedRoom.price}
+                        onChange={handleChange}
+                        required
+                        className="border rounded p-1 w-full"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="location">Location</label>
+                    <input
+                        type="text"
+                        name="location"
+                        value={updatedRoom.location}
+                        onChange={handleChange}
+                        required
+                        className="border rounded p-1 w-full"
+                    />
+                </div>
+            </div>
 
             {/* Images */}
             <div>
@@ -134,13 +141,13 @@ const UpdateRoom = ({ room, onCancel }) => {
                             src={image}
                             alt={`Room Preview ${index + 1}`}
                             className="w-full h-24 object-cover cursor-pointer"
-                            onClick={() => handleImageClick(image)}  // Full-screen on click
+                            onClick={() => handleImageClick(image)} // Full-screen on click
                         />
                     </div>
                 ))}
             </div>
 
-            {/* Amenities (example) */}
+            {/* Amenities */}
             <div>
                 <h4 className="font-semibold">Amenities:</h4>
                 {Object.keys(updatedRoom.amenities).map((amenity) => (

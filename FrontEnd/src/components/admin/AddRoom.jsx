@@ -1,9 +1,12 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { GlobalContext } from '../GlobalContext';
+import { useNavigate } from 'react-router-dom';
+import { IoArrowBack } from 'react-icons/io5';
 
 const AddRoomForm = () => {
     const { addRoom, isAddingRoom } = useContext(GlobalContext);
+    const navigate = useNavigate();
     const [newRoom, setNewRoom] = useState({
         title: '',
         description: '',
@@ -55,6 +58,11 @@ const AddRoomForm = () => {
             return;
         }
 
+        if (files.length > 5) {
+            setError('You can upload a maximum of 5 images.');
+            return;
+        }
+
         try {
             const uploadedImages = await Promise.all(files.map(cloudinaryUpload));
             const validImages = uploadedImages.filter(image => image);
@@ -67,37 +75,42 @@ const AddRoomForm = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Additional validation
         if (newRoom.images.length === 0) {
             setError('Please upload at least 1 image before submitting.');
             return;
         }
 
-        // const formData = new FormData();
-        // formData.append('title', newRoom.title);
-        // formData.append('description', newRoom.description);
-        // formData.append('price', newRoom.price);
-        // formData.append('minutesAway', newRoom.minutesAway);
-        // formData.append('location', newRoom.location);
-        // formData.append('availableRooms', newRoom.availableRooms);
-        // formData.append('contact[phone]', newRoom.contact.phone);
-        // formData.append('contact[whatsapp]', newRoom.contact.whatsapp);
-        // formData.append('contact[email]', newRoom.contact.email);
-        // Object.entries(newRoom.amenities).forEach(([key, value]) => {
-        //     formData.append(`amenities[${key}]`, value);
-        // });
+        if (newRoom.price <= 0) {
+            setError('Price must be a positive number.');
+            return;
+        }
 
-        // newRoom.images.forEach(image => formData.append('images', image));
-        addRoom(newRoom);
-        console.log(newRoom)
+        if (newRoom.availableRooms < 0) {
+            setError('Available rooms cannot be negative.');
+            return;
+        }
+
+        try {
+            await addRoom(newRoom);
+            navigate(-1);
+        } catch (error) {
+            setError('Error adding room. Please try again later.');
+        }
     };
 
     return (
-        <div className="">
-            <div className="bg-white p-[100px] rounded-md shadow-lg w-full">
-                <form onSubmit={handleSubmit} className="space-y-2">
-                    <h2 className="text-2xl font-bold text-gray-700 text-center mb-4">Add a New Room</h2>
+        <div className="relative pt-12 pb-16">
+            <button onClick={() => navigate(-1)} className="absolute top-4 left-4 text-gray-700 hover:text-gray-900">
+                <IoArrowBack size={24} />
+            </button>
+
+            <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-2xl mx-auto">
+                <form onSubmit={handleSubmit} className="space-y-4" aria-labelledby="add-room-form">
+                    <h2 className="text-2xl font-bold text-gray-700 text-center mb-6" id="add-room-form">Add a New Room</h2>
 
                     <input
                         type="text"
@@ -106,39 +119,50 @@ const AddRoomForm = () => {
                         value={newRoom.title}
                         onChange={(e) => setNewRoom({ ...newRoom, title: e.target.value })}
                         required
-                        className="border border-gray-300 rounded p-2 w-[80%] focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        aria-label="Room Title"
                     />
-<br></br>
+
                     <textarea
                         name="description"
                         placeholder="Room Description"
                         value={newRoom.description}
                         onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
                         required
-                        className="border border-gray-300 rounded p-2 w-[80%] focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        aria-label="Room Description"
                     ></textarea>
-<br></br>
-                    <input
-                        type="number"
-                        name="price"
-                        placeholder="Room Price"
-                        value={newRoom.price}
-                        onChange={(e) => setNewRoom({ ...newRoom, price: e.target.value })}
-                        required
-                        className="border border-gray-300 w-md rounded p-2 focus:outline-none focus:ring-2 focus:ring-sky-700"
-                    />
-<br></br>
-                    <input
-                        type="number"
-                        name="minutesAway"
-                        placeholder="Minutes Away from Campus"
-                        value={newRoom.minutesAway}
-                        onChange={(e) => setNewRoom({ ...newRoom, minutesAway: e.target.value })}
-                        required
-                        className="border border-gray-300 rounded p-2 w-md focus:outline-none focus:ring-2 focus:ring-sky-700"
-                    />
 
-                    <select className='p-2 focus:border-sky-700 focus:border-2' onChange={(e) => setNewRoom({ ...newRoom, location: e.target.value })}>
+                    <div className="flex gap-4">
+                        <input
+                            type="number"
+                            name="price"
+                            placeholder="Room Price"
+                            value={newRoom.price}
+                            onChange={(e) => setNewRoom({ ...newRoom, price: Math.max(0, e.target.value) })} // Prevent negative price
+                            required
+                            className="border border-gray-300 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            aria-label="Room Price"
+                        />
+
+                        <input
+                            type="number"
+                            name="minutesAway"
+                            placeholder="Minutes Away from Campus"
+                            value={newRoom.minutesAway}
+                            onChange={(e) => setNewRoom({ ...newRoom, minutesAway: e.target.value })}
+                            required
+                            className="border border-gray-300 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            aria-label="Minutes Away from Campus"
+                        />
+                    </div>
+
+                    <select
+                        className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        onChange={(e) => setNewRoom({ ...newRoom, location: e.target.value })}
+                        aria-label="Room Location"
+                    >
+                        <option value="">Select Location</option>
                         <option value="gate 1">Gate 1</option>
                         <option value="gate 2">Gate 2</option>
                         <option value="gate 3">Gate 3</option>
@@ -146,34 +170,38 @@ const AddRoomForm = () => {
 
                     <div className="space-y-2">
                         <h4 className="font-semibold text-gray-700">Amenities:</h4>
-                        {Object.keys(newRoom.amenities).map((amenity) => (
-                            <label key={amenity} className="flex pl-4 items-center">
-                                <input
-                                    type="checkbox"
-                                    name={amenity}
-                                    checked={newRoom.amenities[amenity]}
-                                    onChange={(e) =>
-                                        setNewRoom({
-                                            ...newRoom,
-                                            amenities: { ...newRoom.amenities, [amenity]: e.target.checked }
-                                        })
-                                    }
-                                    className="mr-2"
-                                />
-                                {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
-                            </label>
-                        ))}
+                        <div className="grid grid-cols-2 gap-2">
+                            {Object.keys(newRoom.amenities).map((amenity) => (
+                                <label key={amenity} className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name={amenity}
+                                        checked={newRoom.amenities[amenity]}
+                                        onChange={(e) =>
+                                            setNewRoom({
+                                                ...newRoom,
+                                                amenities: { ...newRoom.amenities, [amenity]: e.target.checked }
+                                            })
+                                        }
+                                        className="mr-2"
+                                        aria-label={`Amenity: ${amenity.charAt(0).toUpperCase() + amenity.slice(1)}`}
+                                    />
+                                    <span>{amenity.charAt(0).toUpperCase() + amenity.slice(1)}</span>
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
                     <h4 className="font-semibold text-gray-700">Contact Information:</h4>
-                   <div className="contact flex gap-2 pl-4 flex-col text-sm w-full">
-                    <input
+                    <div className="flex flex-col gap-4">
+                        <input
                             type="text"
                             name="phone"
                             placeholder="Phone Number"
                             value={newRoom.contact.phone}
                             onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, phone: e.target.value } })}
-                            className="border border-gray-300 rounded-[3px] p-[6px]  min-w-[200px] w-1/4 focus:outline-none focus:ring-1 focus:ring-sky-700"
+                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            aria-label="Phone Number"
                         />
                         <input
                             type="text"
@@ -181,7 +209,8 @@ const AddRoomForm = () => {
                             placeholder="WhatsApp Number"
                             value={newRoom.contact.whatsapp}
                             onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, whatsapp: e.target.value } })}
-                            className="border border-gray-300 rounded-[3px] p-[6px]  min-w-[200px] w-1/4 focus:outline-none focus:ring-1 focus:ring-sky-700"
+                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            aria-label="WhatsApp Number"
                         />
                         <input
                             type="email"
@@ -190,9 +219,10 @@ const AddRoomForm = () => {
                             value={newRoom.contact.email}
                             onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, email: e.target.value } })}
                             required
-                            className="border border-gray-300 rounded-[3px] p-[6px] min-w-[200px] w-1/4 focus:outline-none focus:ring-1 focus:ring-sky-700"
+                            className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            aria-label="Email Address"
                         />
-                   </div>
+                    </div>
 
                     <input
                         type="file"
@@ -200,32 +230,46 @@ const AddRoomForm = () => {
                         multiple
                         onChange={handleImageUpload}
                         className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        aria-label="Upload Room Images"
                     />
-
-                    {error && <p className="text-red-500">{error}</p>}
-
-                    <div className="grid grid-cols-3 gap-4 mt-4">
-                        {imagePreviews.map((img, index) => (
-                            <img key={index} src={img} alt={`Preview ${index + 1}`} className="h-32 w-full object-cover rounded" />
-                        ))}
-                    </div>
+                    
+                    {imagePreviews.length > 0 && (
+                        <div className="flex gap-4 my-4">
+                            {imagePreviews.map((preview, index) => (
+                                <img key={index} src={preview} alt={`Preview ${index + 1}`} className="h-20 w-20 object-cover rounded" />
+                            ))}
+                        </div>
+                    )}
 
                     <input
                         type="number"
                         name="availableRooms"
-                        placeholder="Available Rooms"
-                        value={newRoom.availableRooms < 0 ? 0 : newRoom.availableRooms }
-                        onChange={(e) => setNewRoom({ ...newRoom, availableRooms: e.target.value })}
+                        placeholder="Number of Available Rooms"
+                        value={newRoom.availableRooms}
+                        onChange={(e) => setNewRoom({ ...newRoom, availableRooms: Math.max(0, e.target.value) })} // Prevent negative available rooms
                         required
-                        className="border border-gray-300 rounded p-2 w-[150px] focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        className="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
+                        aria-label="Number of Available Rooms"
                     />
+
+                    {error && <div className="text-red-500">{error}</div>}
 
                     <button
                         type="submit"
+                        className={`bg-slate-900 text-white font-bold py-2 rounded hover:bg-slate-800 transition duration-300 w-full ${
+                            isAddingRoom ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
                         disabled={isAddingRoom}
-                        className="bg-sky-700 text-white py-2 px-4 rounded hover:bg-sky-800 transition-colors duration-300 w-full"
                     >
                         {isAddingRoom ? 'Adding Room...' : 'Add Room'}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="bg-gray-300 text-gray-700 font-bold py-2 rounded hover:bg-gray-400 transition duration-300 w-full"
+                    >
+                        Cancel
                     </button>
                 </form>
             </div>
@@ -233,5 +277,4 @@ const AddRoomForm = () => {
     );
 };
 
-export default AddRoomForm
-
+export default AddRoomForm;
