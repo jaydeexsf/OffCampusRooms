@@ -1,6 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { GlobalContext } from '../GlobalContext';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // For handling Cloudinary uploads
 
 const UpdateRoom = ({ room, onCancel }) => {
     const { updateRoom, isUpdatingRoom } = useContext(GlobalContext);
@@ -14,15 +15,15 @@ const UpdateRoom = ({ room, onCancel }) => {
         minutesAway: room.minutesAway,
         location: room.location,
         amenities: room.amenities,
-        images: room.images || [], // Current images
+        images: room.images || [],
     });
 
     const [previewImages, setPreviewImages] = useState(updatedRoom.images);
     const [selectedImage, setSelectedImage] = useState(null); // For full-screen view
+    const [uploading, setUploading] = useState(false); // For image upload state
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-
         if (name in updatedRoom.amenities) {
             setUpdatedRoom({
                 ...updatedRoom,
@@ -38,43 +39,50 @@ const UpdateRoom = ({ room, onCancel }) => {
         }
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const files = Array.from(e.target.files);
-        const newImages = [];
+        const newImages = [...updatedRoom.images];
 
-        // Use FileReader to generate preview URLs for the uploaded images
-        files.forEach((file) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                newImages.push(reader.result);
-                if (newImages.length === files.length) {
-                    const combinedImages = [...updatedRoom.images, ...newImages].slice(0, 6);
-                    setPreviewImages(combinedImages); // Update image preview
-                    setUpdatedRoom((prevRoom) => ({
-                        ...prevRoom,
-                        images: combinedImages, // Store in the room data
-                    }));
-                }
-            };
-            reader.readAsDataURL(file);
-        });
+        setUploading(true);
+        for (let file of files) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'roomImages');
+        formData.append('cloud_name', 'daqzt4zy1'); // Use your Cloudinary upload preset
+
+            try {
+                const response = await axios.post(
+                    'https://api.cloudinary.com/v1_1/daqzt4zy1/image/upload',
+                    formData
+                );
+                const imageUrl = response.data.secure_url;
+                newImages.push(imageUrl); // Add Cloudinary URL to the room's images
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+        setPreviewImages(newImages.slice(0, 6)); // Only show up to 6 images
+        setUpdatedRoom((prevRoom) => ({
+            ...prevRoom,
+            images: newImages,
+        }));
+        setUploading(false);
     };
 
     const handleImageClick = (image) => {
-        setSelectedImage(image); // Show full-screen modal with the selected image
+        setSelectedImage(image); // Full-screen modal with selected image
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         await updateRoom(room._id, updatedRoom);
-        navigate(-1); // Redirect to the previous URL after successful update
-        window.location.reload(); // Reload the page
+        window.location.reload(); // Reload the page on same URL
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md max-w-lg mx-auto">
             {/* Title */}
-            <label htmlFor="title" className="block text-gray-700">Title</label>
+            <label htmlFor="title" className="block text-gray-700 font-semibold">Title</label>
             <input
                 type="text"
                 name="title"
@@ -85,7 +93,7 @@ const UpdateRoom = ({ room, onCancel }) => {
             />
 
             {/* Description */}
-            <label htmlFor="description" className="block text-gray-700">Description</label>
+            <label htmlFor="description" className="block text-gray-700 font-semibold">Description</label>
             <textarea
                 name="description"
                 value={updatedRoom.description}
@@ -97,7 +105,7 @@ const UpdateRoom = ({ room, onCancel }) => {
             {/* Price and Location in the same line */}
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="price" className="block text-gray-700">Price</label>
+                    <label htmlFor="price" className="block text-gray-700 font-semibold">Price</label>
                     <input
                         type="number"
                         name="price"
@@ -108,7 +116,7 @@ const UpdateRoom = ({ room, onCancel }) => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="location" className="block text-gray-700">Location</label>
+                    <label htmlFor="location" className="block text-gray-700 font-semibold">Location</label>
                     <input
                         type="text"
                         name="location"
@@ -122,7 +130,7 @@ const UpdateRoom = ({ room, onCancel }) => {
 
             {/* Images */}
             <div>
-                <label htmlFor="images" className="block text-gray-700">Images (up to 6)</label>
+                <label htmlFor="images" className="block text-gray-700 font-semibold">Images (up to 6)</label>
                 <input
                     type="file"
                     name="images"
@@ -131,6 +139,7 @@ const UpdateRoom = ({ room, onCancel }) => {
                     onChange={handleImageChange}
                     className="border rounded p-2 w-full bg-gray-50"
                 />
+                {uploading && <p className="text-indigo-600">Uploading images...</p>}
             </div>
 
             {/* Display Images */}
@@ -181,8 +190,8 @@ const UpdateRoom = ({ room, onCancel }) => {
 
             {/* Submit and Cancel buttons */}
             <div className="flex space-x-4">
-                <button type="submit" disabled={isUpdatingRoom} className="bg-indigo-600 hover:bg-indigo-700 text-white py-1 px-3 rounded shadow-lg transition-colors">
-                    {isUpdatingRoom ? 'Updating Room...' : 'Update Room'}
+                <button type="submit" disabled={isUpdatingRoom || uploading} className="bg-indigo-600 hover:bg-indigo-700 text-white py-1 px-3 rounded shadow-lg transition-colors">
+                    {isUpdatingRoom || uploading ? 'Updating Room...' : 'Update Room'}
                 </button>
                 <button type="button" onClick={onCancel} className="bg-gray-300 text-gray-700 py-1 px-3 rounded shadow-lg hover:bg-gray-400 transition-colors">
                     Cancel

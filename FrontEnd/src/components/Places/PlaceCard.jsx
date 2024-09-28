@@ -36,7 +36,7 @@ const PlaceCard = ({
     >
       <div className="overflow-hidden">
         <img
-          src={images}
+          src={images[0]}
           alt="Room"
           className="mx-auto h-[240px] sm:h-[220px] w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
         />

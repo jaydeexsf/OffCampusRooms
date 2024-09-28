@@ -61,7 +61,7 @@ const RoomsSection = () => {
          >
            <div className="overflow-hidden">
              <img
-               src={room.images}
+               src={room.images[0]}
                alt="Room"
                className="mx-auto h-[250px] rounded-md w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
              />
@@ -69,16 +69,6 @@ const RoomsSection = () => {
      
            <div className="space-y-2 p-3">
              <h1 className="line-clamp-1 font-bold text-xl">{room.title}</h1>
-             {/* <div className="flex flex-wrap gap-[10px] mt-2">
-               {Object.keys(room.amenities).map((amenity) => 
-                 room.amenities[amenity] ? (
-                   <div key={amenity} className="flex items-center gap-1 text-sm">
-                     {amenitiesIcons[amenity]}
-                     <span>{amenitiesLabels[amenity]}</span>
-                   </div>
-                 ) : null
-               )}
-             </div> */}
 
              <div className="flex items-center text-[12px] justify-between border-t-2 pt-2 !mt-3">
                <button
