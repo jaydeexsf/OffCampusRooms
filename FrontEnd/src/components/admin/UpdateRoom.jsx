@@ -48,7 +48,7 @@ const UpdateRoom = ({ room, onCancel }) => {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', 'roomImages');
-        formData.append('cloud_name', 'daqzt4zy1'); // Use your Cloudinary upload preset
+            formData.append('cloud_name', 'daqzt4zy1'); // Use your Cloudinary upload preset
 
             try {
                 const response = await axios.post(
@@ -56,7 +56,7 @@ const UpdateRoom = ({ room, onCancel }) => {
                     formData
                 );
                 const imageUrl = response.data.secure_url;
-                newImages.push(imageUrl); // Add Cloudinary URL to the room's images
+                newImages.push(imageUrl); // addig Cloudinary URL to the room's images
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
@@ -80,66 +80,66 @@ const UpdateRoom = ({ room, onCancel }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md max-w-lg mx-auto">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-primary p-6 rounded-lg shadow-md max-w-lg mx-aut">
             {/* Title */}
-            <label htmlFor="title" className="block text-gray-700 font-semibold">Title</label>
+            <label htmlFor="title" className="block text-whitw font-semibold">Title</label>
             <input
                 type="text"
                 name="title"
                 value={updatedRoom.title}
                 onChange={handleChange}
                 required
-                className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="border rounded p-2 w-full bg-secondary text-white focus:outline-none focus:ring-2 focus:ring-primary"
             />
 
             {/* Description */}
-            <label htmlFor="description" className="block text-gray-700 font-semibold">Description</label>
+            <label htmlFor="description" className="block text-white font-semibold">Description</label>
             <textarea
                 name="description"
                 value={updatedRoom.description}
                 onChange={handleChange}
                 required
-                className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="border rounded p-2 w-full bg-secondary text-white focus:outline-none focus:ring-2 focus:ring-primary"
             />
 
             {/* Price and Location in the same line */}
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="price" className="block text-gray-700 font-semibold">Price</label>
+                    <label htmlFor="price" className="block text-white font-semibold">Price</label>
                     <input
                         type="number"
                         name="price"
                         value={updatedRoom.price}
                         onChange={handleChange}
                         required
-                        className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="border rounded p-2 w-full bg-secondary text-white focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                 </div>
                 <div>
-                    <label htmlFor="location" className="block text-gray-700 font-semibold">Location</label>
+                    <label htmlFor="location" className="block text-white font-semibold">Location</label>
                     <input
                         type="text"
                         name="location"
                         value={updatedRoom.location}
                         onChange={handleChange}
                         required
-                        className="border rounded p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="border rounded p-2 w-full bg-secondary text-white focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                 </div>
             </div>
 
             {/* Images */}
             <div>
-                <label htmlFor="images" className="block text-gray-700 font-semibold">Images (up to 6)</label>
+                <label htmlFor="images" className="block text-white font-semibold">Images (up to 6)</label>
                 <input
                     type="file"
                     name="images"
                     accept="image/*"
                     multiple
                     onChange={handleImageChange}
-                    className="border rounded p-2 w-full bg-gray-50"
+                    className="border rounded p-2 w-full bg-secondary text-white"
                 />
-                {uploading && <p className="text-indigo-600">Uploading images...</p>}
+                {uploading && <p className="text-dark">Uploading images...</p>}
             </div>
 
             {/* Display Images */}
@@ -158,9 +158,9 @@ const UpdateRoom = ({ room, onCancel }) => {
 
             {/* Amenities */}
             <div>
-                <h4 className="font-semibold text-gray-700">Amenities:</h4>
+                <h4 className="font-semibold text-primary">Amenities:</h4>
                 {Object.keys(updatedRoom.amenities).map((amenity) => (
-                    <label key={amenity} className="inline-block mr-4">
+                    <label key={amenity} className="inline-block mr-4 text-white">
                         <input
                             type="checkbox"
                             name={amenity}
@@ -190,10 +190,10 @@ const UpdateRoom = ({ room, onCancel }) => {
 
             {/* Submit and Cancel buttons */}
             <div className="flex space-x-4">
-                <button type="submit" disabled={isUpdatingRoom || uploading} className="bg-indigo-600 hover:bg-indigo-700 text-white py-1 px-3 rounded shadow-lg transition-colors">
+                <button type="submit" disabled={isUpdatingRoom || uploading} className="bg-dark hover:bg-primary-dark text-white py-2 px-3 rounded shadow-lg transition-colors">
                     {isUpdatingRoom || uploading ? 'Updating Room...' : 'Update Room'}
                 </button>
-                <button type="button" onClick={onCancel} className="bg-gray-300 text-gray-700 py-1 px-3 rounded shadow-lg hover:bg-gray-400 transition-colors">
+                <button type="button" onClick={onCancel} className="bg-gray-400 text-gray-900 py-2 px-3 rounded shadow-lg hover:bg-gray-500 transition-colors">
                     Cancel
                 </button>
             </div>
