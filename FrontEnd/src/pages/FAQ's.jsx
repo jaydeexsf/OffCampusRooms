@@ -11,9 +11,9 @@ const FaqPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-[40px]">
-      <h1 className="text-[24px] font-bold text-center mb-8">Frequently Asked Questions</h1>
-      <div className="bg-white shadow-lg rounded-lg p-4 space-y-4 max-w-3xl mx-auto">
+    <div className="container mt-8 mx-auto px-4 py-[40px]">
+      <h1 className="text-[26px] font-bold text-center mb-8">Frequently Asked Questions</h1>
+      <div className="bg-slate-20 shadow-lg rounded-lg p-4 space-y-4 max-w-3xl mx-auto">
         {FAQData.map((faq, index) => (
           <div key={index} className="border-b pb-2">
             <div
@@ -25,14 +25,14 @@ const FaqPage = () => {
               </h2>
               <span>
                 {activeIndex === index ? (
-                  <FaChevronUp className="text-gray-600 transform rotate-180 transition-transform duration-300" />
+                  <FaChevronDown className="text-gray-600 transform rotate-180 transition-transform duration-300" />
                 ) : (
                   <FaChevronDown className="text-gray-600 transition-transform duration-300" />
                 )}
               </span>
             </div>
             <p
-              className={`text-gray-600 mt-2 transition-all duration-300 ${
+              className={`text-gray-600 mt-2 text-sm transition-all duration-0 ${
                 activeIndex === index ? "max-h-full opacity-100" : "max-h-0 opacity-0 overflow-hidden"
               }`}
             >

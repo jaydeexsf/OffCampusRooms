@@ -27,11 +27,11 @@ export const NavbarLinks = [
 const DropdownLinks = [
   {
     name: "Student Tips",
-    link: "/#student-tips",
+    link: "/tips",
   },
   {
     name: "Contact Us",
-    link: "/#contact-us",
+    link: "/contact",
   },
 ];
 

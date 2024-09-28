@@ -70,11 +70,11 @@ const Testimonial = () => {
         <div data-aos="zoom-in" data-aos-duration="300" className="max-w-3xl mx-auto">
           <Slider {...settings}>
             {testimonialData.map(({ id, name, text, img }) => (
-              <div key={id} className="px-4">
-                <div className="flex flex-col items-center gap-4 text-center bg-slate-300 dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+              <div key={id} className="px-4 ">
+                <div className="flex h-[300px] flex-col items-center gap-4 text-center bg-primary dark:bg-gray-800 p-6 rounded-xl shadow-lg">
                   <img src={img} alt={`${name}'s photo`} className="rounded-full w-24 h-24 object-cover" />
-                  <h1 className="text-xl font-semibold">{name}</h1>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">{text}</p>
+                  <h1 className="text-xl text-white font-semibold">{name}</h1>
+                  <p className="text-gray-100/60 dark:text-gray-300 text-sm">{text.length > 210 ? text : text.slice(0, 210) + '..' }</p>
                   <p className="text-gray-400 text-6xl font-serif absolute top-0 right-0 opacity-20">
                     ,,
                   </p>

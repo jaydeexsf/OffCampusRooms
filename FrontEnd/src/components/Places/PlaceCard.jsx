@@ -38,7 +38,7 @@ const PlaceCard = ({
         <img
           src={images}
           alt="Room"
-          className="mx-auto h-[270px] sm:h-[220px] w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
+          className="mx-auto h-[240px] sm:h-[220px] w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
         />
       </div>
 

@@ -10,10 +10,13 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import AllRooms from "./pages/AllRooms";
 import FaqPage from "./pages/FAQ's";
-import AdminPanel from "./pages/admin/adminPanel";
+// import AdminPanel from "./pages/admin/adminPanel";
 import Loader from "./pages/Loader";
 import AddRoomForm from "./components/admin/AddRoom";
 import BookingInfo from "./pages/BookingInfo";
+import AdminPanel from "./pages/admin/AdminPanel";
+import Tips from "./pages/Tips";
+import Contact from "./pages/Contact";
 
 const App = () => {
   const { globalLoader } = useContext(GlobalContext); // Access globalLoader from context
@@ -42,6 +45,8 @@ const App = () => {
             <Route path="admin" element={<AdminPanel />} />
             <Route path='add-room' element={<AddRoomForm />} />
             <Route path='bookinginfo' element={<BookingInfo />} />
+            <Route path="tips" element={<Tips />} />
+            <Route path="contact" element={<Contact />} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>

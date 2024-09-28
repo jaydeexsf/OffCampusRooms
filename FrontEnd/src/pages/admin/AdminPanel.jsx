@@ -17,7 +17,7 @@ const AdminPanel = () => {
       {/* Tabs */}
       <div className="flex justify-center space-x-6 mb-8">
         <button
-          className={`relative py-2 px-4 text-xl font-semibold ${activeTab === 'rooms' ? 'text-primary' : 'text-white'}`}
+          className={`relative py-2 px-4 text-xl font-semibold ${activeTab === 'rooms' ? 'text-dark' : 'text-white'}`}
           onClick={() => setActiveTab('rooms')}
         >
           Rooms
@@ -26,7 +26,7 @@ const AdminPanel = () => {
           )}
         </button>
         <button
-          className={`relative py-2 px-4 text-xl font-semibold ${activeTab === 'faqs' ? 'text-primary' : 'text-white'}`}
+          className={`relative py-2 px-4 text-xl font-semibold ${activeTab === 'faqs' ? 'text-dark' : 'text-white'}`}
           onClick={() => setActiveTab('faqs')}
         >
           FAQs

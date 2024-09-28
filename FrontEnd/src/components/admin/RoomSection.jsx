@@ -26,7 +26,7 @@ const RoomsSection = () => {
       <div className="text-center py-4">
         <NavLink to="/add-room">
           <button
-            className="bg-gradient-to-r text-sm from-red-500 to-pink-500 text-white py-3 px-6 rounded-full hover:bg-gradient-to-l focus:outline-none focus:ring-2 focus:ring-red-300 transition duration-300 shadow-lg"
+            className="bg-gradient-to-r text-sm from-primary to-dark text-white py-3 px-6 rounded-full hover:bg-gradient-to-l focus:outline-none focus:ring-2 focus:ring-red-300 transition duration-300 shadow-lg"
           >
             Add New Room
           </button>
@@ -41,7 +41,7 @@ const RoomsSection = () => {
       <div className="mb-6 text-right">
         <NavLink to="/add-room">
           <button
-            className="bg-gradient-to-r text-xs from-red-500 to-pink-500 text-white py-[10px] px-[16px] rounded-full hover:bg-gradient-to-l focus:outline-none focus:ring-2 focus:ring-red-300 transition duration-300 shadow-lg"
+            className="bg-gradient-to-r text-xs shadow-white/10 hover:shadow-inner from-primary to-dark text-white py-[10px] px-[16px] rounded-full hover:bg-gradient-to-l focus:outline-none focus:ring-2 focus:ring-red-300 transition duration-300 shadow-md"
           >
             Add New Room
           </button>
@@ -78,7 +78,7 @@ const RoomsSection = () => {
 
              <div className="flex items-center text-[12px] justify-between border-t-2 pt-2 !mt-3">
                <button
-                    className="bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white py-2 px-6 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
+                    className="bg-gradient-to-r from-primary to-dark hover:from-secondary hover:to- text-white py-2 px-6 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
                     onClick={() => {
                       setCurrentRoom(room); // Set the room to edit
                       setEditRoomOpen(true); // Open the edit room form
@@ -87,14 +87,14 @@ const RoomsSection = () => {
                     Edit
                   </button>
                   <button
-                    className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-700 hover:to-red-400 text-white py-2 px-6 rounded-full focus:outline-none transition duration-300 shadow-md"
+                    className="bg-gradient-to-r from-red-700 to-red-700 hover:from-red-800 hover:to-red-800 text-white py-2 px-6 rounded-full focus:outline-none transition duration-300 shadow-md"
                     onClick={() =>{
                       setRoomDelete(room);
                       setConfirm(true)}}
                   >
                     Delete
                 </button>
-               <div className="rounded-md absolute top-2 right-2  text-black flex flex-shrink-0 bg-sky-100 p-2">
+               <div className="rounded-md absolute top-2 right-2  text-black flex flex-shrink-0 bg-white shadow-red-700 shadow-sm p-2">
                    <p className="text-[12px] flex-shrink-0 font-bold">
                      R {room.price} /month
                    </p>

@@ -8,7 +8,7 @@ export default {
         // primary: "#00c3c7",
         primary: "#020617",
         secondary: "#0f172a",
-        dark: "#ffcf22",
+        dark: "#3b0764",
       },
       container: {
         center: true,
