@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import UpdateRoom from './UpdateRoom';
 import { GlobalContext } from '../GlobalContext';
 import { NavLink } from 'react-router-dom';
@@ -6,7 +6,11 @@ import { NavLink } from 'react-router-dom';
 const RoomsSection = () => {
   const [isEditRoomOpen, setEditRoomOpen] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
-  const { allRooms, deleteRoom } = useContext(GlobalContext);
+  const { allRooms, deleteRoom, fetchAllRooms } = useContext(GlobalContext);
+
+  useEffect(()=>{
+    fetchAllRooms()
+  }, [])
 
   const [confirm, setConfirm] = useState(false)
   const [roomDelete, setRoomDelete] = useState(null)
