@@ -50,11 +50,11 @@ const AddRoomForm = () => {
         destinationLong
     };
     
-    const URL = `http://localhost:5000/api/google/distance`;
+    const BURL = `http://localhost:5000/api/google/distance`;
     
     const getDistance = async () => {
         try {
-            const response = await axios.post(URL, everything);
+            const response = await axios.post(BURL, everything);
             console.log(response.data);
             // setLocation(response.data) // Uncomment and define setLocation accordingly
         } catch (err) {
@@ -63,8 +63,12 @@ const AddRoomForm = () => {
     };
     
     useEffect(() => {
-        getDistance();
+        const fetchData = async () => {
+            await getDistance(); // Make sure distance calculation is done first
+        };
+        fetchData();
     }, []);
+    
     
     
     
