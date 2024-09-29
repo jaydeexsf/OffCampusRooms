@@ -35,39 +35,82 @@ const AddRoomForm = () => {
     const [fullscreenImage, setFullscreenImage] = useState(null); // For showing the full-screen image
 
     
-    const myLocation = '40.758896,-73.985130'; // Times Square
-    const destination = '40.785091,-73.968285'; 
+    // const myLocationLat = 40.758896;
+    // const myLocationLong = -73.985130;
+    const [myLocationLat, setMyLocationLat] = useState(null)
+    const [myLocationLong, setmyLocationLong] = useState(null)
 
-    const myLocationLat = 40.758896;
-    const myLocationLong = -73.985130;
-    const cdestinationLat = 40.785091;
-    const destinationLong = -73.968285;
+    function getUserCoordinates() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+              setMyLocationLat(latitude);
+              setmyLocationLong(longitude);
+              console.log("Latitude: " + latitude);
+              console.log("Longitude: " + longitude);
+            },
+            function (error) {
+              console.error("Error occurred. Error code: " + error.code);
+            }
+          );
+        } else {
+          console.error("Geolocation is not supported by this browser.");
+        }
+      }
+
+      useEffect(()=> {
+        getUserCoordinates()
+      }, [])
+      
+    
+    // Define 3 destinations
+    const destinations = [
+        { long: 29.734105570334947, lat: -23.88695606138235 }, //Gate 2
+        { long:  29.73331142439389, lat:-23.892532972613324}, // Gate 3
+        { long:  29.738459289865034, lat:-23.880302596206946 }  // Gate 1
+    ];
     
     const everything = {
         myLocationLat,
         myLocationLong,
-        cdestinationLat,
-        destinationLong
+        destinations
     };
+
+    const [time, setTime] =  useState([])
+    const [distance, setDistance] = useState([])
     
     const BURL = `http://localhost:5000/api/google/distance`;
     
     const getDistance = async () => {
         try {
             const response = await axios.post(BURL, everything);
+            setDistance(response.data.rows[0].elements.map(c => c.distance.text ))
+            setTime(response.data.rows[0].elements.map(c => c.duration.text ))
             console.log(response.data);
-            // setLocation(response.data) // Uncomment and define setLocation accordingly
+            // setLocation(response.data); // Uncomment and define setLocation accordingly
         } catch (err) {
             console.log('There was an error:', err.message);
         }
     };
+
+    useEffect(()=> {
+        const gate2 = parseInt(time[0] )
+        const gate3 = parseInt(time[1])
+        const gate1 = parseInt(time[2])
+        const gates = [gate1, gate2, gate3,]
+        console.log(Math.min(...gates))
+    }, [time, distance])
     
     useEffect(() => {
         const fetchData = async () => {
-            await getDistance(); // Make sure distance calculation is done first
+            if (myLocationLat && myLocationLong) {  // Ensure coordinates are set
+                await getDistance(); 
+            }
         };
         fetchData();
-    }, []);
+    }, [myLocationLat, myLocationLong]);  // Re-run when coordinates change
     
     
     
