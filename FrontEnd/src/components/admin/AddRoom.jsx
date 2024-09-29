@@ -70,77 +70,7 @@ const AddRoomForm = () => {
     
     
 
-    
-    
-    
-    ///////////////////////// // location tracker ////////////////////////////////
 
-    // const predefinedLocations = [
-    //     { name: 'Gate 1', lng: -23.880706185486616, lat: 29.738466820385696},
-    //     { name: 'Gate 2', lng: -23.88694413658466, lat: 29.73424542827584, },
-    //     { name: 'Gate 3', lng: -23.89254715591565, lat: 29.73356772910418 },
-    // ];
-
-    // useEffect(() => {
-    //     // Get user location on component mount
-    //     navigator.geolocation.getCurrentPosition((position) => {
-    //         const userLocation = {
-    //             lat: position.coords.latitude,
-    //             lng: position.coords.longitude,
-    //         };
-    //         console.log('User Coordinates:', userLocation);
-    //         calculateDistances(userLocation);
-    //     }, (error) => {
-    //         console.error('Error getting user location:', error);
-    //         setError('Could not get user location. Please allow location access.');
-    //     });
-    // }, []);
-
-    // const calculateDistances = async (userLocation) => {
-    //     const origins = `${userLocation.lat},${userLocation.lng}`;
-    //     const destinations = predefinedLocations.map(location => `${location.lat},${location.lng}`).join('|');
-
-    //     try {
-    //         const response = await axios.get(`http://localhost:5000/api/faq/distance`, {
-    //             params: {
-    //                 origins,
-    //                 destinations,
-    //            // Replace with your API 
-    //             },
-    //         });
-
-    //         const distances = response.data.rows[0].elements;
-    //         let shortestDistance = Infinity;
-    //         let closestLocation = null;
-
-    //         distances.forEach((distance, index) => {
-    //             if (distance.status === 'OK') {
-    //                 const distanceValue = distance.distance.value; // in meters
-    //                 const durationValue = distance.duration.value; // in seconds
-
-    //                 console.log(`Distance to ${predefinedLocations[index].name}:`, distance.text);
-    //                 console.log(`Time to ${predefinedLocations[index].name}:`, distance.duration.text);
-
-    //                 if (distanceValue < shortestDistance) {
-    //                     shortestDistance = distanceValue;
-    //                     closestLocation = predefinedLocations[index];
-    //                 }
-    //             }
-                
-    //         });
-
-    //         if (closestLocation) {
-    //             console.log('Closest Location:', closestLocation.name);
-    //             console.log('Shortest Distance (m):', shortestDistance);
-    //             console.log('Estimated Time (min):', Math.round((shortestDistance / 1000) / 60)); // converting meters to km and seconds to minutes
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching distances:', error);
-    //         setError('Failed to calculate distances. Please try again.');
-    //     }
-    // };
-
-    ////////////////////////////////////////////////////////////
 
     const cloudinaryUpload = async (file) => {
         const formData = new FormData();
@@ -226,9 +156,9 @@ const AddRoomForm = () => {
                 <IoArrowBack size={24} />
             </button>
 
-            <div className="bg-slate-950 p-8  rounded-md shadow-lg w-full max-w-2xl mx-auto">
-                <form onSubmit={handleSubmit} className="space-y-4" aria-labelledby="add-room-form">
-                    <h2 className="text-2xl font-bold text-gray-200 text-center mb-6" id="add-room-form">Add a New Room</h2>
+            <div className="bg-slate-950 p-8  rounded-md shadow-lg w-[90%] max-w-[500px] mx-auto">
+                <form onSubmit={handleSubmit} className="space-y-4 text-xs" aria-labelledby="add-room-form">
+                    <h2 className="text-2xl font-bold text-gray-200 text-center mb-2" id="add-room-form">Add a New Room</h2>
 
                     <input
                         type="text"
@@ -285,10 +215,10 @@ const AddRoomForm = () => {
                     </select>
 
                     <div className="space-y-2">
-                        <h4 className="font-semibold text-lg text-gray-200">Amenities:</h4>
-                        <div className="grid grid-cols-2 gap-2">
+                        <h4 className="font-semibold text-md text-gray-200">Amenities:</h4>
+                        <div className="grid grid-cols-2 gap-2 text-[11px]">
                             {Object.keys(newRoom.amenities).map((amenity) => (
-                                <label key={amenity} className="flex text-gray-400 items-center space-x-2">
+                                <label key={amenity} className="flex text-gray-400 items-center space-x-1">
                                     <input
                                     className="bg-green-700 focus:bg-green-900 text-red-700 mr-2"
                                         type="checkbox"
@@ -308,8 +238,8 @@ const AddRoomForm = () => {
                         </div>
                     </div>
 
-                    <h4 className="font-semibold text-lg text-gray-200">Contact Information:</h4>
-                    <div className="flex flex-col gap-4">
+                    <h4 className="font-semibold text-md text-gray-200">Contact Information:</h4>
+                    <div className="flex text-[10px] flex-col gap-4">
                         <input
                             type="text"
                             name="phone"

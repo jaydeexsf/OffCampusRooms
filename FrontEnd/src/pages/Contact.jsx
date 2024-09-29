@@ -26,7 +26,7 @@ const Contact = () => {
             <AiOutlinePhone size={28} className="text-primary" />
             <div>
               <h2 className="text-lg font-semibold text-gray-800">Call Us</h2>
-              <p className="text-gray-600 text-xs">+27 11 123 4567</p>
+              <p className="text-gray-600 text-xs">+27 79 219 2664</p>
             </div>
           </div>
           {/* Address */}

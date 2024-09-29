@@ -58,7 +58,7 @@ const AdminPanel = () => {
       </div>
 
       {/* Content Area */}
-      <div className="w-full md:w-3/4 px-10">
+      <div className="w-full py-8 md:w-3/4 px-10">
         {/* Tab Content */}
         {activeTab === 'rooms' ? (
           <div>

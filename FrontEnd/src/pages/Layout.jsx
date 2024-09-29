@@ -20,7 +20,7 @@ const Layout = () => {
         <Outlet />
       </div>
       {/* Conditional rendering based on the current pathname */}
-      {location.pathname === "/admin" ? null : <Footer />}
+      {location.pathname === "/admin" || location.pathname === "/add-room" ? null : <Footer />}
       <OrderPopup orderPopup={orderPopup} setOrderPopup={setOrderPopup} />
     </>
   );

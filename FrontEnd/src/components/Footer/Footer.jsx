@@ -1,10 +1,9 @@
 import React from "react";
-import FooterLogo from "../../assets/logo.png"; 
+import FooterLogo from "../../assets/logo.png";
 import {
-  FaFacebook,
   FaInstagram,
   FaLinkedin,
-  FaWhatsapp, 
+  FaWhatsapp,
   FaMobileAlt,
   FaMapMarkerAlt,
 } from "react-icons/fa";
@@ -28,6 +27,10 @@ const FooterLinks = [
     title: "Contact",
     link: "/contact",
   },
+  {
+    title: "Admin",
+    link: "/admin",
+  },
 ];
 
 const Footer = () => {
@@ -43,10 +46,10 @@ const Footer = () => {
           <source src={UniversityVid} type="video/mp4" />
         </video>
         <div className="container">
-          <div className="grid md:grid-cols-3 py-5 bg-white/80 backdrop-blur-sm rounded-t-xl">
+          <div className="grid md:grid-cols-3 py-0 bg-white/80 backdrop-blur-sm rounded-t-xl">
             {/* Contact Information */}
-            <div className="py-8 px-4">
-              <h1 className="flex items-center  mb-4 gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
+            <div className="py-8 text-xs px-4">
+              <h1 className="flex items-center mb-4 gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
                 <img src={FooterLogo} alt="logo" className="max-h-[60px]" />
                 {/* University Rooms */}
               </h1>
@@ -58,23 +61,20 @@ const Footer = () => {
                 <FaMapMarkerAlt />
                 <p>Mankweng, Polokwane</p>
               </div>
-              <div className="flex items-center gap-3 mt-3">
+              <div className="flex items-center gap-3 mt-1">
                 <FaMobileAlt />
                 <p>+27 79 219 2664</p>
               </div>
               {/* Social handles */}
-              <div className="flex items-center gap-3 mt-6">
+              <div className="flex items-center gap-3 mt-3">
                 <a href="https://wa.me/+2772192664">
-                  <FaWhatsapp className="text-xl" />
+                  <FaWhatsapp className="text-[15px]" />
                 </a>
                 <a href="#">
-                  <FaInstagram className="text-xl" />
+                  <FaInstagram className="text-[15px]" />
                 </a>
                 <a href="#">
-                  <FaFacebook className="text-xl" />
-                </a>
-                <a href="#">
-                  <FaLinkedin className="text-xl" />
+                  <FaLinkedin className="text-[15px]" />
                 </a>
               </div>
             </div>
@@ -82,14 +82,14 @@ const Footer = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 col-span-2 md:pl-10">
               <div>
                 <div className="py-8 px-4">
-                  <h1 className="text-xl font-bold text-justify sm:text-left mb-3">
+                  <h1 className="text-md font-bold text-justify sm:text-left mb-2">
                     Quick Links
                   </h1>
-                  <ul className="flex flex-col gap-3">
+                  <ul className="flex flex-col gap-1">
                     {FooterLinks.map((link) => (
                       <li
                         key={link.title}
-                        className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200"
+                        className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[10px]"
                       >
                         <Link
                           to={link.link}
@@ -106,17 +106,17 @@ const Footer = () => {
               {/* Repeated Links (if needed for other purposes) */}
               <div>
                 <div className="py-8 px-4">
-                  <h1 className="text-xl font-bold text-justify sm:text-left mb-3">
+                  <h1 className="text-md font-bold text-justify sm:text-left mb-2">
                     Student Resources
                   </h1>
-                  <ul className="flex flex-col gap-3">
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200">
+                  <ul className="flex flex-col gap-1">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[10px]">
                       <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>
                         <span>&#11162;</span>
                         <span>FAQs</span>
                       </Link>
                     </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[10px]">
                       <Link to="/support" onClick={() => window.scrollTo(0, 0)}>
                         <span>&#11162;</span>
                         <span>Support</span>

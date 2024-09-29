@@ -84,7 +84,7 @@ const RoomsSection = () => {
 
               <div className="flex items-center pb-2 text-[12px] justify-between border-t-[1px] pt-2 !mt-1">
                 <button
-                  className="bg-gradient-to-r from-primary to-dark hover:from-secondary hover:to- text-white py-2 px-6 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
+                  className="bg-gradient-to-r from-primary/90 to-primary/50 hover:from-secondary hover:to- text-white py-2 px-6 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
                   onClick={() => {
                     setCurrentRoom(room); // Set the room to edit
                     setEditRoomOpen(true); // Open the edit room form
