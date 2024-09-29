@@ -21,51 +21,29 @@ export const GlobalProvider = ({ children }) => {
     const [isUpdatingRoom, setIsUpdatingRoom] = useState(false);
     const [isDeletingRoom, setIsDeletingRoom] = useState(false);
     //global loader
-    const [globalLoader, setGolbalLoader] = useState(false)
+    const [globalLoader, setGolbalLoader] = useState(true)
     const [Cloc, setCloc]  =  useState()
 
     // Fetch Best Rooms on default or when user visits /best-rooms
     const fetchBestRooms = async () => {
         try {
             const response = await axios.get("http://localhost:5000/api/rooms/best-rooms");
-            setBestRooms(response.data[0]);
+            setBestRooms(response.data);
         } catch (error) {
             console.error('Error fetching best rooms:', error);
         } finally {
             setGolbalLoader(false);
+            console.log(bestRooms)
         }
     };
 
-    // const fetchAllRooms = async () => {
-    //     setIsRoomLoading(true);
-    //     try {
-    //         const response = await axios.get("http://localhost:5000/api/rooms/all");
-    //         const rooms = response.data.rooms; 
-    //         setAllRooms(rooms); 
-    //     } catch (error) {
-    //         console.error('Error fetching all rooms:', error);
-    //     } finally {
-    //         setGolbalLoader(false);
-    //     }
-    // };
+    useEffect(()=>{
+        fetchBestRooms()
+    }, [])
 
-    ///////////////////////////////////////////
-    // useEffect(() => {
-    //     const fetchAllRooms = async () => {
-    //       try {
-    //         const response = await axios.get('http://localhost:5000/api/rooms/all'); // Specify the full URL
-    //         const rooms = response.data.rooms; 
-    //         setAllRooms(rooms); // Set the fetched rooms data
-    //       } catch (error) {
-    //         console.error("Error fetching room data:", error);
-    //       } finally {
-    //         setLoading(false); // Ensure loading is set to false whether the fetch was successful or not
-    //       }
-    //     };
-    
-    //     fetchAllRooms();
-    //   }, []);
-
+    if (bestRooms) {
+        console.log(bestRooms.map((c)=> c.title))
+    }
 
 
     ////////////////////////////////
@@ -83,17 +61,7 @@ export const GlobalProvider = ({ children }) => {
                 setGolbalLoader(false);
             }
         };
-        // useEffect(()=>{
-        //     fetchAllRooms()
-        // }, [])
-
-        // useEffect(()=>{
-        //     if(allRooms) {
-        //         console.log(allRooms)
-        //     }
-        // }, [allRooms])
-
-        // Fetching FAQs on /faqs route
+       
         const fetchFAQs = async () => {
             setIsFaqLoading(true);
             try {

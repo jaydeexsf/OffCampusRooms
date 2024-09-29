@@ -16,6 +16,7 @@ const UpdateRoom = ({ room, onCancel }) => {
         location: room.location,
         amenities: room.amenities,
         images: room.images || [],
+        bestRoom: room.bestRoom,
     });
 
     const [previewImages, setPreviewImages] = useState(updatedRoom.images);
@@ -79,8 +80,15 @@ const UpdateRoom = ({ room, onCancel }) => {
         window.location.reload(); // Reload the page on same URL
     };
 
+    const updateBestRoom = (e)=> {
+        setUpdatedRoom((prev) => ({
+             ...prev, 
+            bestRoom:  e.target.value
+         }))
+    }
+
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 bg-primary p-6 rounded-lg shadow-md max-w-lg mx-aut">
+        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto bg-primary p-6 rounded-lg shadow-md max-w-lg mx-auto">
             {/* Title */}
             <label htmlFor="title" className="block text-whitw font-semibold">Title</label>
             <input
@@ -171,6 +179,15 @@ const UpdateRoom = ({ room, onCancel }) => {
                         {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
                     </label>
                 ))}
+            </div>
+
+            <div>
+                <label>Best Room?</label>
+                <input 
+                onChange={updateBestRoom}
+                value={updatedRoom.bestRoom}
+                className='p-[10px] bg-secondary w-full rounded-lg border-red-600 focus:outline-none text-gray-500 focus:ring-2 focus:border-dark'
+                type="text"  />
             </div>
 
             {/* Full-screen Image Modal */}

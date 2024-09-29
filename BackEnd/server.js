@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDB = require("./configDb");
 const roomRoutes = require("./routes/roomRoutes");
 const faqRoutes = require("./routes/faqRoutes")
+const distanceRoute = require('./routes/distanceRoute')
 
 dotenv.config();
 
@@ -20,10 +21,12 @@ app.use(express.json()); // Allows the server to accept JSON requests
 
 // Routes
 app.use("/api/rooms", roomRoutes); 
-app.use('/api/faq', faqRoutes)
+app.use('/api/faq', faqRoutes);
+app.use('/api/google', distanceRoute);
 
 // Server listening
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+ 

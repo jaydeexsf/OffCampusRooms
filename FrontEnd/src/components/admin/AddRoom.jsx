@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { GlobalContext } from '../GlobalContext';
 import { useNavigate } from 'react-router-dom';
@@ -32,6 +32,115 @@ const AddRoomForm = () => {
 
     const [imagePreviews, setImagePreviews] = useState([]);
     const [error, setError] = useState('');
+    const [fullscreenImage, setFullscreenImage] = useState(null); // For showing the full-screen image
+
+    
+    const myLocation = '40.758896,-73.985130'; // Times Square
+    const destination = '40.785091,-73.968285'; 
+
+    const myLocationLat = 40.758896;
+    const myLocationLong = -73.985130;
+    const cdestinationLat = 40.785091;
+    const destinationLong = -73.968285;
+    
+    const everything = {
+        myLocationLat,
+        myLocationLong,
+        cdestinationLat,
+        destinationLong
+    };
+    
+    const URL = `http://localhost:5000/api/google/distance`;
+    
+    const getDistance = async () => {
+        try {
+            const response = await axios.post(URL, everything);
+            console.log(response.data);
+            // setLocation(response.data) // Uncomment and define setLocation accordingly
+        } catch (err) {
+            console.log('There was an error:', err.message);
+        }
+    };
+    
+    useEffect(() => {
+        getDistance();
+    }, []);
+    
+    
+    
+    
+
+    
+    
+    
+    ///////////////////////// // location tracker ////////////////////////////////
+
+    // const predefinedLocations = [
+    //     { name: 'Gate 1', lng: -23.880706185486616, lat: 29.738466820385696},
+    //     { name: 'Gate 2', lng: -23.88694413658466, lat: 29.73424542827584, },
+    //     { name: 'Gate 3', lng: -23.89254715591565, lat: 29.73356772910418 },
+    // ];
+
+    // useEffect(() => {
+    //     // Get user location on component mount
+    //     navigator.geolocation.getCurrentPosition((position) => {
+    //         const userLocation = {
+    //             lat: position.coords.latitude,
+    //             lng: position.coords.longitude,
+    //         };
+    //         console.log('User Coordinates:', userLocation);
+    //         calculateDistances(userLocation);
+    //     }, (error) => {
+    //         console.error('Error getting user location:', error);
+    //         setError('Could not get user location. Please allow location access.');
+    //     });
+    // }, []);
+
+    // const calculateDistances = async (userLocation) => {
+    //     const origins = `${userLocation.lat},${userLocation.lng}`;
+    //     const destinations = predefinedLocations.map(location => `${location.lat},${location.lng}`).join('|');
+
+    //     try {
+    //         const response = await axios.get(`http://localhost:5000/api/faq/distance`, {
+    //             params: {
+    //                 origins,
+    //                 destinations,
+    //            // Replace with your API 
+    //             },
+    //         });
+
+    //         const distances = response.data.rows[0].elements;
+    //         let shortestDistance = Infinity;
+    //         let closestLocation = null;
+
+    //         distances.forEach((distance, index) => {
+    //             if (distance.status === 'OK') {
+    //                 const distanceValue = distance.distance.value; // in meters
+    //                 const durationValue = distance.duration.value; // in seconds
+
+    //                 console.log(`Distance to ${predefinedLocations[index].name}:`, distance.text);
+    //                 console.log(`Time to ${predefinedLocations[index].name}:`, distance.duration.text);
+
+    //                 if (distanceValue < shortestDistance) {
+    //                     shortestDistance = distanceValue;
+    //                     closestLocation = predefinedLocations[index];
+    //                 }
+    //             }
+                
+    //         });
+
+    //         if (closestLocation) {
+    //             console.log('Closest Location:', closestLocation.name);
+    //             console.log('Shortest Distance (m):', shortestDistance);
+    //             console.log('Estimated Time (min):', Math.round((shortestDistance / 1000) / 60)); // converting meters to km and seconds to minutes
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching distances:', error);
+    //         setError('Failed to calculate distances. Please try again.');
+    //     }
+    // };
+
+    ////////////////////////////////////////////////////////////
 
     const cloudinaryUpload = async (file) => {
         const formData = new FormData();
@@ -102,6 +211,15 @@ const AddRoomForm = () => {
         }
     };
 
+    const handleImageClick = (image) => {
+        setFullscreenImage(image);
+    };
+
+    // Function to close the fullscreen view
+    const closeFullscreen = () => {
+        setFullscreenImage(null);
+    };
+
     return (
         <div className="relative text-white bg-slate-900 pt-[100px] pb-16">
             <button onClick={() => navigate(-1)} className="absolute top-[70px] left-4 text-gray-100 hover:text-gray-300">
@@ -128,7 +246,6 @@ const AddRoomForm = () => {
                         placeholder="Room Description"
                         value={newRoom.description}
                         onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
-                        required
                         className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                         aria-label="Room Description"
                     ></textarea>
@@ -151,7 +268,6 @@ const AddRoomForm = () => {
                             placeholder="Minutes Away from Campus"
                             value={newRoom.minutesAway}
                             onChange={(e) => setNewRoom({ ...newRoom, minutesAway: e.target.value })}
-                            required
                             className="border border-gray-700 bg-slate-900 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="Minutes Away from Campus"
                         />
@@ -218,7 +334,6 @@ const AddRoomForm = () => {
                             placeholder="Email Address"
                             value={newRoom.contact.email}
                             onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, email: e.target.value } })}
-                            required
                             className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="Email Address"
                         />
@@ -234,12 +349,25 @@ const AddRoomForm = () => {
                     />
                     
                     {imagePreviews.length > 0 && (
-                        <div className="flex gap-4 my-4">
-                            {imagePreviews.map((preview, index) => (
-                                <img key={index} src={preview} alt={`Preview ${index + 1}`} className="h-20 w-20 object-cover rounded" />
-                            ))}
-                        </div>
+                         <div className="flex gap-4 my-4">
+                         {imagePreviews.map((preview, index) => (
+                             <img
+                                 key={index}
+                                 src={preview}
+                                 alt={`Preview ${index + 1}`}
+                                 className="h-20 w-20 object-cover rounded cursor-pointer"
+                                 onClick={() => handleImageClick(preview)} // Open image in full screen
+                             />
+                         ))}
+                     </div>
                     )}
+
+                     {fullscreenImage && (
+                <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={closeFullscreen}>
+                    <img src={fullscreenImage} alt={fullscreenImage.title} className="max-w-full max-h-full object-contain" />
+                    <button className="absolute top-4 right-4 text-white text-2xl" onClick={closeFullscreen}>✕</button>
+                </div>
+            )}
 
                     <input
                         type="number"
@@ -256,7 +384,7 @@ const AddRoomForm = () => {
 
                     <button
                         type="submit"
-                        className={`bg-slate-900 text-white font-bold py-2 rounded hover:bg-slate-800 transition duration-300 w-full ${
+                        className={`bg-gradient-to-r from-black to-dark/50 hover:from-dark/50 hover:to-black rounded-full text-white font-bold py-2  hover:bg-dark/80 transition duration-300 w-full ${
                             isAddingRoom ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                         disabled={isAddingRoom}
@@ -267,7 +395,7 @@ const AddRoomForm = () => {
                     <button
                         type="button"
                         onClick={() => navigate(-1)}
-                        className="bg-gray-300 text-gray-700 font-bold py-2 rounded hover:bg-gray-400 transition duration-300 w-full"
+                        className="bg-gray-300 rounded-full text-gray-700 font-bold py-2 hover:bg-gray-400 transition duration-300 w-full"
                     >
                         Cancel
                     </button>
