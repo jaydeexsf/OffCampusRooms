@@ -33,7 +33,6 @@ export const GlobalProvider = ({ children }) => {
             console.error('Error fetching best rooms:', error);
         } finally {
             setGolbalLoader(false);
-            console.log(bestRooms)
         }
     };
 
@@ -41,20 +40,12 @@ export const GlobalProvider = ({ children }) => {
         fetchBestRooms()
     }, [])
 
-    if (bestRooms) {
-        console.log(bestRooms.map((c)=> c.title))
-    }
-
-
-    ////////////////////////////////
 
      const fetchAllRooms = async () => {
         setGolbalLoader(true);
             try {
                 const response = await axios.get("http://localhost:5000/api/rooms/all");
                 setAllRooms(response.data.rooms);
-                console.log(response.data.rooms)
-                console.log('dd')
             } catch (error) {
                 console.error('Error fetching all rooms:', error);
             } finally {
@@ -73,20 +64,6 @@ export const GlobalProvider = ({ children }) => {
                 setIsFaqLoading(false);
             }
         };
-
-    // useEffect(()=> {
-    //    setCloc(location.pathname)
-
-    //     if (Cloc === '/all') {
-    //         setGolbalLoader(true)
-    //         fetchAllRooms()
-    //         console.log('wors ss s  king')
-    //     } else if (Cloc === '/frequetly-asked-questions') {
-    //         fetchFAQs()
-    //         console.log('jhjh jhjh')
-    //     }
-    // }, [location.path])
-    // console.log(Cloc)
     
     // Add Room
     const addRoom = async (newRoom) => {

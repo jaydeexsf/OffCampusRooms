@@ -64,8 +64,6 @@ const AddRoomForm = () => {
         getUserCoordinates()
       }, [])
       
-    
-    // Define 3 destinations
     const destinations = [
         { long: 29.734105570334947, lat: -23.88695606138235 }, //Gate 2
         { long:  29.73331142439389, lat:-23.892532972613324}, // Gate 3
@@ -79,7 +77,9 @@ const AddRoomForm = () => {
     };
 
     const [time, setTime] =  useState([])
+    const [gateName, setGateName] =  useState()
     const [distance, setDistance] = useState([])
+    const [timeToCampus, setTimeToCampus] = useState()
     
     const BURL = `http://localhost:5000/api/google/distance`;
     
@@ -95,13 +95,28 @@ const AddRoomForm = () => {
         }
     };
 
-    useEffect(()=> {
-        const gate2 = parseInt(time[0] )
-        const gate3 = parseInt(time[1])
-        const gate1 = parseInt(time[2])
-        const gates = [gate1, gate2, gate3,]
-        console.log(Math.min(...gates))
-    }, [time, distance])
+   useEffect(() => {
+    if (time.length === 3) { // Ensure there are 3 times
+        const gateTimes = [
+            { time: parseInt(time[0]), name: 'Gate 2' }, // Gate 1
+            { time: parseInt(time[1]), name: 'Gate 3' }, // Gate 2
+            { time: parseInt(time[2]), name: 'Gate 1' }  // Gate 3
+        ];
+
+        // Find the gate with the smallest time
+        const closestGate = gateTimes.reduce((prev, curr) => (curr.time < prev.time ? curr : prev));
+        
+        setTimeToCampus(closestGate.time); 
+        setGateName(closestGate.name);
+        setNewRoom({...newRoom, minutesAway: closestGate.time})
+        setNewRoom({...newRoom, location: closestGate.name.toLowerCase()})
+        newRoom.location = closestGate.name;
+        console.log(`${closestGate.name} is the closest gate with a time of ${closestGate.time} minutes away.`);
+    }
+}, [time]);
+
+
+
     
     useEffect(() => {
         const fetchData = async () => {
@@ -227,30 +242,50 @@ const AddRoomForm = () => {
                         aria-label="Room Description"
                     ></textarea>
 
-                    <div className="flex gap-4">
-                        <input
+                    <input
                             type="number"
                             name="price"
                             placeholder="Room Price"
                             value={newRoom.price}
                             onChange={(e) => setNewRoom({ ...newRoom, price: Math.max(0, e.target.value) })} // Prevent negative price
                             required
-                            className="border border-gray-700 bg-slate-900 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                             aria-label="Room Price"
                         />
 
-                        <input
-                            type="number"
+                    <div className="flex items-center justify-between gap-4">
+
+                         {gateName ? 
+                             <input
+                            type="text"
                             name="minutesAway"
+                            disabled={true}
                             placeholder="Minutes Away from Campus"
-                            value={newRoom.minutesAway}
-                            onChange={(e) => setNewRoom({ ...newRoom, minutesAway: e.target.value })}
-                            className="border border-gray-700 bg-slate-900 rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-sky-700"
+                            value={gateName + ' is the closest Gate'}
+                            className="border-transparent hover:cursor-not-allowed border-b-gray-700 border-2 bg-transparent text-gray-400/50 rounded p-2 w-1/2 focus:outline-none focus:border-b-gray-300 focus:ring-sky-700"
+                        /> :
+                        <div className='w-[90%] flex justify-center'> 
+                             <div className="border-t-2 border-t-white border-gray-600 border-2 rounded-full w-4 h-4 animate-spin" ></div>
+                        </div>
+                    }
+
+                        {timeToCampus ? <input
+                            type="text"
+                            name="minutesAway"
+                            disabled={true}
+                            placeholder="Minutes Away from Campus"
+                            value={timeToCampus + ' min away from campus'}
+                            className="border-transparent hover:cursor-not-allowed border-b-gray-700 border-2 bg-transparent text-gray-400/50 rounded p-2 w-1/2 focus:outline-none focus:border-b-gray-300 focus:ring-sky-700"
                             aria-label="Minutes Away from Campus"
-                        />
+                        /> :
+                         <div className='w-[50%] flex justify-center'>
+                             <div className="border-t-2 border-t-white border-gray-600 border-2 rounded-full w-4 h-4 animate-spin" ></div>
+                        </div>
+                         }
                     </div>
 
-                    <select
+
+                    {/* <select
                         className="border border-gray-700 text-gray-300 bg-slate-900 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-sky-700"
                         onChange={(e) => setNewRoom({ ...newRoom, location: e.target.value })}
                         aria-label="Room Location"
@@ -259,7 +294,7 @@ const AddRoomForm = () => {
                         <option value="gate 1">Gate 1</option>
                         <option value="gate 2">Gate 2</option>
                         <option value="gate 3">Gate 3</option>
-                    </select>
+                    </select> */}
 
                     <div className="space-y-2">
                         <h4 className="font-semibold text-md text-gray-200">Amenities:</h4>
