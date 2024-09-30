@@ -71,7 +71,7 @@ const RoomsSection = () => {
             key={room._id}
             className="shadow-xs relative transition-all duration-500 hover:shadow-primary/70 bg-gray-950 rounded-sm hover:shadow-xl dark:bg-slate-950 dark:text-white cursor-pointer"
           >
-            <div className="overflow-hidden">
+            <div className="overflow-hidden p-1">
               <img
                 src={room.images[0]}
                 alt="Room"
