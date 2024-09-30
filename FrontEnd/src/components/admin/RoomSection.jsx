@@ -80,7 +80,7 @@ const RoomsSection = () => {
             </div>
 
             <div className="space-y-0 px-2">
-              <h1 className="line-clamp-1 font-bold text-xl">{room.title}</h1>
+              <h1 className="line-clamp-1 font-semibold text-xl">{room.title}</h1>
 
               <div className="flex items-center pb-2 text-[12px] justify-between border-t-[1px] pt-2 !mt-1">
                 <button

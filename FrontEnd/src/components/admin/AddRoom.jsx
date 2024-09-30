@@ -95,25 +95,31 @@ const AddRoomForm = () => {
         }
     };
 
-   useEffect(() => {
-    if (time.length === 3) { // Ensure there are 3 times
-        const gateTimes = [
-            { time: parseInt(time[0]), name: 'Gate 2' }, // Gate 1
-            { time: parseInt(time[1]), name: 'Gate 3' }, // Gate 2
-            { time: parseInt(time[2]), name: 'Gate 1' }  // Gate 3
-        ];
-
-        // Find the gate with the smallest time
-        const closestGate = gateTimes.reduce((prev, curr) => (curr.time < prev.time ? curr : prev));
-        
-        setTimeToCampus(closestGate.time); 
-        setGateName(closestGate.name);
-        setNewRoom({...newRoom, minutesAway: closestGate.time})
-        setNewRoom({...newRoom, location: closestGate.name.toLowerCase()})
-        newRoom.location = closestGate.name;
-        console.log(`${closestGate.name} is the closest gate with a time of ${closestGate.time} minutes away.`);
-    }
-}, [time]);
+    useEffect(() => {
+        if (time.length === 3) { // Ensure there are 3 times
+            const gateTimes = [
+                { time: parseInt(time[0]), name: 'Gate 2' }, // Gate 1
+                { time: parseInt(time[1]), name: 'Gate 3' }, // Gate 2
+                { time: parseInt(time[2]), name: 'Gate 1' }  // Gate 3
+            ];
+    
+            // Find the gate with the smallest time
+            const closestGate = gateTimes.reduce((prev, curr) => (curr.time < prev.time ? curr : prev));
+            
+            setTimeToCampus(closestGate.time); 
+            setGateName(closestGate.name);
+    
+            // Update newRoom in one setNewRoom call
+            setNewRoom(prevRoom => ({
+                ...prevRoom,
+                minutesAway: closestGate.time,
+                location: closestGate.name.toLowerCase(),
+            }));
+    
+            console.log(`${closestGate.name} is the closest gate with a time of ${closestGate.time} minutes away.`);
+        }
+    }, [time]);
+    
 
 
 
