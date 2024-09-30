@@ -45,7 +45,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
   return (
     <>
       <nav className="fixed top-0 right-0 w-full z-50 bg-white dark:bg-gray-900 backdrop-blur-sm text-black dark:text-white shadow-md">
-        <div className="bg-gradient-to-r from-primary to-secondary text-white">
+        <div className="bg-gradient-to-r from-primary to-dark text-white">
           <div className="container py-[3px] sm:block hidden">
             <div className="flex text-[12px] items-center justify-between">
               <p className="">Exclusive student deals on room bookings!</p>

@@ -14,7 +14,7 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="bg-slate-900 mt-[-35px] text-white min-h-screen flex flex-col md:flex-row">
+    <div className="bg-gray-900 mt-[-35px] text-white min-h-screen flex flex-col md:flex-row">
       {/* Hamburger Menu Button */}
       <div className="md:hidden p-4">
         <button onClick={toggleSidebar} className="text-white">
@@ -33,7 +33,7 @@ const AdminPanel = () => {
               } hover:bg-dark/70 flex items-center`}
               onClick={() => {
                 setActiveTab('rooms');
-                setIsOpen(false); // Close sidebar on selection
+                setIsOpen(false); 
               }}
             >
               <HiOutlineHome className="mr-2 w-5 h-5" /> {/* Icon for Manage Rooms */}
@@ -47,7 +47,7 @@ const AdminPanel = () => {
               } hover:bg-indigo-500 flex items-center`}
               onClick={() => {
                 setActiveTab('faqs');
-                setIsOpen(false); // Close sidebar on selection
+                setIsOpen(false); 
               }}
             >
               <HiOutlineQuestionMarkCircle className="mr-2 w-5 h-5" /> {/* Icon for Manage FAQs */}

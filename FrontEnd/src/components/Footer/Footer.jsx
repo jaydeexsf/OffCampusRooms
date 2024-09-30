@@ -48,7 +48,7 @@ const Footer = () => {
         <div className="container">
           <div className="grid md:grid-cols-3 py-0 bg-white/80 backdrop-blur-sm rounded-t-xl">
             {/* Contact Information */}
-            <div className="py-8 text-xs px-4">
+            <div className="pt-8 text-xs px-4">
               <h1 className="flex items-center mb-4 gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
                 <img src={FooterLogo} alt="logo" className="max-h-[60px]" />
                 {/* University Rooms */}
