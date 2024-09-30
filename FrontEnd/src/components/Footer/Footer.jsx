@@ -53,7 +53,7 @@ const Footer = () => {
                 <img src={FooterLogo} alt="logo" className="max-h-[60px]" />
                 {/* University Rooms */}
               </h1>
-              <p className="text-sm">
+              <p className="text-xs">
                 Find the best rooms around the University of Limpopo. We provide affordable, student-friendly accommodation with easy access to campus.
               </p>
               <br />
@@ -82,14 +82,14 @@ const Footer = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 col-span-2 md:pl-10">
               <div>
                 <div className="py-8 px-4">
-                  <h1 className="text-md font-bold text-justify sm:text-left mb-2">
+                  <h1 className="text-md lg:text-lg font-bold text-justify sm:text-left mb-2">
                     Quick Links
                   </h1>
                   <ul className="flex flex-col gap-1">
                     {FooterLinks.map((link) => (
                       <li
                         key={link.title}
-                        className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[10px]"
+                        className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 lg:text-[13px] text-[10px]"
                       >
                         <Link
                           to={link.link}
@@ -106,17 +106,17 @@ const Footer = () => {
               {/* Repeated Links (if needed for other purposes) */}
               <div>
                 <div className="py-8 px-4">
-                  <h1 className="text-md font-bold text-justify sm:text-left mb-2">
+                  <h1 className="text-md lg:text-lg font-bold text-justify sm:text-left mb-2">
                     Student Resources
                   </h1>
                   <ul className="flex flex-col gap-1">
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[10px]">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 lg:text-[13px] text-[10px]">
                       <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>
                         <span>&#11162;</span>
                         <span>FAQs</span>
                       </Link>
                     </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[10px]">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 lg:text-[13px] text-[10px]">
                       <Link to="/support" onClick={() => window.scrollTo(0, 0)}>
                         <span>&#11162;</span>
                         <span>Support</span>
@@ -128,7 +128,7 @@ const Footer = () => {
             </div>
           </div>
           {/* Footer Bottom Text */}
-          <div className="text-center py-4 text-sm border-t-2 border-gray-300/50 bg-primary text-white">
+          <div className="text-center py-2 text-[8px] lg:text-[12px] border-t-2 border-gray-300/50 bg-primary text-white">
             &copy; 2024 All rights reserved || Built for UL Students by Johannes M.
           </div>
         </div>

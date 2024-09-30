@@ -98,7 +98,7 @@ const AllRooms = () => {
               <input
                 type="text"
                 placeholder="Search by title or description"
-                className="w-full p-2 border text-white focus:outline-none focus:shadow-dark focus:shadow-md focus:border-dark bg-slate-900 border-gray-500 rounded"
+                className="w-full text-xs p-2 border text-white focus:outline-none focus:shadow-dark focus:shadow-md focus:border-dark bg-primary border-dark rounded-full"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -106,11 +106,11 @@ const AllRooms = () => {
           </div>
 
           <section className="container md:mx-auto px-0">
-            <div className="flex flex-row">
+            <div className="flex flex-row gap-[-58px]">
               {/* Filters Section */}
-              <div className="md:w-1/4 w-[30%] sticky top-[100px] p-2 bg-white dark:bg-gray-800 shadow-lg max-h-fit overflow-y-auto">
+              <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-white dark:bg-gray-800 shadow-lg max-h-fit overflow-y-auto">
                 <div className="mb-4">
-                  <h2 className="text-md font-semibold">Filter by Location</h2>
+                  <h2 className="text-sm font-semibold">Filter by Location</h2>
                   <div className="flex flex-col gap-1 mt-2 text-xs">
                     {["gate 1", "gate 2", "gate 3", "motintane"].map((loc) => (
                       <label key={loc} className="flex items-center gap-1">
@@ -125,8 +125,8 @@ const AllRooms = () => {
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <h2 className="text-md font-semibold">Filter by Amenities</h2>
+                <div className=" mb-4">
+                  <h2 className="text-sm font-semibold">Filter by Amenities</h2>
                   <div className="flex flex-col gap-1 mt-2 text-xs">
                     {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map(
                       (amenity) => (
@@ -149,7 +149,7 @@ const AllRooms = () => {
                 </div>
 
                 <div className="mb-4">
-                  <h2 className="text-md font-semibold">
+                  <h2 className="text-sm font-semibold">
                     Filter by Distance (away from campus)
                   </h2>
                   <div className="flex flex-col gap-1 mt-2 text-xs">
@@ -178,7 +178,7 @@ const AllRooms = () => {
               </div>
 
               {/* Rooms Listing */}
-              <div className="md:w-[100%] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+              <div className="md:w-[100%] grid grid-cols-1 ml-[-10px] md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
                 {filteredRooms.map((room, index) => (
                   <PlaceCard
                     {...room}
