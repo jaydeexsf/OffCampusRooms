@@ -1,11 +1,20 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { useUser, useAuth } from "@clerk/clerk-react";
 
 // Create the context
 export const GlobalContext = createContext();
 
 // Provider component to wrap the app
 export const GlobalProvider = ({ children }) => {
+
+    const { isSignedIn } = useAuth(); // Check if user is signed in
+    const { user } = useUser(); // Access the logged-in user's info
+  
+    // Determine if the logged-in user is an admin
+    const isAdmin = user?.publicMetadata?.role === "admin"; 
+
+
     // Room State
     const [bestRooms, setBestRooms] = useState([]);
     const [allRooms, setAllRooms] = useState([]);
@@ -149,7 +158,10 @@ export const GlobalProvider = ({ children }) => {
                 addFaq,
                 deleteFaq,
                 globalLoader,
-                fetchAllRooms
+                fetchAllRooms,
+                isLoggedIn: isSignedIn,
+                isAdmin,
+
             }}
         >
             {children}

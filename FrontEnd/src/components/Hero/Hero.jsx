@@ -91,7 +91,7 @@ const Hero = () => {
                   </div>
                 </div>
                 <button
-                  className="bg-gradient-to-r from-slate-900 to-slate-950 hover:from-slate-950 hover:to-slate-800 hover:bg-dark text-white font-semibold px-4 py-3 rounded-full mt-6 w-full text-center transition-transform duration-300"
+                  className="bg-gradient-to-r from-slate-900 to-slate-950 hover:from-slate-950 hover:to-slate-800 hover:bg-dark text-white font-semibold px-4 py-2 rounded-full mt-6 w-full text-center transition-transform duration-300"
                   onClick={handleSearch}
                   disabled={isLoading}
                 >

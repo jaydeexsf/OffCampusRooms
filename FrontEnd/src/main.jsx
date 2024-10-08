@@ -5,11 +5,22 @@ import { GlobalProvider } from "./components/GlobalContext"; // Import GlobalPro
 import "./index.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ClerkProvider } from '@clerk/clerk-react'
+
+// Import your publishable key
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key")
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <GlobalProvider> {/* Wrap App with GlobalProvider */}
-      <App />
-    </GlobalProvider>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+       <GlobalProvider> 
+          <App />
+        </GlobalProvider>
+      </ClerkProvider>
+    
   </React.StrictMode>
 );

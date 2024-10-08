@@ -14,7 +14,7 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="bg-gray-900 mt-[-35px] text-white min-h-screen flex flex-col md:flex-row">
+    <div className="bg-gray-900 mt-[-35px] pb-36 text-white min-h-screen flex flex-col md:flex-row">
       {/* Hamburger Menu Button */}
       <div className="md:hidden p-4">
         <button onClick={toggleSidebar} className="text-white">

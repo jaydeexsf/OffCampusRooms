@@ -110,8 +110,8 @@ const AllRooms = () => {
               {/* Filters Section */}
               <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-white dark:bg-gray-800 shadow-lg max-h-fit overflow-y-auto">
                 <div className="mb-4">
-                  <h2 className="text-sm font-semibold">Filter by Location</h2>
-                  <div className="flex flex-col gap-1 mt-2 text-xs">
+                  <h2 className="text-xs md:text-sm font-semibold">Filter by Location</h2>
+                  <div className="flex flex-col gap-1 mt-2  md:text-xs text-[10px]">
                     {["gate 1", "gate 2", "gate 3", "motintane"].map((loc) => (
                       <label key={loc} className="flex items-center gap-1">
                         <input
@@ -126,8 +126,8 @@ const AllRooms = () => {
                 </div>
 
                 <div className=" mb-4">
-                  <h2 className="text-sm font-semibold">Filter by Amenities</h2>
-                  <div className="flex flex-col gap-1 mt-2 text-xs">
+                  <h2 className="text-xs md:text-sm font-semibold">Filter by Amenities</h2>
+                  <div className="flex flex-col gap-1 mt-2 md:text-xs text-[10px]">
                     {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map(
                       (amenity) => (
                         <label
@@ -149,11 +149,11 @@ const AllRooms = () => {
                 </div>
 
                 <div className="mb-4">
-                  <h2 className="text-sm font-semibold">
+                  <h2 className="text-xs md:text-sm  font-semibold">
                     Filter by Distance (away from campus)
                   </h2>
-                  <div className="flex flex-col gap-1 mt-2 text-xs">
-                    {[5, 10, 20, 30].map((distance) => (
+                  <div className="flex flex-col gap-1 mt-2 md:text-xs text-[8px]">
+                    {[5, 10, 20, 30, 40, 50].map((distance) => (
                       <label key={distance} className="flex items-center gap-1">
                         <input
                           type="radio"

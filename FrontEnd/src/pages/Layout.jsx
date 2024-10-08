@@ -13,16 +13,16 @@ const Layout = () => {
   };
 
   return (
-    <>
+    <div className={location.pathname === "/admin" || location.pathname === "/add-room" || location.pathname === "/login" ? 'pb-36 mt-[-32px]' : '' }>
       {/* <Navbar handleOrderPopup={handleOrderPopup} /> */}
-      {location.pathname === "/admin" ? null : <Navbar handleOrderPopup={handleOrderPopup} />}
+      {location.pathname === "/admin" || location.pathname === "/add-room" || location.pathname === "/login" ? null : <Navbar />}
       <div className="pt-8">
         <Outlet />
       </div>
       {/* Conditional rendering based on the current pathname */}
-      {location.pathname === "/admin" || location.pathname === "/add-room" ? null : <Footer />}
+      {location.pathname === "/admin" || location.pathname === "/add-room" || location.pathname === "/login" ? null : <Footer />}
       <OrderPopup orderPopup={orderPopup} setOrderPopup={setOrderPopup} />
-    </>
+    </div>
   );
 };
 
