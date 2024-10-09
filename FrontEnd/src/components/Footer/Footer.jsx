@@ -36,9 +36,9 @@ const FooterLinks = [
 
 const Footer = () => {
   const navigate = useNavigate();
-  const { user } = useUser(); // Get the logged-in user's details
+  const { user, isSignedIn } = useUser(); // Get the logged-in user's details
   const [isAdmin, setIsAdmin] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
+  const [showMessage, setShowMessage] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -49,13 +49,19 @@ const Footer = () => {
   }, [user]);
 
   const handleAdminClick = (e) => {
-    if (!isAdmin) {
-      e.preventDefault(); // Prevent navigation to the admin page
-      setShowMessage(true); // Show the "not admin" message
-      setTimeout(() => setShowMessage(false), 3000); // Hide message after 3 seconds
+    if (!isSignedIn) {
+      e.preventDefault();
+      navigate("/login"); // Redirect to login if not signed in
+      setShowMessage("Sign In if You are the Admin"); 
+    } else if (!isAdmin) {
+      e.preventDefault(); // Prevent navigation for non-admin users
+      setShowMessage("You are not the admin."); // Show non-admin message
     } else {
       navigate("/admin"); // Navigate to the admin page if the user is an admin
     }
+
+    // Automatically hide the message after 3 seconds
+    setTimeout(() => setShowMessage(""), 3000);
   };
 
   return (
@@ -70,13 +76,12 @@ const Footer = () => {
           <source src={UniversityVid} type="video/mp4" />
         </video>
         <div className="container relative">
-        
           <div className="grid md:grid-cols-3 py-0 bg-white/80 backdrop-blur-sm rounded-t-xl">
-          {showMessage && (
-            <div className="text-center bg-primary px-4 shadow-xl py-2 rounded-md shadow-primary absolute top-[50%] translate-x-[-50%] translate-y-[-50%] left-[50%] text-red-500 text-lg font-semibold">
-              You are not the admin.
-            </div>
-          )}
+            {showMessage && (
+              <div className="text-center bg-primary px-4 shadow-xl py-2 rounded-md shadow-primary absolute top-[50%] translate-x-[-50%] translate-y-[-50%] left-[50%] text-red-500 text-lg font-semibold">
+                {showMessage}
+              </div>
+            )}
             {/* Contact Information */}
             <div className="pt-8 lg:pb-12 text-xs px-4">
               <h1 className="flex items-center mb-4 gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
@@ -121,7 +126,7 @@ const Footer = () => {
                         className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]"
                       >
                         <Link
-                          to={link.link === "/admin" ? "#" : link.link} // Prevent default navigation for admin
+                          to={link.title === "Admin" ? "#" : link.link}
                           onClick={
                             link.title === "Admin"
                               ? handleAdminClick
@@ -163,7 +168,6 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          {/* "Not Admin" Message */}
           {/* Footer Bottom Text */}
           <div className="text-center py-2 text-[8px] lg:text-[12px] border-t-2 border-gray-300/50 bg-primary text-white">
             &copy; 2024 All rights reserved || Built for UL Students by Johannes M.

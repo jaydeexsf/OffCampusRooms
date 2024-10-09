@@ -26,9 +26,9 @@ const App = () => {
   React.useEffect(() => {
     AOS.init({
       offset: 40,
-      duration: 800,
+      duration: 8,
       easing: "ease-in-sine",
-      delay: 40,
+      delay: 20,
     });
     AOS.refresh();
   }, []);
