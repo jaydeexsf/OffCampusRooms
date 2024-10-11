@@ -18,6 +18,7 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
       }, 
       (error) => {
         console.error("Error getting Coordinates: ", error);
+        alert(`Error: ${error.message}`);
       });
     }
 
@@ -28,6 +29,8 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
         }, 
         (error) => {
           console.error("Error getting Coordinates: ", error);
+          alert(`Error: ${error.message}`);
+
         });
       }
   }, []);

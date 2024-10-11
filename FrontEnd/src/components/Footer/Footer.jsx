@@ -49,19 +49,20 @@ const Footer = () => {
   }, [user]);
 
   const handleAdminClick = (e) => {
+    e.preventDefault();
     if (!isSignedIn) {
-      e.preventDefault();
+      setShowMessage("Sign in if you are the admin.");
       navigate("/login"); // Redirect to login if not signed in
-      setShowMessage("Sign In if You are the Admin"); 
     } else if (!isAdmin) {
-      e.preventDefault(); // Prevent navigation for non-admin users
-      setShowMessage("You are not the admin."); // Show non-admin message
+      setShowMessage("You are not the admin.");
     } else {
       navigate("/admin"); // Navigate to the admin page if the user is an admin
     }
 
     // Automatically hide the message after 3 seconds
-    setTimeout(() => setShowMessage(""), 3000);
+    if (showMessage) {
+      setTimeout(() => setShowMessage(""), 3000);
+    }
   };
 
   return (
