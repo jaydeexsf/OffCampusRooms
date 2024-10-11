@@ -40,7 +40,10 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                 {showLocation ?<h1 className="text-xl font-semibold  translate-x-[-25%]  text-white">{title}</h1> : '' }
               <IoCloseOutline
                 className="text-2xl cursor-pointer mt-4 hover:text-gray-300 transition-colors duration-200"
-                onClick={() => setOrderPopup(false)}
+                onClick={() => {
+                  setOrderPopup(false)
+                  setShowLocation(false)
+                }}
               />
             </div>
 
