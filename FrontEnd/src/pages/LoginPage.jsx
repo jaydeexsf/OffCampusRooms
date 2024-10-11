@@ -12,6 +12,11 @@ const LoginPage = () => {
     }
   }, [isSignedIn, navigate]);
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+
   return (
     <div className="flex items-center justify-center h-screen bg-primary">
       <div className="bg-white rounded-lg shadow-dark shadow- p-8 max-w-sm w-full">
