@@ -24,7 +24,7 @@ const Places = ({ handleOrderPopup }) => {
     fetchRooms();
   }, []);
 
-  // console.log(bestRooms); 
+  console.log(bestRooms); 
 
   if (loading) {
     return <div className="dark:bg-gray-900 dark:text-white bg-gray-50 py-10">Loading...</div>;

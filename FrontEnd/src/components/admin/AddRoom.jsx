@@ -10,7 +10,7 @@ const AddRoomForm = () => {
     const [newRoom, setNewRoom] = useState({
         title: '',
         description: '',
-        price: '',
+        price: null,
         minutesAway: '',
         location: '',
         amenities: {
@@ -27,14 +27,17 @@ const AddRoomForm = () => {
             email: '',
         },
         images: [],
-        availableRooms: 0,
+        availableRooms: '',
+        coordinates: {
+            lat: null,
+            long: null,
+        }
     });
 
     const [imagePreviews, setImagePreviews] = useState([]);
     const [error, setError] = useState('');
     const [fullscreenImage, setFullscreenImage] = useState(null); // For showing the full-screen image
 
-    
     // const myLocationLat = 40.758896;
     // const myLocationLong = -73.985130;
     const [myLocationLat, setMyLocationLat] = useState(null)
@@ -48,8 +51,7 @@ const AddRoomForm = () => {
               const longitude = position.coords.longitude;
               setMyLocationLat(latitude);
               setmyLocationLong(longitude);
-              console.log("Latitude: " + latitude);
-              console.log("Longitude: " + longitude);
+              setNewRoom({...newRoom, coordinates: {...newRoom.coordinates, lat: latitude, long: longitude}});
             },
             function (error) {
               console.error("Error occurred. Error code: " + error.code);
@@ -89,27 +91,26 @@ const AddRoomForm = () => {
             setDistance(response.data.rows[0].elements.map(c => c.distance.text ))
             setTime(response.data.rows[0].elements.map(c => c.duration.text ))
             console.log(response.data);
-            // setLocation(response.data); // Uncomment and define setLocation accordingly
+            // setLocation(response.data); 
         } catch (err) {
             console.log('There was an error:', err.message);
         }
     };
 
     useEffect(() => {
-        if (time.length === 3) { // Ensure there are 3 times
+        if (time.length === 3) { 
             const gateTimes = [
                 { time: parseInt(time[0]), name: 'Gate 2' }, // Gate 1
                 { time: parseInt(time[1]), name: 'Gate 3' }, // Gate 2
                 { time: parseInt(time[2]), name: 'Gate 1' }  // Gate 3
             ];
     
-            // Find the gate with the smallest time
+            // ginding the gate with the smallest time
             const closestGate = gateTimes.reduce((prev, curr) => (curr.time < prev.time ? curr : prev));
             
             setTimeToCampus(closestGate.time); 
             setGateName(closestGate.name);
     
-            // Update newRoom in one setNewRoom call
             setNewRoom(prevRoom => ({
                 ...prevRoom,
                 minutesAway: closestGate.time,
@@ -126,12 +127,12 @@ const AddRoomForm = () => {
     
     useEffect(() => {
         const fetchData = async () => {
-            if (myLocationLat && myLocationLong) {  // Ensure coordinates are set
+            if (myLocationLat && myLocationLong) {
                 await getDistance(); 
             }
         };
         fetchData();
-    }, [myLocationLat, myLocationLong]);  // Re-run when coordinates change
+    }, [myLocationLat, myLocationLong]);  
     
     
     
@@ -213,7 +214,6 @@ const AddRoomForm = () => {
         setFullscreenImage(image);
     };
 
-    // Function to close the fullscreen view
     const closeFullscreen = () => {
         setFullscreenImage(null);
     };
@@ -374,7 +374,7 @@ const AddRoomForm = () => {
                                  src={preview}
                                  alt={`Preview ${index + 1}`}
                                  className="h-20 w-20 object-cover rounded cursor-pointer"
-                                 onClick={() => handleImageClick(preview)} // Open image in full screen
+                                 onClick={() => handleImageClick(preview)} 
                              />
                          ))}
                      </div>
@@ -392,7 +392,7 @@ const AddRoomForm = () => {
                         name="availableRooms"
                         placeholder="Number of Available Rooms"
                         value={newRoom.availableRooms}
-                        onChange={(e) => setNewRoom({ ...newRoom, availableRooms: Math.max(0, e.target.value) })} // Prevent negative available rooms
+                        onChange={(e) => setNewRoom({ ...newRoom, availableRooms: Math.max(0, e.target.value) })} 
                         required
                         className="border bg-slate-900 border-gray-700 text-white rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
                         aria-label="Number of Available Rooms"

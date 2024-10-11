@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IoBed, IoCloseOutline, IoWifi, IoArrowBack, IoArrowForward, IoArrowBackCircle } from "react-icons/io5";
 import { FaWifi, FaShower, FaBed, FaTable, FaBolt } from "react-icons/fa";
+import LocationGoogle from "../Location/LocationGoogle";
 
 const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -8,7 +9,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
   if (!roomDetails) return null;
 
-  const { title, price, amenities, images, contact, availableRooms, location } = roomDetails;
+  const { title, price, amenities, images, contact, availableRooms, location, coordinates } = roomDetails;
 
   const availabilityStatus = availableRooms > 0 ? `${availableRooms} room${availableRooms > 1 ? 's' : ''} available` : "Fully booked";
 
@@ -24,12 +25,21 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     <>
       {orderPopup && (
         <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 shadow-md bg-white dark:bg-gray-900 rounded-md w-[90%] md:w-[600px] max-h-[90vh] overflow-y-auto duration-200">
+          <div className="fixed top-1/2 left-1/2 pb-8 -translate-x-1/2 -translate-y-1/2 px-0 py-0 shadow-md bg-white dark:bg-gray-900 rounded-md w-[90%] md:w-[600px] max-h-[95vh] overflow-y-auto duration-200">
             {/* Header */}
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold text-black/70">{title}</h1>
+            <div className="flex sticky pb-4 z-[10] top-[0] bg-primary left-[0] text-white px-2 items-center justify-between">
+              {!showLocation ? <h1 className="text-xl font-semibold text-white">{title}</h1> : '' }
+              {showLocation ? <button
+                  className="mt-6 bg-gray-700 hover:bg-gray-600 text-white pb-2 py-2 px-4 rounded-full shadow flex items-center justify-center"
+                  onClick={() => setShowLocation(false)}
+                >
+                  <IoArrowBackCircle className="mr-2" />
+                  Back
+                </button> : '' }
+
+                {showLocation ? <h1 className="text-xl font-semibold text-white">{title}</h1> : '' }
               <IoCloseOutline
-                className="text-2xl cursor-pointer hover:text-red-600 transition-colors duration-200"
+                className="text-2xl cursor-pointer mt-4 hover:text-gray-300 transition-colors duration-200"
                 onClick={() => setOrderPopup(false)}
               />
             </div>
@@ -38,7 +48,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
             {!showLocation ? (
               <>
                 {/* Image Slider with Previous/Next buttons */}
-                <div className="relative mt-4">
+                <div className="relative px-2 mt-4">
                   <img
                     src={images[currentImage]}
                     alt={`Slide ${currentImage}`}
@@ -59,8 +69,8 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                 </div>
 
                 {/* Room Details */}
-                <div className="mt-4">
-                  <p className="font-semibold">Price: R{price}</p>
+                <div className="mt-4 px-4">
+                  <p className="font-semibold">Rent: R{price}</p>
                   <p className="mt-2 font-semibold">Amenities:</p>
                   <div className="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
                     <div className="flex items-center">
@@ -104,17 +114,17 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
               </>
             ) : (
               <div className="mt-4">
-                <h2 className="text-xl font-semibold">Location</h2>
-                <p className="text-gray-700 dark:text-gray-300 mt-2">{location || "Location not provided"}</p>
-
-                {/* Back Button */}
-                <button
+                 {/* <button
                   className="mt-6 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-full shadow flex items-center justify-center"
                   onClick={() => setShowLocation(false)}
                 >
                   <IoArrowBackCircle className="mr-2" />
                   Back to Room Details
-                </button>
+                </button> */}
+              <div className="pb-8 px-2 py-4">
+              <span className="text-xl font-semibold">Closest Gate: </span><span className="text-gray-700 dark:text-gray-300 mt-2">{location || "Location not provided"}</span>
+              </div>
+                <LocationGoogle latitudeC={coordinates.lat} longitudeC={coordinates.long} />
               </div>
             )}
           </div>

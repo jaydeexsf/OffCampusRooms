@@ -22,7 +22,11 @@ const roomSchema = new mongoose.Schema({
   },
   images: [String],
   availableRooms: Number,
-  bestRoom: { type: Boolean, default: false } // Added bestRoom field with a default value of false
+  bestRoom: { type: Boolean, default: false }, 
+  coordinates: {
+    lat: Number,
+    long: Number,
+  },
 });
 
 const Room = mongoose.model("Room", roomSchema);

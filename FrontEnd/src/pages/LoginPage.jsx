@@ -16,9 +16,9 @@ const LoginPage = () => {
   }, [isSignedIn]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primary">
+    <div className="flex items-center justify-center h-screen bg-primary">
       <div className="bg-white  rounded-lg shadow-dark shadow- p-8 max-w-sm w-full">
-        <h1 className="text-2xl font-bold text-primary text-center mb-4">Welcome Back!</h1>
+        <h1 className="text-2xl font-bold text-primary text-center mb-4">Hello</h1>
         <p className="text-gray-600 text-center mb-6">Please sign in to continue.</p>
         <SignedOut>
           {isLoaded ? <div className="flex hover:cursor-pointer hover:from-primary hover:bg-dark transition-all duration-300 bg-dark/90 text-white font-semibold py-[4px] rounded-md justify-center">

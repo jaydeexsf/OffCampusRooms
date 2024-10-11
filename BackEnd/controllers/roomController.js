@@ -41,6 +41,7 @@ const addRoom = async (req, res) => {
       contact,  
       availableRooms,
       images,   
+      coordinates,
     } = req.body;
 
     // Create a new Room instance
@@ -54,6 +55,7 @@ const addRoom = async (req, res) => {
       contact,           
       images: images, 
       availableRooms,
+      coordinates,
     });
 
     await newRoom.save();
@@ -120,7 +122,8 @@ const updateRoom = async (req, res) => {
       contact, 
       images,
       availableRooms,
-      bestRoom
+      bestRoom,
+      coordinates
   } = req.body; 
 
   const roomId = req.params.id
@@ -139,7 +142,8 @@ const updateRoom = async (req, res) => {
               contact,
               images,
               availableRooms,
-              bestRoom
+              bestRoom,
+              coordinates,
           },
           { new: true, runValidators: true }
       );
