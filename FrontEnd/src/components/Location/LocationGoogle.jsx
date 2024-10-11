@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript, Marker, DirectionsRenderer } from '@react-google-maps/api';
 
 const LocationGoogle = ({ latitudeC, longitudeC }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyAMCwh4mUljViilrr2QcNSRv-OiV6hq2RY', 
+    googleMapsApiKey: 'AIzaSyAMCwh4mUljViilrr2QcNSRv-OiV6hq2RY', // Ensure your key is secured
   });
 
-  const [coordinates, setCoordinates] = useState(null);
-  const [userCoordinates, setUserCoordinates] = useState(null);
+  const [coordinates, setCoordinates] = useState(null); // Destination coordinates
+  const [userCoordinates, setUserCoordinates] = useState(null); // User's current coordinates
   const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [directionsStatus, setDirectionsStatus] = useState('Get Directions');
+
+  
 
   useEffect(() => {
     if (latitudeC) {
@@ -18,53 +21,58 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
       }, 
       (error) => {
         console.error("Error getting Coordinates: ", error);
-        alert(`Error: ${error.message}`);
       });
     }
 
+  }, []);
+
+  // Function to get directions from user's location to destination
+  const getDirections = () => {
+    setDirectionsStatus('Getting Directions...');
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
           const { latitude, longitude } = position.coords;
           setUserCoordinates({ lat: latitude, lng: longitude });
-        }, 
-        (error) => {
-          console.error("Error getting Coordinates: ", error);
-          alert(`Error: ${error.message}`);
 
-        });
-      }
-  }, []);
-// { long:  29.738459289865034, lat:-23.880302596206946 } 
-  const getDirections = () => {
-    if (window.google && coordinates && latitudeC && longitudeC) {
-      const directionsService = new window.google.maps.DirectionsService();
-
-      directionsService.route(
-        {
-          origin: userCoordinates,
-          destination: { lat: parseFloat(latitudeC), lng: parseFloat(longitudeC) }, 
-          travelMode: window.google.maps.TravelMode.WALKING, 
-        },
-        (result, status) => {
-          if (status === window.google.maps.DirectionsStatus.OK) {
-            setDirectionsResponse(result);
-          } else {
-            console.error(`Error fetching directions: ${status}`);
+          // Now fetch the directions after getting the user's location
+          if (window.google && latitudeC && longitudeC) {
+            const directionsService = new window.google.maps.DirectionsService();
+            directionsService.route(
+              {
+                origin: { lat: latitude, lng: longitude }, // User's current location
+                destination: { lat: latitudeC, lng: longitudeC }, // Destination coordinates
+                travelMode: window.google.maps.TravelMode.WALKING,
+              },
+              (result, status) => {
+                if (status === 'OK') {
+                  setDirectionsResponse(result);
+                  setDirectionsStatus('get directions')
+                } else {
+                  console.error(`Error fetching directions: ${status}`);
+                }
+              }
+            );
           }
+        },
+        (error) => {
+          console.error("Error getting user's location: ", error);
+          alert(`Error: ${error.message}`);
         }
       );
+    } else {
+      alert('Geolocation is not supported by your browser.');
     }
   };
 
+  // Display loading state if the Google Map is not yet loaded
   if (!isLoaded || !coordinates) {
     return (
-      <div className="flex items-center justify-center h-">
+      <div className="flex items-center justify-center h-screen">
         <div className="text-xl font-semibold border-2 border-gray-400 border-t-black w-8 h-8 animate-spin rounded-full">
-             {/* Loading Map... */}
+          {/* Loading Map... */}
         </div>
-        {/* loading map */}
       </div>
-      
     );
   }
 
@@ -73,17 +81,19 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
       <div className="w-full h-[400px]">
         <GoogleMap
           center={coordinates}
-          zoom={16} 
+          zoom={16}
           mapContainerStyle={{ width: '100%', height: '100%' }}
         >
-          <Marker 
-            position={coordinates} 
+          {/* Marker at the destination */}
+          <Marker
+            position={coordinates}
             icon={{
-              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 
-              scaledSize: new window.google.maps.Size(30, 30), 
-            }} 
+              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+              scaledSize: new window.google.maps.Size(30, 30),
+            }}
           />
 
+          {/* Render directions if available */}
           {directionsResponse && (
             <DirectionsRenderer
               directions={directionsResponse}
@@ -98,17 +108,18 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
         </GoogleMap>
       </div>
 
-      <button 
-        className="mt-8 px-4 w-[90%] py-2 bg-primary hover:bg-secondary/100 text-white rounded-full"
+      <button
+        className={`${directionsStatus === 'get directions' ? 'hidden' : 'block'}  mt-8 px-4 w-[90%] py-2 flex justify-center items-center gap-3 bg-primary hover:bg-secondary/100 text-white rounded-full`}
         onClick={getDirections}
-      >
-        Get Directions
+      > <span className={`${directionsStatus === 'Getting Directions...' ? 'block' : 'hidden'} border-gray-400 border-2 border-t-primary w-4 h-4 rounded-full animate-spin`}></span>
+       {directionsStatus}
       </button>
     </div>
   );
 };
 
 export default LocationGoogle;
+
 
 
 /////////This code below i cant clear it becasue i wanted to see what was wrong with it compared to the above since i touched something and the icon
