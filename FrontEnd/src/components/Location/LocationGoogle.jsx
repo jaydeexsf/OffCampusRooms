@@ -96,7 +96,7 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
       </div>
 
       <button 
-        className="mt-4 px-4 w-full py-2 bg-primary hover:bg-secondary/100 text-white rounded-full"
+        className="mt-8 px-4 w-[90%] py-2 bg-primary hover:bg-secondary/100 text-white rounded-full"
         onClick={getDirections}
       >
         Get Directions
