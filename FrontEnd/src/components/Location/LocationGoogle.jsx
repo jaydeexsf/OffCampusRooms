@@ -6,34 +6,41 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
     googleMapsApiKey: 'AIzaSyAMCwh4mUljViilrr2QcNSRv-OiV6hq2RY', 
   });
 
-  const [coordinates, setCoordinates] = useState({ lat: latitudeC, lng: longitudeC });
+  const [coordinates, setCoordinates] = useState(null);
   const [userCoordinates, setUserCoordinates] = useState(null);
   const [directionsResponse, setDirectionsResponse] = useState(null);
 
-  // Get the user's current location
   useEffect(() => {
+    if (latitudeC) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        // const { latitude, longitude } = position.coords;
+        setCoordinates({ lat: latitudeC, lng: longitudeC });
+      }, 
+      (error) => {
+        console.error("Error getting Coordinates: ", error);
+      });
+    }
+
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
+        navigator.geolocation.getCurrentPosition((position) => {
           const { latitude, longitude } = position.coords;
           setUserCoordinates({ lat: latitude, lng: longitude });
-        },
+        }, 
         (error) => {
-          console.error("Error getting user's location: ", error);
-        }
-      );
-    }
+          console.error("Error getting Coordinates: ", error);
+        });
+      }
   }, []);
-
-  // Function to get directions from user location to the room's coordinates
+// { long:  29.738459289865034, lat:-23.880302596206946 } 
   const getDirections = () => {
-    if (window.google && userCoordinates && coordinates) {
+    if (window.google && coordinates && latitudeC && longitudeC) {
       const directionsService = new window.google.maps.DirectionsService();
+
       directionsService.route(
         {
           origin: userCoordinates,
-          destination: coordinates,
-          travelMode: window.google.maps.TravelMode.WALKING, // You can change to DRIVING, BICYCLING, etc.
+          destination: { lat: parseFloat(latitudeC), lng: parseFloat(longitudeC) }, 
+          travelMode: window.google.maps.TravelMode.WALKING, 
         },
         (result, status) => {
           if (status === window.google.maps.DirectionsStatus.OK) {
@@ -48,35 +55,32 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
 
   if (!isLoaded || !coordinates) {
     return (
-      <div className="flex items-center justify-center">
-        <div className='flex items-center flex-col'>
-          <div className='border-4 border-gray-500 rounded-full border-t-dark animate-spin h-12 w-12'></div>
-          <div className="text-xl font-semibold">Loading Map...</div>
+      <div className="flex items-center justify-center h-">
+        <div className="text-xl font-semibold border-2 border-gray-400 border-t-black w-8 h-8 animate-spin rounded-full">
+             {/* Loading Map... */}
         </div>
+        {/* loading map */}
       </div>
+      
     );
   }
 
   return (
-    <div className="flex flex-col items-center px-3 h-screen">
+    <div className="flex flex-col items-center h-screen">
       <div className="w-full h-[400px]">
         <GoogleMap
           center={coordinates}
-          zoom={16}
+          zoom={16} 
           mapContainerStyle={{ width: '100%', height: '100%' }}
         >
-          {/* Marker for the room's location */}
-          {coordinates && (
-            <Marker
-              position={coordinates}
-              icon={{
-                url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-            />
-          )}
+          <Marker 
+            position={coordinates} 
+            icon={{
+              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', 
+              scaledSize: new window.google.maps.Size(30, 30), 
+            }} 
+          />
 
-          {/* Show directions on the map */}
           {directionsResponse && (
             <DirectionsRenderer
               directions={directionsResponse}
