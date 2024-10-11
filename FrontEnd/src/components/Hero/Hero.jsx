@@ -14,7 +14,7 @@ const Hero = () => {
   const searchRooms = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/rooms/search", {
+      const response = await axios.get("https://offcampusrooms.onrender.com/api/rooms/search", {
         params: {
           location: location,
           maxPrice: priceValue,

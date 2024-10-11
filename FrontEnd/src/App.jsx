@@ -42,7 +42,7 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="best-places" element={<PlacesRoute />} />
             <Route path="about" element={<About />} />
-            <Route path="all" element={<AllRooms />} />
+            <Route path="all-rooms" element={<AllRooms />} />
             <Route path="frequetly-asked-questions" element={<FaqPage />} />
             <Route path="bookinginfo" element={<BookingInfo />} />
             <Route path="tips" element={<Tips />} />

@@ -16,7 +16,7 @@ export const NavbarLinks = [
   },
   {
     name: "Browse Rooms",
-    link: "/all",
+    link: "/all-rooms",
   },
   {
     name: "FAQs",

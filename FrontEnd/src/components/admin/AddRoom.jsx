@@ -83,7 +83,7 @@ const AddRoomForm = () => {
     const [distance, setDistance] = useState([])
     const [timeToCampus, setTimeToCampus] = useState()
     
-    const BURL = `http://localhost:5000/api/google/distance`;
+    const BURL = `https://offcampusrooms.onrender.com/api/google/distance`;
     
     const getDistance = async () => {
         try {

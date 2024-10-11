@@ -21,8 +21,8 @@ const FooterLinks = [
     link: "/about",
   },
   {
-    title: "Available Rooms",
-    link: "/available-rooms",
+    title: "All Rooms",
+    link: "/all-rooms",
   },
   {
     title: "Contact",

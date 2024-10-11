@@ -11,7 +11,7 @@ const Places = ({ handleOrderPopup }) => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/rooms/all'); // Specify the full URL
+        const response = await axios.get('https://offcampusrooms.onrender.com/api/rooms/all'); // Specify the full URL
         const rooms = response.data.rooms; 
         setBestRooms(rooms); // Set the fetched rooms data
       } catch (error) {
