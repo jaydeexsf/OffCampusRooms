@@ -37,7 +37,7 @@ const Hero = ({handleOrderPopup}) => {
   };
 
   useEffect(() => {
-    handleSearch();
+    searchRooms(); 
     console.log('dddddd')
   }, [limitations]);
 
