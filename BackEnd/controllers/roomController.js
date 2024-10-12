@@ -20,7 +20,7 @@ const getAllBestRooms = async (req, res) => {
   try {
     const bestRooms = await Room.find({ bestRoom: true });
 
-    res.status(200).json(bestRooms); // Send best rooms
+    res.status(200).json({bestRooms}); // Send best rooms
   } catch (error) {
     console.error("Error fetching best rooms:", error);
     res.status(500).json({ message: "Error fetching best rooms", error: error.message });
