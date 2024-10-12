@@ -11,7 +11,7 @@ const Places = ({ handleOrderPopup }) => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get('https://offcampusrooms.onrender.com/api/rooms/all'); // Specify the full URL
+        const response = await axios.get('https://offcampusrooms.onrender.com/api/rooms/best-rooms'); // Specify the full URL
         const rooms = response.data.rooms; 
         setBestRooms(rooms); // Set the fetched rooms data
       } catch (error) {
@@ -27,7 +27,7 @@ const Places = ({ handleOrderPopup }) => {
   console.log(bestRooms); 
 
   if (loading) {
-    return <div className="dark:bg-gray-900 dark:text-white bg-gray-50 py-10">Loading...</div>;
+    return <div className="dark:bg-gray-900 flex gap-2 dark:text-white items-center bg-gray-50 py-10"> <span className="border-2 rounded-full w-4 h-4 border-black border-t-gray-500 animate-spin"></span> Loading...</div>;
   }
 
   return (
@@ -49,7 +49,7 @@ const Places = ({ handleOrderPopup }) => {
               />
             ))
           ) : (
-            <div>No rooms available.</div> // Message if no rooms are found
+            <div>No Best Rooms Go To All Rooms Page.</div> // Message if no rooms are found
           )}
         </div>
       </section>

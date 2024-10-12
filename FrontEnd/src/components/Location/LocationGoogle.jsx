@@ -73,14 +73,13 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-xl font-semibold border-2 border-gray-400 border-t-black w-8 h-8 animate-spin rounded-full">
-          Loading Map...
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center h-screen">
+    <div className="flex flex-col items-center">
       <div className="w-full h-[400px]">
         <GoogleMap
           center={coordinates}
