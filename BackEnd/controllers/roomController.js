@@ -2,7 +2,7 @@ const Room = require("../models/roomModel");
 
 const getAllRooms = async (req, res) => {
   try {
-    const rooms = await Room.find();
+    const rooms = await Room.find().limit();
     // console.log("Rooms data:", rooms); 
     // if (rooms) {
     //   return res.status(200).json({ message: "No rooms found", });
@@ -173,14 +173,13 @@ const deleteRoom = async (req, res)=> {
 
 const searchRooms = async (req, res) => {
   try {
-      const { location, maxPrice } = req.query; // Get query parameters
+      const { location, maxPrice, limitBy } = req.query; 
 
-      // Fetch rooms from your database
       let query = {};
       if (location !== "All") query.location = location.toLowerCase();
       if (maxPrice) query.price = { $lte: maxPrice };
 
-      const rooms = await Room.find(query); // Assuming Room is your MongoDB model
+      const rooms = await Room.find(query).limit(limitBy); 
       res.json(rooms);
   } catch (err) {
       console.error(err);
