@@ -31,7 +31,8 @@ const AddRoomForm = () => {
         coordinates: {
             lat: null,
             long: null,
-        }
+        },
+        bestRooms: false,
     });
 
     const [imagePreviews, setImagePreviews] = useState([]);
