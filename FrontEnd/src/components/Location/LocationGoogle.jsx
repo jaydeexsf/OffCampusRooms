@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, useLoadScript, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, Marker, DirectionsRenderer, Circle } from '@react-google-maps/api';
 
 const LocationGoogle = ({ latitudeC, longitudeC }) => {
   const { isLoaded } = useLoadScript({
@@ -10,23 +10,25 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
   const [userCoordinates, setUserCoordinates] = useState(null); // User's current coordinates
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [directionsStatus, setDirectionsStatus] = useState('Get Directions');
+  const [color, setColor] = useState('#FF5733'); // Default color
 
-  
+  const colors = ['#FF5733', '#33FF57', '#5733FF', '#FFD700', '#FF00FF', '#00FFFF', '#800000', '#FF4500', '#2E8B57', '#4B0082'];
 
   useEffect(() => {
-    if (latitudeC) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        // const { latitude, longitude } = position.coords;
-        setCoordinates({ lat: latitudeC, lng: longitudeC });
-      }, 
-      (error) => {
-        console.error("Error getting Coordinates: ", error);
-      });
-    }
+    const timeoutId = setTimeout(() => {
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      setColor(randomColor); 
+    }, 2000);
 
-  }, []);
+    // Cleaning to prevent memory leaks
+    return () => clearTimeout(timeoutId);
+  }, [color]);
 
-  // Function to get directions from user's location to destination
+  useEffect(()=>{
+    setCoordinates({ lat: latitudeC, lng: longitudeC });
+  }, [])
+
+  // function to get directions from user's location location
   const getDirections = () => {
     setDirectionsStatus('Getting Directions...');
     if (navigator.geolocation) {
@@ -70,7 +72,7 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-xl font-semibold border-2 border-gray-400 border-t-black w-8 h-8 animate-spin rounded-full">
-          {/* Loading Map... */}
+          {coordinates}
         </div>
       </div>
     );
@@ -84,6 +86,19 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
           zoom={16}
           mapContainerStyle={{ width: '100%', height: '100%' }}
         >
+
+          <Marker
+            position={coordinates}
+            icon={{
+              path: window.google.maps.SymbolPath.CIRCLE, // Creates a small circle
+              scale: 6, // Adjust the size of the circle
+              fillColor: `${color}`, // Red color
+              fillOpacity: 1, // Solid fill
+              strokeWeight: 2,
+              strokeColor: '#FFFFFF', // Optional white border
+            }}
+          />
+          
           {/* Marker at the destination */}
           <Marker
             position={coordinates}
