@@ -1,14 +1,14 @@
 import React from "react";
 import { IoLocationSharp, IoWifi, IoWater, IoBed } from "react-icons/io5";
-import { FaShower } from "react-icons/fa"; // Use FaShower from react-icons/fa
+import { FaShower } from "react-icons/fa"; 
 
 const amenitiesIcons = {
   wifi: <IoWifi className="text-sky-400" title="Free WiFi" />,
-  shower: <FaShower className="text-green-400" title="Shower" />, // Replace IoShower with FaShower
+  shower: <FaShower className="text-green-400" title="Shower" />, 
   bathtub: <IoWater className="text-blue-400" title="Bathtub" />,
-  table: <span className="text-yellow-400" title="Table">🪑</span>, // Use appropriate icon or text
+  table: <span className="text-yellow-400" title="Table">🪑</span>, 
   bed: <IoBed className="text-red-400" title="Bed" />,
-  electricity: <span className="text-orange-400" title="Electricity">⚡</span>, // Use appropriate icon or text
+  electricity: <span className="text-orange-400" title="Electricity">⚡</span>, 
 };
 
 const amenitiesLabels = {

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Import icons
-import FAQData from "../assets/FAQ'sData"; // Import FAQ data
+import { FaChevronDown, FaChevronUp } from "react-icons/fa"; 
+import FAQData from "../assets/FAQ'sData"; 
 
 const FaqPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
 
-  // Toggle FAQ function
   const toggleFAQ = (index) => {
     setActiveIndex(index === activeIndex ? null : index); // Open if closed, close if open
   };

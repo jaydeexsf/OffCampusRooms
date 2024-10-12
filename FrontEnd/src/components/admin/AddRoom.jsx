@@ -106,7 +106,6 @@ const AddRoomForm = () => {
                 { time: parseInt(time[2]), name: 'Gate 1' }  // Gate 3
             ];
     
-            // ginding the gate with the smallest time
             const closestGate = gateTimes.reduce((prev, curr) => (curr.time < prev.time ? curr : prev));
             
             setTimeToCampus(closestGate.time); 
@@ -187,7 +186,6 @@ const AddRoomForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Additional validation
         if (newRoom.images.length === 0) {
             setError('Please upload at least 1 image before submitting.');
             return;

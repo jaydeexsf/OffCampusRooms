@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { AiOutlinePhone, AiOutlineMail, AiFillLinkedin, AiOutlineTwitter, AiOutlineInstagram } from 'react-icons/ai';
 
 const BookingInfo = () => {
-  // Scroll to top when the component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -24,7 +23,6 @@ const BookingInfo = () => {
           If you have any questions, feel free to reach out to our support team.
         </p>
         
-        {/* Contact Info */}
         <div className="mt-6">
           <h1 className="font-semibold text-lg">Contact Support:</h1>
           <div className="flex flex-col space-y-2">

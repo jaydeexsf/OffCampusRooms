@@ -14,10 +14,9 @@ const AllRooms = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDistance, setSelectedDistance] = useState(null);
   const [roomsData, setRooomsData] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
-    // Fetch all rooms when the component mounts
     fetchAllRooms();
   }, []);
 
@@ -28,7 +27,6 @@ const AllRooms = () => {
     }
   }, [allRooms]);
 
-  // Function to handle location filter change
   const handleLocationChange = (location) => {
     setSelectedLocation((prev) =>
       prev.includes(location)
@@ -37,7 +35,6 @@ const AllRooms = () => {
     );
   };
 
-  // Function to handle amenities filter change
   const handleAmenityChange = (amenity) => {
     setSelectedAmenities((prev) =>
       prev.includes(amenity)
@@ -46,18 +43,15 @@ const AllRooms = () => {
     );
   };
 
-  // Function to handle distance filter change
   const handleDistanceChange = (distance) => {
     setSelectedDistance(distance);
   };
 
-  // Function to handle popup opening
   const handleOrderPopup = (room) => {
     setSelectedRoom(room);
     setOrderPopup(true);
   };
 
-  // Filter rooms based on selected criteria
   const filteredRooms = roomsData
     ? roomsData.filter((room) => {
         const locationMatch =
@@ -77,12 +71,10 @@ const AllRooms = () => {
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 py-10">
-      {/* Loader while rooms are fetching */}
       {loading ? (
         <Loader />
       ) : (
         <>
-          {/* Banner Section */}
           <div className="relative">
             <img
               src={Img1}
@@ -93,7 +85,6 @@ const AllRooms = () => {
               <h1 className="text-4xl mb-12 font-bold">Browse Rooms</h1>
             </div>
 
-            {/* Move Search Bar to the Top of the Image */}
             <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-[50%]">
               <input
                 type="text"
@@ -107,7 +98,6 @@ const AllRooms = () => {
 
           <section className="container md:mx-auto px-0">
             <div className="flex flex-row gap-[-58px]">
-              {/* Filters Section */}
               <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-white dark:bg-gray-800 shadow-lg max-h-fit overflow-y-auto">
                 <div className="mb-4">
                   <h2 className="text-xs md:text-sm font-semibold">Filter by Location</h2>
@@ -177,7 +167,6 @@ const AllRooms = () => {
                 </div>
               </div>
 
-              {/* Rooms Listing */}
               <div className="md:w-[100%] grid grid-cols-1 ml-[-10px] md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
                 {filteredRooms.map((room, index) => (
                   <PlaceCard
@@ -189,7 +178,6 @@ const AllRooms = () => {
             </div>
           </section>
 
-          {/* Show the popup if a room is selected */}
           {orderPopup && selectedRoom && (
             <OrderPopup
               roomDetails={selectedRoom}

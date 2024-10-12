@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import UniversityVid from "../../assets/video/footer.mp4";
 import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react"; // Import useUser from Clerk
+import { useUser } from "@clerk/clerk-react"; 
 
 const FooterLinks = [
   {
@@ -36,13 +36,12 @@ const FooterLinks = [
 
 const Footer = () => {
   const navigate = useNavigate();
-  const { user, isSignedIn } = useUser(); // Get the logged-in user's details
+  const { user, isSignedIn } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [showMessage, setShowMessage] = useState("");
 
   useEffect(() => {
     if (user) {
-      // Check if the user has the "admin" role
       const userRole = user.publicMetadata?.role;
       setIsAdmin(userRole === "admin");
     }
@@ -52,14 +51,13 @@ const Footer = () => {
     e.preventDefault();
     if (!isSignedIn) {
       setShowMessage("Sign in if you are the admin.");
-      navigate("/login"); // Redirect to login if not signed in
+      navigate("/login"); 
     } else if (!isAdmin) {
       setShowMessage("You are not the admin.");
     } else {
-      navigate("/admin"); // Navigate to the admin page if the user is an admin
+      navigate("/admin"); 
     }
 
-    // Automatically hide the message after 3 seconds
     if (showMessage) {
       setTimeout(() => setShowMessage(""), 3000);
     }
@@ -83,7 +81,6 @@ const Footer = () => {
                 {showMessage}
               </div>
             )}
-            {/* Contact Information */}
             <div className="pt-8 lg:pb-12 text-xs px-4">
               <h1 className="flex items-center mb-4 gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
                 <img src={FooterLogo} alt="logo" className="max-h-[60px]" />
@@ -100,7 +97,6 @@ const Footer = () => {
                 <FaMobileAlt />
                 <p>+27 79 219 2664</p>
               </div>
-              {/* Social handles */}
               <div className="flex items-center gap-3 mt-3">
                 <a href="https://wa.me/+2772192664">
                   <FaWhatsapp className="text-[15px]" />
@@ -113,7 +109,6 @@ const Footer = () => {
                 </a>
               </div>
             </div>
-            {/* Footer Links */}
             <div className="grid grid-cols-2 sm:grid-cols-3 col-span-2 md:pl-10">
               <div>
                 <div className="py-8 px-4">
@@ -142,7 +137,6 @@ const Footer = () => {
                   </ul>
                 </div>
               </div>
-              {/* Other Links */}
               <div>
                 <div className="py-8 px-4">
                   <h1 className="text-[18px] lg:text-lg font-bold text-justify sm:text-left mb-2">
@@ -169,7 +163,6 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          {/* Footer Bottom Text */}
           <div className="text-center py-2 text-[8px] lg:text-[12px] border-t-2 border-gray-300/50 bg-primary text-white">
             &copy; 2024 All rights reserved || Built for UL Students by Johannes M.
           </div>

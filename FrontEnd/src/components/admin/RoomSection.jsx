@@ -7,7 +7,7 @@ const RoomsSection = () => {
   const [isEditRoomOpen, setEditRoomOpen] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const { allRooms, deleteRoom, fetchAllRooms } = useContext(GlobalContext);
-  const [showBestRooms, setShowBestRooms] = useState(false); // State to control best rooms visibility
+  const [showBestRooms, setShowBestRooms] = useState(false); 
 
   useEffect(() => {
     fetchAllRooms();
@@ -21,7 +21,6 @@ const RoomsSection = () => {
     setEditRoomOpen(false);
   };
 
-  // Loading or empty state handling
   if (!allRooms) {
     return <p>Loading rooms...</p>;
   }
@@ -38,12 +37,10 @@ const RoomsSection = () => {
     );
   }
 
-  // Filter rooms based on the state
   const displayedRooms = showBestRooms ? allRooms.filter(room => room.bestRoom) : allRooms;
 
   return (
     <div className="relative">
-      {/* Show Best Rooms Button */}
       <div className='flex justify-between'>
         <div className="mb-6 text-right">
           <button
@@ -54,7 +51,6 @@ const RoomsSection = () => {
           </button>
         </div>
 
-        {/* Add Room Button */}
         <div className="mb-6 text-right">
           <NavLink to="/add-room">
             <button className="bg-gradient-to-r text-xs shadow-white/10 hover:shadow-inner from-primary to-dark text-white py-[10px] px-[16px] rounded-full hover:bg-gradient-to-l focus:outline-none focus:ring-2 focus:ring-red-300 transition duration-300 shadow-md">
@@ -64,7 +60,6 @@ const RoomsSection = () => {
         </div>
       </div>
 
-      {/* Room Grid */}
       <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 ${isEditRoomOpen ? 'filter blur-md' : ''}`}>
         {displayedRooms.map((room) => (
           <div
@@ -86,8 +81,8 @@ const RoomsSection = () => {
                 <button
                   className="bg-gradient-to-r from-secondary/90 to-secondary/20 hover:from-secondary hover:to- text-white py-[7px] px-5 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
                   onClick={() => {
-                    setCurrentRoom(room); // Set the room to edit
-                    setEditRoomOpen(true); // Open the edit room form
+                    setCurrentRoom(room); 
+                    setEditRoomOpen(true);
                   }}
                 >
                   Edit
@@ -117,7 +112,7 @@ const RoomsSection = () => {
                         <button
                           className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white py-1 text-sm px-3 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
                           onClick={() => {
-                            setConfirm(false); // Open the edit room form
+                            setConfirm(false); 
                           }}
                         >
                           Cancel
@@ -143,7 +138,6 @@ const RoomsSection = () => {
         ))}
       </div>
 
-      {/* Edit Room Modal */}
       {isEditRoomOpen && (
         <div className="fixed pb-[500px] pt-[520px] inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-gray-900 bg-opacity-50 overflow-y-auto">
           <div className="p-6 rounded-lg shadow-lg max-w-[1000px] w-full">

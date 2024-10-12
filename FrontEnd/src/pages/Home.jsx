@@ -31,12 +31,11 @@ const Home = () => {
           >
             <source src={NatureVid} type="video/mp4" />
           </video>
-          <Hero />
+          <Hero handleOrderPopup={handleOrderPopup} />
         </div>
         <div>
           <Places handleOrderPopup={handleOrderPopup} />
           <Banner />
-          {/* <BannerPic img={Banner2} /> */}
           <Testimonial />
           <OrderPopup
             orderPopup={orderPopup}

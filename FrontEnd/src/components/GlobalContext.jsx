@@ -2,52 +2,46 @@ import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useUser, useAuth } from "@clerk/clerk-react";
 
-// Create the context
 export const GlobalContext = createContext();
 
-// Provider component to wrap the app
 export const GlobalProvider = ({ children }) => {
 
-    const { isSignedIn } = useAuth(); // Check if user is signed in
-    const { user } = useUser(); // Access the logged-in user's info
+    const { isSignedIn } = useAuth(); 
+    const { user } = useUser(); 
   
-    // Determine if the logged-in user is an admin
     const isAdmin = user?.publicMetadata?.role === "admin"; 
 
 
-    // Room State
+    // Room States
     const [bestRooms, setBestRooms] = useState([]);
     const [allRooms, setAllRooms] = useState([]);
     // const [isRoomLoading, setIsRoomLoading] = useState(false);
 
-    // FAQ State
     const [faqs, setFaqs] = useState([]);
     const [isFaqLoading, setIsFaqLoading] = useState(false);
     const [isPostingFaq, setIsPostingFaq] = useState(false);
 
-    // Loader
     const [isAddingRoom, setIsAddingRoom] = useState(false);
     const [isUpdatingRoom, setIsUpdatingRoom] = useState(false);
     const [isDeletingRoom, setIsDeletingRoom] = useState(false);
     //global loader
-    const [globalLoader, setGolbalLoader] = useState(true)
+    const [globalLoader, setGolbalLoader] = useState(false)
     const [Cloc, setCloc]  =  useState()
 
-    // Fetch Best Rooms on default or when user visits /best-rooms
-    const fetchBestRooms = async () => {
-        try {
-            const response = await axios.get("https://offcampusrooms.onrender.com/api/rooms/best-rooms");
-            setBestRooms(response.data);
-        } catch (error) {
-            console.error('Error fetching best rooms:', error);
-        } finally {
-            setGolbalLoader(false);
-        }
-    };
+    // const fetchBestRooms = async () => {
+    //     try {
+    //         const response = await axios.get("https://offcampusrooms.onrender.com/api/rooms/best-rooms");
+    //         setBestRooms(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching best rooms:', error);
+    //     } finally {
+    //         setGolbalLoader(false);
+    //     }
+    // };
 
-    useEffect(()=>{
-        fetchBestRooms()
-    }, [])
+    // useEffect(()=>{
+    //     fetchBestRooms()
+    // }, [])
 
 
      const fetchAllRooms = async () => {
@@ -74,7 +68,6 @@ export const GlobalProvider = ({ children }) => {
             }
         };
     
-    // Add Room
     const addRoom = async (newRoom) => {
         setIsAddingRoom(true);
         try {
@@ -89,7 +82,6 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
-    // Update Room
     const updateRoom = async (roomId, updatedRoom) => {
         setIsUpdatingRoom(true);
         try {
@@ -104,7 +96,6 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
-    // Delete Room
     const deleteRoom = async (roomId) => {
         setIsDeletingRoom(true);
         try {
@@ -118,7 +109,6 @@ export const GlobalProvider = ({ children }) => {
     };
 
 
-    // Add FAQ
     const addFaq = async (newFaq) => {
         setIsPostingFaq(true);
         try {
@@ -131,7 +121,6 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
-    // Delete FAQ
     const deleteFaq = async (faqId) => {
         try {
             await axios.delete(`https://offcampusrooms.onrender.com/api/rooms/del-faq/${faqId}`);

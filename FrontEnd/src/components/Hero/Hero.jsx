@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FiHome } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import PlaceCard from "../Places/PlaceCard";
+import { FaAngleDown } from "react-icons/fa";
 
-const Hero = () => {
+const Hero = ({handleOrderPopup}) => {
   const [priceValue, setPriceValue] = useState(2000);
   const [location, setLocation] = useState("All");
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [limitations, setLimitations] = useState(5)
 
   // Using axios to fetch data from the backend
   const searchRooms = async () => {
@@ -18,23 +20,29 @@ const Hero = () => {
         params: {
           location: location,
           maxPrice: priceValue,
+          limitBy: limitations,
         },
       });
       console.log(location)
-      setSearchResults(response.data); // Set the results to the data returned from the API
+      setSearchResults(response.data); 
     } catch (error) {
       console.error("Error fetching search results:", error);
     } finally {
-      setIsLoading(false); // Ensure the loading state is stopped
+      setIsLoading(false); 
     }
   };
 
   const handleSearch = () => {
-    searchRooms(); // Perform the search when the button is clicked
+    searchRooms(); 
   };
 
+  useEffect(() => {
+    handleSearch();
+    console.log('dddddd')
+  }, [limitations]);
+
   const handleResetSearch = () => {
-    setSearchResults(null); // Reset the search results
+    setSearchResults(null); 
   };
 
   return (
@@ -43,7 +51,6 @@ const Hero = () => {
         <div className="container grid grid-cols-1 md:mt-6 w-[90%] md:w-[75%] lg:w-[80%] gap-4">
           {!searchResults ? (
             <>
-              {/* Search Form */}
               <div className="text-white text-center">
                 <h1 className="font-bold text-2xl lg:text-3xl mb-4" data-aos="fade-up">
                   Find Your Perfect Room Near University of Limpopo
@@ -105,25 +112,33 @@ const Hero = () => {
             </>
           ) : (
             <>
-              {/* Search Results */}
-              <div className="bg-white pb-36 absolute top- left-0 z-[11] rounded-lg shadow-lg p-6">
+              <div className="bg-white pb-8 absolute top-5 left-0 z-[11] rounded-lg shadow-lg p-6">
                 <button
-                  className="text-primary flex items-center mb-6 hover:text-primary-dark"
+                  className="text-primary flex items-center mb-3 hover:text-primary-dark"
                   onClick={handleResetSearch}
                 >
                   <FiHome className="mr-2" size={20} />
                   Back to Search
                 </button>
-                <div clasName="text-center w-full mb-4 mt-12 pb-8 font-bold">Your Search Results ...</div>
+                <div className="text-center w-full pb-2 font-bold ">Your Search Results...</div>
                 {searchResults.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {searchResults.map((room, index) => (
+                  <div className="grid grid-cols-1 mt-4 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {searchResults.map((item, index) => (
                       <PlaceCard
                       key={index}
-                      {...room} // Spread the room data into PlaceCard props
-                      handleOrderPopup={() => handleOrderPopup(item)} // Pass the selected room data
+                      {...item} 
+                      handleOrderPopup={() => handleOrderPopup(item)} 
                     />
                     ))}
+                    <div className="mt-4 w-full font-semibold ">
+                      <button onClick={() => {
+                            setLimitations(limitations + 5)
+                          }}
+                           className="flex w-full py-2 bg-dark/50 hover:bg-dark/60 rounded-full justify-center items-center gap-4">
+                        <span> show more </span><FaAngleDown />
+                      </button>
+                      {/* Your Seacrh results ends here. */}
+                    </div>
                   </div>
                 ) : (
                   <p className="text-center text-gray-500">No rooms found matching your criteria.</p>

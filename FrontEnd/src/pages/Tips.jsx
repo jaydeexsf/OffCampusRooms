@@ -10,9 +10,7 @@ const Tips = () => {
           Your safety is our priority! Follow these essential tips to stay safe while on and off campus.
         </p>
 
-        {/* Tips Section */}
         <div className="space-y-8">
-          {/* Tip 1: Lock Your Room */}
           <div className="flex items-start space-x-4">
             <AiOutlineLock size={32} className="text-primary" />
             <div>
@@ -23,7 +21,6 @@ const Tips = () => {
             </div>
           </div>
 
-          {/* Tip 2: Avoid Late-Night Walks */}
           <div className="flex items-start space-x-4">
             <AiOutlineClockCircle size={32} className="text-primary" />
             <div>
@@ -34,7 +31,6 @@ const Tips = () => {
             </div>
           </div>
 
-          {/* Tip 3: Be Aware of Your Surroundings */}
           <div className="flex items-start space-x-4">
             <AiOutlineEye size={32} className="text-primary" />
             <div>
@@ -45,7 +41,6 @@ const Tips = () => {
             </div>
           </div>
 
-          {/* Tip 4: Keep Emergency Contacts Ready */}
           <div className="flex items-start space-x-4">
             <AiOutlinePhone size={32} className="text-primary" />
             <div>
@@ -56,7 +51,6 @@ const Tips = () => {
             </div>
           </div>
 
-          {/* Tip 5: Report Suspicious Activity */}
           <div className="flex items-start space-x-4">
             <AiOutlineWarning size={32} className="text-primary" />
             <div>

@@ -1,5 +1,5 @@
 import React from "react";
-import RoomsImg from "../../assets/travelbox.png"; // Replace with relevant image for rooms
+import RoomsImg from "../../assets/travelbox.png"; 
 import { MdLocationOn, MdAttachMoney } from "react-icons/md";
 import { IoIosWifi } from "react-icons/io";
 import { FaBed } from "react-icons/fa";
@@ -11,7 +11,6 @@ const Banner = () => {
         <div className="min-h-[550px] flex justify-center items-center backdrop-blur-xl py-12 sm:py-0">
           <div className="container">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-              {/* Image section */}
               <div data-aos="flip-up">
                 <img
                   src={RoomsImg}
@@ -19,7 +18,6 @@ const Banner = () => {
                   className="max-w-[450px] h-[350px] w-full mx-auto drop-shadow-[5px_5px_12px_rgba(0,0,0,0.7)] object-cover"
                 />
               </div>
-              {/* text content section */}
               <div className="flex flex-col justify-center gap-6 sm:pt-0 lg:px-16">
                 <h1 data-aos="fade-up" className="text-2xl sm:text-3xl font-bold">
                   Find the Best Rooms Near University of Limpopo

@@ -49,7 +49,6 @@ const App = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<LoginPage />} />
             
-            {/* Protect the /admin and /add-room routes */}
             <Route path="admin" element={
               <ProtectedRoute adminOnly={true}>
                 <AdminPanel />

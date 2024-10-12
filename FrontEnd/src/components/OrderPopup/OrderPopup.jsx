@@ -26,7 +26,6 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
       {orderPopup && (
         <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
           <div className="fixed top-1/2 left-1/2 pb-8 -translate-x-1/2 -translate-y-1/2 px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:w-[600px] max-h-[95vh] overflow-y-auto duration-200">
-            {/* Header */}
             <div className="flex sticky pb-4 z-[10] top-[0] bg-primary left-[0] text-white px-2 items-center justify-between">
               {!showLocation ? <h1 className="text-xl font-semibold text-white">{title}</h1> : '' }
               {showLocation ? <button
@@ -47,10 +46,8 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
               />
             </div>
 
-            {/* Toggle between Room Details and Location */}
             {!showLocation ? (
               <>
-                {/* Image Slider with Previous/Next buttons */}
                 <div className="relative px-2 mt-4">
                   <img
                     src={images[currentImage]}
@@ -58,20 +55,17 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                     className="w-full h-[250px] object-cover rounded-lg"
                   />
 
-                  {/* Previous button */}
                   <IoArrowBack
-                    className="absolute top-1/2 left-2 transform -translate-y-1/2 text-3xl text-white bg-black/50 p-2 rounded-full cursor-pointer"
+                    className="absolute top-1/2 left-4 transform -translate-y-1/2 text-4xl text-white bg-primary hover:bg-primary/80 transition-all duration-200 p-2 rounded-full cursor-pointer"
                     onClick={handlePrevImage}
                   />
 
-                  {/* Next button */}
                   <IoArrowForward
-                    className="absolute top-1/2 right-2 transform -translate-y-1/2 text-3xl text-white bg-black/50 p-2 rounded-full cursor-pointer"
+                    className="absolute top-1/2 right-4 transform -translate-y-1/2 text-4xl text-white bg-primary hover:bg-primary/80 transition-all duration-200 p-2 rounded-full cursor-pointer"
                     onClick={handleNextImage}
                   />
                 </div>
 
-                {/* Room Details */}
                 <div className="mt-4 px-4">
                   <p className="font-semibold">Rent: R{price}</p>
                   <p className="mt-2 font-semibold">Amenities:</p>
@@ -98,14 +92,12 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                     </div>
                   </div>
 
-                  {/* Contact Information */}
                   <div className="mt-4">
                     {contact.phone  ? <p className="text-gray-700 dark:text-gray-300"><strong>Phone:</strong> {contact.phone || "N/A"}</p> : '' }
                     {contact.whatsapp ? <p className="text-gray-700 dark:text-gray-300"><strong>WhatsApp:</strong> {contact.whatsapp || "N/A"}</p> : ''}
                     {contact.email ? <p className="text-gray-700 dark:text-gray-300"><strong>Email:</strong> {contact.email || "N/A"}</p> : '' }
                   </div>
 
-                  {/* Location Button */}
                   <button
                     className="mt-6 bg-primary w-full text-center hover:bg-secondary duration-200 text-white py-2 px-4 rounded-full shadow flex items-center justify-center"
                     onClick={() => setShowLocation(true)}

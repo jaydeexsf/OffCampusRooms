@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Assuming React Router is used
+import { Link } from "react-router-dom"; 
 import { FaHome } from "react-icons/fa";
-import { motion } from "framer-motion"; // For animations
+import { motion } from "framer-motion"; 
 
 const NoPage = () => {
   return (
@@ -15,7 +15,6 @@ const NoPage = () => {
         <h1 className="text-9xl font-extrabold tracking-widest">404</h1>
         <p className="text-xl mt-4 mb-6">Oops! The page you’re looking for doesn’t exist.</p>
 
-        {/* Animated floating illustration */}
         <motion.div
           initial={{ y: 0 }}
           animate={{ y: [-10, 10, -10] }}
@@ -29,7 +28,6 @@ const NoPage = () => {
           />
         </motion.div>
 
-        {/* Return Home Button */}
         <Link to="/" className="inline-block">
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -42,7 +40,6 @@ const NoPage = () => {
         </Link>
       </motion.div>
 
-      {/* Additional Subtle Animations */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
