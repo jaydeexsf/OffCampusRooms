@@ -23,7 +23,6 @@ const Hero = ({handleOrderPopup}) => {
           limitBy: limitations,
         },
       });
-      console.log(location)
       setSearchResults(response.data); 
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -37,8 +36,9 @@ const Hero = ({handleOrderPopup}) => {
   };
 
   useEffect(() => {
-    searchRooms(); 
-    console.log('dddddd')
+    if (limitations > 6) {
+      searchRooms(); 
+    }
   }, [limitations]);
 
   const handleResetSearch = () => {

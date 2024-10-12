@@ -13,7 +13,6 @@ const Places = ({ handleOrderPopup }) => {
         const response = await axios.get('https://offcampusrooms.onrender.com/api/rooms/best-rooms');
         const rooms = response.data.bestRooms; 
         setBestRooms(rooms); 
-        console.log(response); 
 
       } catch (error) {
         console.error("Error fetching room data:", error);
@@ -24,10 +23,6 @@ const Places = ({ handleOrderPopup }) => {
 
     fetchRooms();
   }, []);
-
-  if (bestRooms) {
-    console.log(bestRooms)
-  }
 
   if (loading) {
     return <div className="dark:bg-gray-900 flex gap-2 dark:text-white items-center bg-gray-50 py-10"> <span className="border-2 rounded-full w-4 h-4 border-black border-t-gray-500 animate-spin"></span> Loading...</div>;
