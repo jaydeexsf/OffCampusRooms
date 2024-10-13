@@ -82,14 +82,14 @@ const AllRooms = () => {
               className="w-full h-[200px] object-cover"
             />
             <div className="absolute top-[0px] left-0 w-full h-full flex items-center justify-center bg-black/50 text-white">
-              <h1 className="text-4xl mb-12 font-bold">Browse Rooms</h1>
+              <h1 className="text-4xl mb-16 font-bold">Browse Rooms</h1>
             </div>
 
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-[50%]">
+            <div className="absolute bottom-12 left-1/2 transform max-w-[600px] -translate-x-1/2 w-[80%]">
               <input
                 type="text"
                 placeholder="Search by title or description"
-                className="w-full text-xs p-2 border text-white focus:outline-none focus:shadow-dark focus:shadow-md focus:border-dark bg-primary border-dark rounded-full"
+                className="w-full text-xs p-3 px-5 border text-white focus:outline-none focus:shadow-dark focus:shadow-md focus:border-dark bg-primary border-dark rounded-full"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -98,7 +98,7 @@ const AllRooms = () => {
 
           <section className="container md:mx-auto px-0">
             <div className="flex flex-row gap-[-58px]">
-              <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-white dark:bg-gray-800 shadow-lg max-h-fit overflow-y-auto">
+              <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-white dark:bg-gray-800 shadow-lg max-h-[450px] overflow-y-auto">
                 <div className="mb-4">
                   <h2 className="text-xs md:text-sm font-semibold">Filter by Location</h2>
                   <div className="flex flex-col gap-1 mt-2  md:text-xs text-[10px]">

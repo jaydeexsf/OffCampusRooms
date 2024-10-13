@@ -25,7 +25,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     <>
       {orderPopup && (
         <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-          <div className="fixed top-1/2 left-1/2 pb-8 -translate-x-1/2 -translate-y-1/2 px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:w-[600px] max-h-[95vh] overflow-y-auto duration-200">
+          <div className="fixed top-[40%] left-1/2 pb-8 -translate-x-1/2 -translate-y-1/2 px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:w-[600px] max-h-[95vh] overflow-y-auto duration-200">
             <div className="flex sticky pb-4 z-[10] top-[0] bg-primary left-[0] text-white px-2 items-center justify-between">
               {!showLocation ? <h1 className="text-xl font-semibold text-white">{title}</h1> : '' }
               {showLocation ? <button
@@ -70,21 +70,21 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   <p className="font-semibold">Rent: R{price}</p>
                   <p className="mt-2 font-semibold">Amenities:</p>
                   <div className="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
-                    <div className="flex items-center">
+                    <div className="flex items-center text-sm">
                       <IoWifi className="text-sky-400" title="Free WiFi" />
-                      <span className="ml-1">{amenities.wifi ? "Wifi" : "No Wifi"}</span>
+                      <span className="ml-1">{amenities.wifi ? "Wifi" : ""}</span>
                     </div>
                     <div className="flex items-center">
                       <FaShower className="text-green-400" title="Shower" />
-                      <span className="ml-1">{amenities.shower ? "Shower" : "No Shower"}</span>
+                      <span className="ml-1">{amenities.shower ? "Shower" : ""}</span>
                     </div>
                     <div className="flex items-center">
                       <span className="text-yellow-400" title="Table">🪑</span>
-                      <span className="ml-1">{amenities.table ? "Table & Chair" : "No Table & Chair"}</span>
+                      <span className="ml-1">{amenities.table ? "Table & Chair" : ""}</span>
                     </div>
                     <div className="flex items-center">
                       <IoBed className="text-red-400" title="Bed" />
-                      <span className="ml-1">{amenities.bed ? "Bed" : "No Bed"}</span>
+                      <span className="ml-1">{amenities.bed ? "Bed" : ""}</span>
                     </div>
                     <div className="flex items-center">
                       <span className="text-orange-400" title="Electricity">⚡</span>

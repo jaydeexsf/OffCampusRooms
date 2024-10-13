@@ -118,7 +118,7 @@ const Hero = ({handleOrderPopup}) => {
                   onClick={handleResetSearch}
                 >
                   <FiHome className="mr-2" size={20} />
-                  Back to Search
+                  Back 
                 </button>
                 <div className="text-center w-full pb-2 font-bold ">Your Search Results...</div>
                 {searchResults.length > 0 ? (
