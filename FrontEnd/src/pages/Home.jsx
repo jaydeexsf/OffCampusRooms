@@ -4,9 +4,6 @@ import NatureVid from "../assets/video/main.mp4";
 import Places from "../components/Places/Places";
 import Testimonial from "../components/Testimonial/Testimonial";
 import Banner from "../components/Banner/Banner";
-import BannerPic from "../components/BannerPic/BannerPic";
-import BannerImg from "../assets/cover-women.jpg";
-import Banner2 from "../assets/travel-cover2.jpg";
 import OrderPopup from "../components/OrderPopup/OrderPopup";
 // import roomsData from "../assets/RoomsData"; 
 

@@ -22,10 +22,10 @@ const Banner = () => {
                 <h1 data-aos="fade-up" className="text-2xl sm:text-3xl font-bold">
                   Find the Best Rooms Near University of Limpopo
                 </h1>
-                <p data-aos="fade-up" className="text-sm text-gray-500 tracking-wide leading-8">
+                <p data-aos="fade-up" className="text-sm text-gray-500 tracking-tight leading-8">
                   Discover affordable and convenient student accommodation options with all the essential amenities. Get rooms close to the University of Limpopo that fit your budget.
                 </p>
-                <div data-aos="zoom-in" className="grid grid-cols-2 gap-6">
+                <div data-aos="zoom-in" className="text-sm grid grid-cols-2 gap-6">
                   <div className="space-y-6">
                     <div className="flex items-center gap-4">
                       <MdLocationOn className="text-4xl h-12 w-12 shadow-sm p-4 rounded-full bg-violet-100 dark:bg-violet-400" />

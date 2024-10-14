@@ -25,7 +25,7 @@ const Places = ({ handleOrderPopup }) => {
   }, []);
 
   if (loading) {
-    return <div className="dark:bg-gray-900 flex gap-2 dark:text-white items-center bg-gray-50 py-10"> <span className="border-2 rounded-full w-4 h-4 border-black border-t-gray-500 animate-spin"></span> Loading...</div>;
+    return <div className="dark:bg-gray-900 w-full justify-center flex gap-2 dark:text-white items-center bg-gray-50 py-10"> <span className="border-2 rounded-full w-4 h-4 border-black border-t-gray-500 animate-spin"></span> Loading...</div>;
   }
 
   return (
