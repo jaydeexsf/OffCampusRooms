@@ -20,24 +20,12 @@ const FAQData = [
       "answer": "Yes, once you find a room you're interested in, you will be able to view the owner's contact information or send a message directly through the platform."
     },
     {
-      "question": "What payment methods are accepted?",
-      "answer": "We accept various payment methods, including credit/debit cards, PayPal, and bank transfers. Payment details will be provided during the booking process."
-    },
-    {
       "question": "Is there a deposit required when booking a room?",
       "answer": "Yes, most room owners require a deposit to secure your booking. The deposit amount will be specified in the room details."
     },
     {
-      "question": "Can I cancel or modify my booking?",
-      "answer": "Yes, you can cancel or modify your booking by going to your account's bookings section. Please note that cancellation policies vary by room, so be sure to check the room’s terms before booking."
-    },
-    {
       "question": "How can I report an issue with a room or booking?",
       "answer": "If you encounter any problems with your room or booking, you can report it through the 'Help' section of your account, or contact our customer support team."
-    },
-    {
-      "question": "How do I view the status of my booking?",
-      "answer": "You can view your booking status by logging into your account and navigating to the 'Bookings' section. There, you’ll find details about upcoming stays, payment status, and more."
     },
     {
       "question": "Can I share a room with another student?",
@@ -51,10 +39,7 @@ const FAQData = [
       "question": "How are room prices calculated?",
       "answer": "Room prices are determined by the room owner and are usually based on location, size, and amenities offered. You can view the price per month or per semester in the room listing."
     },
-    {
-      "question": "Is there a minimum stay requirement?",
-      "answer": "Yes, some rooms have a minimum stay requirement, such as one semester or three months. This will be clearly mentioned in the room details."
-    },
+  
     {
       "question": "How do I contact customer support?",
       "answer": "You can reach customer support by clicking on the 'Help' or 'Contact Us' section on the website. Our support team is available via email, phone, or live chat."

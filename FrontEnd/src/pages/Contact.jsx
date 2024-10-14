@@ -39,45 +39,17 @@ const Contact = () => {
           </div>
         </div>
 
-        <form className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-          <input
-            type="text"
-            placeholder="Subject"
-            className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          <textarea
-            placeholder="Your Message"
-            className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary h-32"
-          ></textarea>
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition duration-300"
-          >
-            Send Message
-          </button>
-        </form>
-
         {/* Social Media Links */}
-        <div className="mt-8 text-center space-x-4">
+        <div className="mt-8 text-cente flex flex-col items-center space-x-4">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Follow us on</h3>
-          <a href="#" className="text-gray-600 hover:text-primary transition duration-300">
+          <div className='flex gap-4 justify-center'>
+          <a href="https://linkedin.com/in/offcampusrooms" className="text-gray-600 hover:text-primary transition duration-300">
             <AiFillLinkedin size={32} />
           </a>
-          <a href="#" className="text-gray-600 hover:text-primary transition duration-300">
+          <a href="https://x.com/offcampusrooms" className="text-gray-600 hover:text-primary transition duration-300">
             <AiFillTwitterCircle size={32} />
           </a>
+          </div>
         </div>
       </div>
     </div>

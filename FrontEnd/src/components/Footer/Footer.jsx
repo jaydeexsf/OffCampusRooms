@@ -144,7 +144,7 @@ const Footer = () => {
                   </h1>
                   <ul className="flex flex-col gap-1">
                     <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]">
-                      <Link to="/faq" onClick={() => window.scrollTo(0, 0)}>
+                      <Link to="/frequetly-asked-questions" onClick={() => window.scrollTo(0, 0)}>
                         <span>&#11162;</span>
                         <span>FAQs</span>
                       </Link>
