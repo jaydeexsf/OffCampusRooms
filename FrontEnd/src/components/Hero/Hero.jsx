@@ -112,7 +112,7 @@ const Hero = ({handleOrderPopup}) => {
             </>
           ) : (
             <>
-              <div className="bg-white pb-8 absolute top-5 left-0 z-[11] rounded-lg shadow-lg p-6">
+              <div className="bg-white pb-8 absolute top-5 left-0 w-full z-[11] rounded-lg shadow-lg p-6">
                 <button
                   className="text-primary flex items-center mb-3 hover:text-primary-dark"
                   onClick={handleResetSearch}
