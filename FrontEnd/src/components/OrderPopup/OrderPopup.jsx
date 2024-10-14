@@ -67,35 +67,59 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                 </div>
 
                 <div className="mt-4 px-4">
-                  <p className="font-semibold">Rent: R{price}</p>
+                  <p className="font-semibold">Rent: R{price} </p>
                   <p className="mt-2 font-semibold">Amenities:</p>
                   <div className="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
-                    <div className="flex items-center text-sm">
-                      <IoWifi className="text-sky-400" title="Free WiFi" />
-                      <span className="ml-1">{amenities.wifi ? "Wifi" : ""}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <FaShower className="text-green-400" title="Shower" />
-                      <span className="ml-1">{amenities.shower ? "Shower" : ""}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-yellow-400" title="Table">🪑</span>
-                      <span className="ml-1">{amenities.table ? "Table & Chair" : ""}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <IoBed className="text-red-400" title="Bed" />
-                      <span className="ml-1">{amenities.bed ? "Bed" : ""}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-orange-400" title="Electricity">⚡</span>
-                      <span className="ml-1">{amenities.electricity ? "FREE Electricity" : "Buy your own Electricity"}</span>
-                    </div>
+                    {amenities.wifi && (
+                      <div className="flex items-center text-sm">
+                        <IoWifi className="text-sky-400" title="Free WiFi" />
+                        <span className="ml-1">Wifi</span>
+                      </div>
+                    )}
+                    {amenities.shower && (
+                      <div className="flex items-center">
+                        <FaShower className="text-green-400" title="Shower" />
+                        <span className="ml-1">Shower</span>
+                      </div>
+                    )}
+                    {amenities.table && (
+                      <div className="flex items-center">
+                        <span className="text-yellow-400" title="Table">🪑</span>
+                        <span className="ml-1">Table & Chair</span>
+                      </div>
+                    )}
+                    {amenities.bed && (
+                      <div className="flex items-center">
+                        <IoBed className="text-red-400" title="Bed" />
+                        <span className="ml-1">Bed</span>
+                      </div>
+                    )}
+                    {amenities.electricity && (
+                      <div className="flex items-center">
+                        <FaBolt className="text-orange-400" title="Electricity" />
+                        <span className="ml-1">
+                          {amenities.electricity === "free" ? "Free Electricity" : "Buy your own Electricity"}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="mt-4">
-                    {contact.phone  ? <p className="text-gray-700 dark:text-gray-300"><strong>Phone:</strong> {contact.phone || "N/A"}</p> : '' }
-                    {contact.whatsapp ? <p className="text-gray-700 dark:text-gray-300"><strong>WhatsApp:</strong> {contact.whatsapp || "N/A"}</p> : ''}
-                    {contact.email ? <p className="text-gray-700 dark:text-gray-300"><strong>Email:</strong> {contact.email || "N/A"}</p> : '' }
+                    {contact.phone && (
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Phone:</strong> {contact.phone}
+                      </p>
+                    )}
+                    {contact.whatsapp && (
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>WhatsApp:</strong> {contact.whatsapp}
+                      </p>
+                    )}
+                    {contact.email && (
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Email:</strong> {contact.email}
+                      </p>
+                    )}
                   </div>
 
                   <button
@@ -109,16 +133,6 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
               </>
             ) : (
               <div className="mt-0">
-                 {/* <button
-                  className="mt-6 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-full shadow flex items-center justify-center"
-                  onClick={() => setShowLocation(false)}
-                >
-                  <IoArrowBackCircle className="mr-2" />
-                  Back to Room Details
-                </button> */}
-              <div className="pb-0 px-2 py-0">
-              {/* <span className="text-xl font-semibold">Closest Gate: </span><span className="text-gray-700 dark:text-gray-300 mt-2">{location || "Location not provided"}</span> */}
-              </div>
                 <LocationGoogle latitudeC={coordinates.lat} longitudeC={coordinates.long} />
               </div>
             )}
