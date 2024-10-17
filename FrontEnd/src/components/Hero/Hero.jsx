@@ -112,7 +112,7 @@ const Hero = ({handleOrderPopup}) => {
             </>
           ) : (
             <>
-              <div className="bg-white pb-8 absolute top-5 left-0 w-full z-[11] rounded-lg shadow-lg p-6">
+              <div className="bg-white pb-8 sm:pt-16 absolute top-5 left-0 w-full z-[11] rounded-lg shadow-lg p-6">
                 <button
                   className="text-primary flex items-center mb-3 hover:text-primary-dark"
                   onClick={handleResetSearch}
@@ -122,7 +122,8 @@ const Hero = ({handleOrderPopup}) => {
                 </button>
                 <div className="text-center w-full pb-2 font-bold ">Your Search Results...</div>
                 {searchResults.length > 0 ? (
-                  <div className="grid grid-cols-1 mt-4 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <div>
+                   <div className="grid grid-cols-1 mt-4 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {searchResults.map((item, index) => (
                       <PlaceCard
                       key={index}
@@ -130,16 +131,20 @@ const Hero = ({handleOrderPopup}) => {
                       handleOrderPopup={() => handleOrderPopup(item)} 
                     />
                     ))}
-                    <div className="mt-4 w-full font-semibold ">
+                   
+                  </div>
+                  <div className="mt-4 w-full items-center text-center self-center justify-center font-semibold ">
+                      {/* <span className="w-1/3 h-[2px] bg-dark"></span> */}
                       <button onClick={() => {
                             setLimitations(limitations + 5)
                           }}
-                           className="flex w-full py-2 bg-dark/50 hover:bg-dark/60 rounded-full justify-center items-center gap-4">
+                           className="flex w-full text-center py-2 bg-dark/50 hover:bg-dark/60 rounded-full justify-center items-center gap-4">
                         <span> show more </span><FaAngleDown />
                       </button>
+                      {/* <span className="w-1/3 h-[2px] bg-dark"></span> */}
                       {/* Your Seacrh results ends here. */}
                     </div>
-                  </div>
+                 </div>
                 ) : (
                   <p className="text-center text-gray-500">No rooms found matching your criteria.</p>
                 )}

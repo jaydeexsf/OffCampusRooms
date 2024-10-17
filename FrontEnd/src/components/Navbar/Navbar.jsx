@@ -4,6 +4,7 @@ import { NavLink, Link } from "react-router-dom";
 import { FaCaretDown } from "react-icons/fa";
 import ResponsiveMenu from "./ResponsiveMenu";
 import { HiMenuAlt3, HiMenuAlt1 } from "react-icons/hi";
+import { SignedIn, UserButton, useAuth, useUser, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 export const NavbarLinks = [
   {
@@ -37,6 +38,7 @@ const DropdownLinks = [
 
 const Navbar = ({ handleBookRoomPopup }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const { user, isLoaded } = useUser()
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -92,14 +94,35 @@ const Navbar = ({ handleBookRoomPopup }) => {
               </ul>
             </div>
             <div className="flex items-center gap-4">
-              <NavLink to="/bookinginfo"><button
-                className="bg-gradient-to-r text-[12px] from-primary to-dark hover:from-dark hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
+              {/* <NavLink to="/bookinginfo"><button
+                className="bg-gradient-to-r hidden md:flex text-[12px] from-primary to-dark hover:from-dark hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
                 onClick={() => {
                   handleBookRoomPopup();
                 }}
               >
-                Book a Room
-              </button> </NavLink>
+              book a room
+              </button >  </NavLink> */}
+              {user ? (<div className="hidden md:flex">
+              <SignedIn className="hidden xl:flex">
+                <UserButton size={36}  className="border-red-700" />
+              </SignedIn> 
+              </div>) :
+            <div className="hidden md:flex">
+              <SignedOut>
+                        {isLoaded ? (
+                          <div className="flex hover:cursor-pointer hover:bg-primary transition-all duration-300 bg-dark/90 text-white font-semibold py-[4px] px-3 rounded-md justify-center">
+                            <SignInButton />
+                          </div>
+                        ) : (
+                          <div className="flex justify-center">
+                            <div className="border-gray-600 border-t-black border-2 animate-spin w-6 h-6 rounded-full"></div>
+                          </div>
+                        )}
+              </SignedOut>     
+            </div>
+
+            }
+              
               <div className="md:hidden block">
                 {showMenu ? (
                   <HiMenuAlt1 onClick={toggleMenu} className="cursor-pointer transition-all" size={30} />
