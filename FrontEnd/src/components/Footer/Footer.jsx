@@ -93,19 +93,19 @@ const Footer = () => {
                 <FaMapMarkerAlt />
                 <p>Mankweng, Polokwane</p>
               </div>
-              <div className="flex items-center gap-3 mt-1">
+              <div className="flex items-center gap-3 mt-1 ">
                 <FaMobileAlt />
                 <p>+27 79 219 2664</p>
               </div>
               <div className="flex items-center gap-3 mt-3">
-                <a href="https://wa.me/+2772192664">
-                  <FaWhatsapp className="text-[15px]" />
+                <a target="-"  href="https://wa.me/+2772192664">
+                  <FaWhatsapp className="text-[15px]  hover:text-dark/80" />
                 </a>
-                <a href="#">
-                  <FaInstagram className="text-[15px]" />
+                <a target="-"  href="https://instagram.com/offcampusrooms">
+                  <FaInstagram className="text-[15px]  hover:text-dark/80" />
                 </a>
-                <a href="#">
-                  <FaLinkedin className="text-[15px]" />
+                <a target="-" href="https://linkedin.com/in/offcampusrooms">
+                  <FaLinkedin className="text-[15px] hover:text-dark/80" />
                 </a>
               </div>
             </div>
@@ -157,6 +157,17 @@ const Footer = () => {
                         <span>&#11162;</span>
                         <span>Support</span>
                       </Link>
+                      
+                    </li>
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]">
+                      <Link
+                        to="/tips"
+                        onClick={() => window.scrollTo(0, 0)}
+                      >
+                        <span>&#11162;</span>
+                        <span>Student Tips</span>
+                      </Link>
+                      
                     </li>
                   </ul>
                 </div>

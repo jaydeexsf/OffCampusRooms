@@ -107,7 +107,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
                 <UserButton size={36}  className="border-red-700" />
               </SignedIn> 
               </div>) :
-            <div className="hidden md:flex">
+            <div className="">
               <SignedOut>
                         {isLoaded ? (
                           <div className="flex hover:cursor-pointer hover:bg-primary transition-all duration-300 bg-dark/90 text-white font-semibold py-[4px] px-3 rounded-md justify-center">

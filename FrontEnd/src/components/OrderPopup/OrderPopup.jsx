@@ -48,11 +48,11 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
             {!showLocation ? (
               <>
-                <div className="relative px-2 mt-4">
+                <div className="relative px-2 mt-2">
                   <img
                     src={images[currentImage]}
                     alt={`Slide ${currentImage}`}
-                    className="w-full h-[250px] object-cover rounded-lg"
+                    className="w-full h-[280px] object-cover rounded-lg"
                   />
 
                   <IoArrowBack
@@ -67,7 +67,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                 </div>
 
                 <div className="mt-4 px-4">
-                  <p className="font-semibold">Rent: R{price} </p>
+                  <p className="font-semibold">Rent: R {price.toLocaleString('en-US').replace(/,/g, ',')} </p>
                   <p className="mt-2 font-semibold">Amenities:</p>
                   <div className="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
                     {amenities.wifi && (
