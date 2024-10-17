@@ -2,6 +2,11 @@ import React from "react";
 import Slider from "react-slick";
 import myimage from '../../assets/myimage.png'
 import myimage2 from '../../assets/myimage2.png'
+import AbdullMalik from '../../assets/AbdullMalik.png'
+import Selim from '../../assets/Selim.png'
+import muhammed from '../../assets/muhammed.png'
+import Ayyub from '../../assets/Ayyub.png'
+import Manqoba from '../../assets/Manqoba.png'
 
 
 // Team data
@@ -16,25 +21,26 @@ const teamData = [
     id: 2,
     name: "Muhammed Ali",
     profession: "Environmentalist",
-    img: "https://picsum.photos/201/201",
+    img: muhammed
   },
   {
     id: 3,
     name: "Ayyub",
     profession: "Marketing Specialist",
-    img: "https://picsum.photos/203/203",
+    img: Ayyub
+    // img: "https://picsum.photos/203/203",
   },
   {
     id: 4,
     name: "Abdull Malik",
     profession: "Legal Represantative",
-    img: "https://picsum.photos/203/204",
+    img: AbdullMalik
   },
   {
     id: 5,
     name: "Manqoba",
     profession: "Legal Advicer",
-    img: "https://picsum.photos/203/205",
+    img: Manqoba,
   },
   {
     id: 6,
@@ -46,7 +52,7 @@ const teamData = [
     id: 7,
     name: "Karabo Salim",
     profession: "Graphic Designer, Mentor and Consultant",
-    img: "https://picsum.photos/203/206",
+    img: Selim,
   },
   
 ];
