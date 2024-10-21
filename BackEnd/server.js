@@ -6,6 +6,7 @@ const connectDB = require("./configDb");
 const roomRoutes = require("./routes/roomRoutes");
 const faqRoutes = require("./routes/faqRoutes")
 const distanceRoute = require('./routes/distanceRoute')
+const commentRoutes = require('./routes/CommentRoutes');
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(express.json()); // Allows the server to accept JSON requests
 app.use("/api/rooms", roomRoutes); 
 app.use('/api/faq', faqRoutes);
 app.use('/api/google', distanceRoute);
+app.use('/api/comments', commentRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 5000;

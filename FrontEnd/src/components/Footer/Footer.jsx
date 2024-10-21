@@ -169,6 +169,17 @@ const Footer = () => {
                       </Link>
                       
                     </li>
+
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]">
+                      <Link
+                        to="/comment"
+                        onClick={() => window.scrollTo(0, 0)}
+                      >
+                        <span>&#11162;</span>
+                        <span>FeedBack</span>
+                      </Link>
+                      
+                    </li>
                   </ul>
                 </div>
               </div>

@@ -19,6 +19,7 @@ import Contact from "./pages/Contact";
 // import ProtectedRoute from "./components/Authentication/ProtectedRoute"; 
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
+import Comments from "./pages/Comments";
 
 const App = () => {
   const { globalLoader } = useContext(GlobalContext);
@@ -48,6 +49,7 @@ const App = () => {
             <Route path="tips" element={<Tips />} />
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<LoginPage />} />
+            <Route path="comment" element={<Comments />} />
             
             <Route path="admin" element={
               <ProtectedRoute adminOnly={true}>
