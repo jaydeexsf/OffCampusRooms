@@ -94,8 +94,8 @@ const Comments = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl relative pt-16 mx-auto p-4">
-      <h2 className="text-xl text-center mb-12 text-primary font-bold">Tell Us What You Think of Our Website</h2>
+    <div className="w-full max-w-3xl relative md:mt-4 pt-16 mx-auto p-4">
+      <h2 className="text-xl text-center mb-12 text-primary md:text-2xl font-bold">Tell Us What You Think of Our Website</h2>
 
       {message && (
         <div className='absolute z-[11] top-[70px] left-1/2 bg-primary px-4 py-2 text-white rounded-md translate-x-[-50%]'>
@@ -161,6 +161,12 @@ const Comments = () => {
         ))
       ) : <div className="border-gray-400 text-center border-t-black h-8 w-8 border-4 rounded-full animate-spin"></div>
     }
+    {!gettingComments ? (
+      <div></div>
+    ) : (
+      <div className="border-gray-500 text-center flex justify-cente self-center border-t-primary border-[3px] rounded-full border-t-[3px] animate-spin w-6 h-6"> </div>
+    )}
+
        {!gettingComments && comments.length === 0 ? (
         <p>No comments available.</p>
       ) : ''}

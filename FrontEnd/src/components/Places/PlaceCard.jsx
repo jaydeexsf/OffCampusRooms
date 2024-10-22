@@ -38,13 +38,13 @@ const PlaceCard = ({
         <img
           src={images[0]}
           alt="Room"
-          className="mx-auto h-[240px] sm:h-[220px] w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
+          className="mx-auto h-[250px] sm:h-[240px] w-full object-cover transition duration-700 hover:skew-x-2 hover:scale-110"
         />
       </div>
 
-      <div className="space-y-2 p-3">
+      <div className="space-y-2 p-2">
         <h1 className="line-clamp-1 font-bold text-xl">{title}</h1>
-        <div className="flex flex-wrap gap-[10px] mt-2">
+        <div className="flex flex-wrap gap-[10px] mt-">
           {Object.keys(amenities).map((amenity) => 
             amenities[amenity] ? (
               <div key={amenity} className="flex items-center gap-1 text-sm">
@@ -60,7 +60,7 @@ const PlaceCard = ({
           </div>
           <div className="rounded-md text-black flex flex-shrink-0 shadow-black/40 shadow-md bg-black/10 p-2">
               <p className="text-[12px] flex-shrink-0 font-bold">
-                R {price.toLocaleString('en-US').replace(/,/g, ',')} /month
+                R {price.toLocaleString('en-US').replace(/,/g, ',')} /Month
               </p>
             </div>
         </div>

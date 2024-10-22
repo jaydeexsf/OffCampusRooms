@@ -25,7 +25,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     <>
       {orderPopup && (
         <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-          <div className="fixed top-[50%] left-1/2 pb-8 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:w-[600px] max-h-[95vh] overflow-y-auto duration-200">
+          <div className="fixed top-[50%] left-1/2 pb-8 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:max-w-[500px] h-[95vh] overflow-y-auto duration-200">
             <div className="flex sticky pb-4 z-[10] top-[0] bg-primary left-[0] text-white px-2 items-center justify-between">
               {!showLocation ? <h1 className="text-xl font-semibold text-white">{title}</h1> : '' }
               {showLocation ? <button
@@ -52,7 +52,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   <img
                     src={images[currentImage]}
                     alt={`Slide ${currentImage}`}
-                    className="w-full h-[280px] object-cover rounded-lg"
+                    className="w-full max-h-[480px] object-cover rounded-lg"
                   />
 
                   <IoArrowBack
@@ -69,9 +69,9 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                 <div className="mt-4 px-4">
                   <p className="font-semibold">Rent: R {price.toLocaleString('en-US').replace(/,/g, ',')} </p>
                   <p className="mt-2 font-semibold">Amenities:</p>
-                  <div className="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
+                  <div className="flex flex-wrap gap-4 text-sm text-gray-700 dark:text-gray-300">
                     {amenities.wifi && (
-                      <div className="flex items-center text-sm">
+                      <div className="flex items-center tex">
                         <IoWifi className="text-sky-400" title="Free WiFi" />
                         <span className="ml-1">Wifi</span>
                       </div>
