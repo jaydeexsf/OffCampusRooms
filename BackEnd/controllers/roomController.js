@@ -180,7 +180,9 @@ const searchRooms = async (req, res) => {
       if (maxPrice) query.price = { $lte: maxPrice };
 
       const rooms = await Room.find(query).limit(limitBy); 
-      res.json(rooms);
+      const roomCount = await Room.countDocuments(query);
+
+      res.json({rooms, roomCount});
   } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Internal server error' });

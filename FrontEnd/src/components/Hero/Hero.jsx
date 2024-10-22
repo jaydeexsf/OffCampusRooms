@@ -10,7 +10,9 @@ const Hero = ({handleOrderPopup}) => {
   const [location, setLocation] = useState("All");
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [limitations, setLimitations] = useState(5)
+  const [limitations, setLimitations] = useState(6);
+  const [roomsC, setRoomsC]= useState();
+  const [roomLoading, setRoomLoading] = useState(false);
 
   // Using axios to fetch data from the backend
   const searchRooms = async () => {
@@ -23,11 +25,16 @@ const Hero = ({handleOrderPopup}) => {
           limitBy: limitations,
         },
       });
-      setSearchResults(response.data); 
+      setRoomLoading(true)
+      setSearchResults(response.data.rooms);
+      // setRoomsC(response.data.roomCount) 
+
+      console.log(response.data.rooms.length)
     } catch (error) {
       console.error("Error fetching search results:", error);
     } finally {
       setIsLoading(false); 
+      setRoomLoading(false)
     }
   };
 
@@ -133,17 +140,22 @@ const Hero = ({handleOrderPopup}) => {
                     ))}
                    
                   </div>
-                  <div className="mt-4 w-full items-center text-center self-center justify-center font-semibold ">
+                  { roomsC && roomsC <= limitations ? <div className="w-full mt-8 flex justify-center text-lg font-bold">No more rooms maching your criteria</div> : 
+                  <div className="mt-4 w-full items-center flex text-center self-center justify-center font-semibold ">
                       {/* <span className="w-1/3 h-[2px] bg-dark"></span> */}
                       <button onClick={() => {
-                            setLimitations(limitations + 5)
+                            setLimitations(limitations + 6)
                           }}
-                           className="flex w-full text-center py-2 bg-dark/50 hover:bg-dark/60 rounded-full justify-center items-center gap-4">
+                           className="flex w-[30%] text-center py-2 bg-dark/70 hover:bg-dark/60 text-white rounded-full justify-center items-center gap-4">
                         <span> show more </span><FaAngleDown />
                       </button>
                       {/* <span className="w-1/3 h-[2px] bg-dark"></span> */}
                       {/* Your Seacrh results ends here. */}
                     </div>
+
+                    
+                  }
+                 {roomLoading ?  <div className="border-gray-400 flex justify-center border-t-primary w-16 h-16 border-2 animate-spin rounded-full"></div> : ''}
                  </div>
                 ) : (
                   <p className="text-center text-gray-500">No rooms found matching your criteria.</p>
