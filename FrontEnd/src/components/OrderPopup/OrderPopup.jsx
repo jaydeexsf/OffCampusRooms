@@ -25,7 +25,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     <>
       {orderPopup && (
         <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-          <div className="fixed top-[50%] left-1/2 pb-8 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:max-w-[500px] h-[95vh] overflow-y-auto duration-200">
+          <div className="fixed top-[50%] left-1/2 pb-8 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:max-w-[500px] max-h-[600px] md:h-[100vh] h-[95vh] overflow-y-auto duration-200">
             <div className="flex sticky pb-4 z-[10] top-[0] bg-primary left-[0] text-white px-2 items-center justify-between">
               {!showLocation ? <h1 className="text-xl font-semibold text-white">{title}</h1> : '' }
               {showLocation ? <button
@@ -52,7 +52,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   <img
                     src={images[currentImage]}
                     alt={`Slide ${currentImage}`}
-                    className="w-full max-h-[480px] object-cover rounded-lg"
+                    className="w-full max-h-[500px] object-cover rounded-lg"
                   />
 
                   <IoArrowBack
