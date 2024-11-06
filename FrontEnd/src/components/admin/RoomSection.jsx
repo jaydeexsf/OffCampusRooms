@@ -103,12 +103,12 @@ const RoomsSection = () => {
                 </div>
               </div>
               {confirm && roomDelete?._id === room._id ? (
-                <div className="w-[10%]">
-                  <div className="absolute w-[70%] font-semibold rounded-md top-[45%] shadow-2xl border-8 border-gray-700 p-4 translate-y-[-50%] left-[50%] translate-x-[-50%] bg-primary">
-                    <h1 className="text-xs text-center text-gray-800">Are you sure you want to delete this room?</h1>
+                <div className="w-full h-screen fixed z-[100] top-0 left-0 bg-backdrop-blur-lg bg-black/50">
+                  <div className="fixed z-[100] hover:cursor-default min-w-[300px] w-[40%] font-semibold rounded-md top-[45%] shadow-2xl border- shadow-black border-gray-700 p-4 translate-y-[-50%] left-[50%] translate-x-[-50%] bg-primary">
+                    <h1 className="text-xs text-center text-gray-400">Are you sure you want to delete this room?</h1>
                     <div className="mt-2">
-                      <h1 className="text-center text-xl text-slate-900">{room.title}</h1>
-                      <div className="flex justify-between mt-6">
+                      <h1 className="text-center text-xl text-slate-700">{room.title}</h1>
+                      <div className="flex justify-between mt-12">
                         <button
                           className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white py-1 text-sm px-3 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
                           onClick={() => {
