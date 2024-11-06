@@ -63,6 +63,10 @@ const Footer = () => {
     }
   };
 
+  useEffect(()=>{
+    setTimeout(() => setShowMessage(""), 3000);
+  }, [showMessage])
+
   return (
     <>
       <div className="dark:bg-gray-950 py-10 relative overflow-hidden">
