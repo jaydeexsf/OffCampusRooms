@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';  // Importing React Icons
+import { FaEdit, FaTrash, FaCheck, FaTimes } from 'react-icons/fa';  // Importing additional icons
 import UpdateRoom from './UpdateRoom';
 import { GlobalContext } from '../GlobalContext';
 import { NavLink } from 'react-router-dom';
@@ -8,15 +8,16 @@ const RoomsSection = () => {
   const [isEditRoomOpen, setEditRoomOpen] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const { allRooms, deleteRoom, fetchAllRooms } = useContext(GlobalContext);
-  const [showBestRooms, setShowBestRooms] = useState(false); 
+  const [showBestRooms, setShowBestRooms] = useState(false);
+
+  const [confirm, setConfirm] = useState(false);
+  const [roomDelete, setRoomDelete] = useState(null);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');  // success or error message type
 
   useEffect(() => {
     fetchAllRooms();
   }, []);
-
-  const [confirm, setConfirm] = useState(false);
-  const [roomDelete, setRoomDelete] = useState(null);
-  const [message, setMessage] = useState();
 
   const handleCancel = () => {
     setEditRoomOpen(false);
@@ -40,8 +41,27 @@ const RoomsSection = () => {
 
   const displayedRooms = showBestRooms ? allRooms.filter(room => room.bestRoom) : allRooms;
 
+  // Show success message for 3 seconds
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   return (
     <div className="relative">
+      {/* Success Message */}
+      {message && (
+        <div className={`fixed top-0 left-0 z-50 p-4 flex items-center space-x-2 ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white rounded-md shadow-md`}>
+          <FaCheck className="text-xl" />
+          <p>{message}</p>
+          <FaTimes className="cursor-pointer" onClick={() => setMessage('')} />
+        </div>
+      )}
+
       <div className='flex justify-between'>
         <div className="mb-6 text-right">
           <button
@@ -122,6 +142,7 @@ const RoomsSection = () => {
                           className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-700 hover:to-red-400 text-white py-1 px-3 text-sm rounded-full focus:outline-none transition duration-300 shadow-md"
                           onClick={() => {
                             setMessage('Room Deleted Successfully');
+                            setMessageType('success');
                             deleteRoom(room._id);
                           }}
                         >
