@@ -1,19 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FaEdit, FaTrash, FaCheck, FaTimes } from 'react-icons/fa';  // Importing additional icons
+import { FaEdit, FaTrash } from 'react-icons/fa'; 
 import UpdateRoom from './UpdateRoom';
 import { GlobalContext } from '../GlobalContext';
 import { NavLink } from 'react-router-dom';
+import Loader from '../../pages/Loader';
+// import { Loader } from '../../pages/Loader';  
 
 const RoomsSection = () => {
   const [isEditRoomOpen, setEditRoomOpen] = useState(false);
   const [currentRoom, setCurrentRoom] = useState(null);
   const { allRooms, deleteRoom, fetchAllRooms } = useContext(GlobalContext);
-  const [showBestRooms, setShowBestRooms] = useState(false);
+  const [showBestRooms, setShowBestRooms] = useState(false); 
 
   const [confirm, setConfirm] = useState(false);
   const [roomDelete, setRoomDelete] = useState(null);
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState('');  // success or error message type
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);  
 
   useEffect(() => {
     fetchAllRooms();
@@ -41,27 +43,25 @@ const RoomsSection = () => {
 
   const displayedRooms = showBestRooms ? allRooms.filter(room => room.bestRoom) : allRooms;
 
-  // Show success message for 3 seconds
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage('');
-      }, 3000);
-      return () => clearTimeout(timer);
+  const handleDelete = async (roomId) => {
+    setLoading(true);
+    const success = await deleteRoom(roomId);  
+    setLoading(false);
+
+    if (!success) {
+      setMessage('Room Deleted Successfully');
+    } else {
+      setMessage('Failed to delete room');
     }
-  }, [message]);
+
+    setTimeout(() => {
+      setMessage(null);
+      fetchAllRooms(); 
+    }, 3000); 
+  };
 
   return (
     <div className="relative">
-      {/* Success Message */}
-      {message && (
-        <div className={`fixed top-0 left-0 z-50 p-4 flex items-center space-x-2 ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white rounded-md shadow-md`}>
-          <FaCheck className="text-xl" />
-          <p>{message}</p>
-          <FaTimes className="cursor-pointer" onClick={() => setMessage('')} />
-        </div>
-      )}
-
       <div className='flex justify-between'>
         <div className="mb-6 text-right">
           <button
@@ -141,9 +141,7 @@ const RoomsSection = () => {
                         <button
                           className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-700 hover:to-red-400 text-white py-1 px-3 text-sm rounded-full focus:outline-none transition duration-300 shadow-md"
                           onClick={() => {
-                            setMessage('Room Deleted Successfully');
-                            setMessageType('success');
-                            deleteRoom(room._id);
+                            handleDelete(room._id);  // Trigger delete process
                           }}
                         >
                           Delete
@@ -169,6 +167,19 @@ const RoomsSection = () => {
               onClose={() => setEditRoomOpen(false)}
             />
           </div>
+        </div>
+      )}
+
+      {message && (
+        <div className="fixed top-5 left-5 z-[2000] bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
+          {loading ? (
+            <Loader />  // Show loader if it's still loading
+          ) : (
+            <>
+              <span className="text-xl">✔️</span>
+              <p>{message}</p>
+            </>
+          )}
         </div>
       )}
     </div>
