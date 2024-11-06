@@ -146,13 +146,12 @@ const Hero = ({handleOrderPopup}) => {
                       <button onClick={() => {
                             setLimitations(limitations + 6)
                           }}
-                           className="flex w-[30%] text-center py-2 bg-dark/70 hover:bg-dark/60 text-white rounded-full justify-center items-center gap-4">
+                           className="flex w-[200px] md:w-[30%] text-center py-2 bg-dark/70 hover:bg-dark/60 text-white rounded-full justify-center items-center gap-4">
                         <span> show more </span><FaAngleDown />
                       </button>
                       {/* <span className="w-1/3 h-[2px] bg-dark"></span> */}
                       {/* Your Seacrh results ends here. */}
                     </div>
-
                     
                   }
                  {roomLoading ?  <div className="border-gray-400 flex justify-center border-t-primary w-16 h-16 border-2 animate-spin rounded-full"></div> : ''}
