@@ -139,7 +139,7 @@ const RoomsSection = () => {
       </div>
 
       {isEditRoomOpen && (
-        <div className="fixed pb-[500px] pt-[520px] inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-gray-900 bg-opacity-50 overflow-y-auto">
+        <div className="fixed z-[100000000000000000000000] pb-[50px] sm:pt-[200px] inset-0 flex items-center justify-center backdrop-blur-lg bg-gray-900 bg-opacity-50 overflow-y-auto">
           <div className="p-6 rounded-lg shadow-lg max-w-[1000px] w-full">
             <UpdateRoom
               onCancel={handleCancel}

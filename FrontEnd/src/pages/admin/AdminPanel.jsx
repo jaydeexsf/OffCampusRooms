@@ -21,7 +21,7 @@ const AdminPanel = () => {
         </button>
       </div>
 
-      <div className={`fixed md:static bg-primary p-6 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 w-full h-[100vh] z-[100] md:w-1/4`}>
+      <div className={`fixed top-p left-0 md:static pt-[50px] bg-primary p-6 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 w-full h-[100vh] z-[100] md:w-1/4`}>
         <h2 className="text-4xl font-bold mb-8">Admin Panel</h2>
         <ul className="space-y-4">
           <li>
@@ -58,12 +58,12 @@ const AdminPanel = () => {
       <div className="w-full py-8 md:w-3/4 px-10">
         {activeTab === 'rooms' ? (
           <div>
-            <h3 className="text-3xl font-semibold mb-4">Rooms Management</h3>
+            <h3 className="text-3xl font-semibold mb-4"></h3>
             <RoomsSection />
           </div>
         ) : (
           <div>
-            <h3 className="text-3xl font-semibold mb-4">FAQs Management</h3>
+            <h3 className="text-3xl font-semibold mb-4"></h3>
             <FaqsSection faqs={faqs} />
           </div>
         )}
