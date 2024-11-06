@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
-import { useUser, useSignIn } from "@clerk/clerk-react"; // import useSignIn for redirecting
+import { useUser, useSignIn } from "@clerk/clerk-react";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Comments = () => {
   const [comments, setComments] = useState([]);
@@ -9,6 +10,8 @@ const Comments = () => {
   const [message, setMessage] = useState('');
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [gettingComments, setGettingComments] = useState(true);
+  const [isPressSubmitWhileNotLogin, setIsPressSubmitWhileNotLogin] = useState(false);
+  const navigate = useNavigate();
 
   const { user, isLoaded } = useUser();
   const { signIn } = useSignIn();
@@ -31,7 +34,13 @@ const Comments = () => {
 
   const handleCommentSubmit = async () => {
     if (!user) {
-      signIn.redirectToSignIn(); 
+      navigate('/login');
+      signIn.redirectToSignIn();
+      return;
+    }
+
+    if (newComment.trim().length === 0) {
+      setMessage('Please enter at least one character.');
       return;
     }
 
@@ -53,7 +62,6 @@ const Comments = () => {
 
       const response = await axios.post('https://offcampusrooms.onrender.com/api/comments', newCommentData);
       setMessage('Comment Added');
-      // Add new comment and sort again
       const updatedComments = [response.data, ...comments];
       const sortedComments = updatedComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setComments(sortedComments);
@@ -93,16 +101,29 @@ const Comments = () => {
     }
   };
 
+  const handlePressSubmitWhileNotLogin = ()=> {
+  
+  setIsPressSubmitWhileNotLogin(true)
+
+  useEffect(()=>{
+  setTimeout(()=>{
+  setIsPressSubmitWhileNotLogin(false)
+  }, 4000)
+  }, []
+  )
+  
+  }
+
   return (
     <div className="w-full max-w-3xl relative md:mt-4 pt-16 mx-auto p-4">
-      <h2 className="text-xl text-center mb-12 text-primary md:text-2xl font-bold">Tell Us What You Think of Our Website</h2>
+      <h2 className="text-xl text-center mb-12 text-primary md:text-2xl font-bold">Tell Us What You Think of This Website</h2>
 
       {message && (
         <div className='absolute z-[11] top-[70px] left-1/2 bg-primary px-4 py-2 text-white rounded-md translate-x-[-50%]'>
           {message}
         </div>
       )}
-      
+
       <div className="mb-8 relative flex flex-col items-end">
         <div className="flex items-center mb-2 justify-star w-full gap-2">
           <div className="mb-6">
@@ -115,11 +136,15 @@ const Comments = () => {
             )}
           </div>
 
+          
+       {isLoaded && !user && isPressSubmitWhileNotLogin ? <p>Please log in to comment. </p> : ''}
+      
+
           <input
             type="text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write your comment..."
+            placeholder="Write your FeedBack..."
             className="w-full p-2 pr-[70px] outline-none text-sm border-b-primary border-b-2"
             maxLength={400}
           />
@@ -130,14 +155,15 @@ const Comments = () => {
         ) : (
           <button
             onClick={handleCommentSubmit}
-            className="bg-primary absolute hover:bg-dark text-[12px] transition-all duration-300 text-white px-[12px] py-[6px] rounded-full mt-2"
+            className={`bg-primary absolute hover:bg-dark text-[12px] transition-all duration-300 text-white px-[12px] py-[6px] rounded-full mt-2 ${newComment.trim().length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={newComment.trim().length === 0}  // Disable button if input is empty
           >
             Submit
           </button>
         )}
       </div>
 
-      <h1 className='mb-4 text-lg font-bold'>All Comments</h1>
+      <h1 className='mb-4 text-lg font-bold'>All FeedBack</h1>
       {Array.isArray(comments) ? (
         comments.map((comment) => (
           <div key={comment.commentId} className="bg-gray-100 flex items-start gap-2 text-[13px] px-1 py-2 mb-[2px] rounded">
@@ -154,22 +180,24 @@ const Comments = () => {
               <div className="flex gap-4">
                 <strong className="text-xs sm:text-sm font-semibold md:text-md">{comment.userName}</strong>
                 <p className="text-gray-500 text-[10px]">{timeAgo(comment.createdAt)}</p>
-                </div>
+              </div>
               <p className="text-[10px] sm:text-xs md:text-sm">{comment.content}</p>
             </div>
           </div>
         ))
-      ) : <div className="border-gray-400 text-center border-t-black h-8 w-8 border-4 rounded-full animate-spin"></div>
-    }
-    {!gettingComments ? (
-      <div></div>
-    ) : (
-      <div className="border-gray-500 text-center flex justify-cente self-center border-t-primary border-[3px] rounded-full border-t-[3px] animate-spin w-6 h-6"> </div>
-    )}
+      ) : (
+        <div className="border-gray-400 text-center border-t-black h-8 w-8 border-4 rounded-full animate-spin"></div>
+      )}
 
-       {!gettingComments && comments.length === 0 ? (
+      {!gettingComments ? (
+        <div></div>
+      ) : (
+        <div className="border-gray-500 text-center flex justify-center self-center border-t-primary border-[3px] rounded-full border-t-[3px] animate-spin w-6 h-6"> </div>
+      )}
+
+      {!gettingComments && comments.length === 0 && (
         <p>No comments available.</p>
-      ) : ''}
+      )}
     </div>
   );
 };
