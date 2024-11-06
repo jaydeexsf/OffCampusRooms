@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { FaEdit, FaTrash } from 'react-icons/fa';  // Importing React Icons
 import UpdateRoom from './UpdateRoom';
 import { GlobalContext } from '../GlobalContext';
 import { NavLink } from 'react-router-dom';
@@ -79,22 +80,22 @@ const RoomsSection = () => {
 
               <div className="flex items-center pb-2 text-[12px] justify-between border-t-[1px] pt-2 !mt-1">
                 <button
-                  className="bg-gradient-to-r from-secondary/90 to-secondary/20 hover:from-secondary hover:to- text-white py-[7px] px-5 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
+                  className="bg-gradient-to-r flex items-center from-secondary/90 to-secondary/20 hover:from-secondary hover:to- text-white py-[7px] px-5 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 shadow-md"
                   onClick={() => {
                     setCurrentRoom(room); 
                     setEditRoomOpen(true);
                   }}
                 >
-                  Edit
+                  <FaEdit className="mr-2 inline-block" /> Edit
                 </button>
                 <button
-                  className="bg-gradient-to-r from-red-700 to-red-700 hover:from-red-800 hover:to-red-800 text-white py-[7px] px-4 rounded-full focus:outline-none transition duration-300 shadow-md"
+                  className="bg-gradient-to-r flex items-center from-red-700 to-red-700 hover:from-red-800 hover:to-red-800 text-white py-[7px] px-4 rounded-full focus:outline-none transition duration-300 shadow-md"
                   onClick={() => {
                     setRoomDelete(room);
                     setConfirm(true);
                   }}
                 >
-                  Delete
+                  <FaTrash className="mr-2 inline-block" /> Delete
                 </button>
                 <div className="rounded-md absolute top-2 right-2 text-black flex flex-shrink-0 bg-white shadow-red-700 shadow-sm p-2">
                   <p className="text-[12px] flex-shrink-0 font-bold">
