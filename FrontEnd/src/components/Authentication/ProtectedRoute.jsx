@@ -1,11 +1,12 @@
 import { Navigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react"; 
+import Loader from '../../pages/Loader'
 
 const ProtectedRoute = ({ children, adminOnly }) => {
   const { isSignedIn, isLoaded, user } = useUser(); 
 
   if (!isLoaded) {
-    return <div className="border-gray-600 border-t-black border-2 animate-spin"></div>; 
+    return <div className="bg-gray-900 min-h-screen w-full"><Loader /></div>; 
   }
 
   if (!isSignedIn) {
