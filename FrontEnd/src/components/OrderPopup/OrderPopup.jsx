@@ -128,7 +128,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                     )}
                      {location && (
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Location:</strong> {location}
+                        <strong>Closest Gate:</strong> {location}
                       </p>
                     )}
                      {minutesAway && (
@@ -139,10 +139,10 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   </div>
 
                   <button
-                    className="mt-6 bg-primary w-full text-center hover:bg-secondary duration-200 text-white  py-[6px] px-4 rounded-full shadow flex items-center justify-center"
+                    className="mt-6 bg-primary w-full font-semibold text-center hover:bg-secondary duration-200 text-slate-100/80  py-[8px] px-4 rounded-full shadow flex items-center justify-center"
                     onClick={() => setShowLocation(true)}
                   >
-                    <IoArrowForward className="mr-1" />
+                    <IoArrowForward className="mr-2 font-bold" />
                     See Location
                   </button>
                 </div>

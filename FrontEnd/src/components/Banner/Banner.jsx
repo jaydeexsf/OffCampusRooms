@@ -28,21 +28,21 @@ const Banner = () => {
                 <div data-aos="zoom-in" className="text-sm grid grid-cols-2 gap-6">
                   <div className="space-y-6">
                     <div className="flex items-center gap-2">
-                      <MdLocationOn className="text-4xl h-12 w-12 shadow-sm p-4 rounded-full bg-violet-100 dark:bg-violet-400" />
+                      <MdLocationOn className="text-4xl h-12 w-12 shadow-sm p-3 rounded-full bg-violet-100 dark:bg-violet-400" />
                       <p>Close to Campus</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MdAttachMoney className="text-4xl h-12 w-12 shadow-sm p-4 rounded-full bg-orange-100 dark:bg-orange-400" />
+                      <MdAttachMoney className="text-4xl h-12 w-12 shadow-sm p-3 rounded-full bg-orange-100 dark:bg-orange-400" />
                       <p>Affordable Pricing</p>
                     </div>
                   </div>
                   <div className="space-y-6">
                     <div className="flex items-center gap-2">
-                      <IoIosWifi className="text-4xl h-12 w-12 shadow-sm p-4 rounded-full bg-green-100 dark:bg-green-400" />
+                      <IoIosWifi className="text-4xl h-12 w-12 shadow-sm p-3 rounded-full bg-green-100 dark:bg-green-400" />
                       <p>Free Wi-Fi</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <FaBed className="text-4xl h-12 w-12 shadow-sm p-4 rounded-full bg-yellow-100 dark:bg-yellow-400" />
+                      <FaBed className="text-4xl h-12 w-12 shadow-sm p-3 rounded-full bg-yellow-100 dark:bg-yellow-400" />
                       <p>Furnished Rooms</p>
                     </div>
                   </div>

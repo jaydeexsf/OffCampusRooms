@@ -29,7 +29,7 @@ const Places = ({ handleOrderPopup }) => {
   }
 
   return (
-    <div className="dark:bg-gray-900 dark:text-white mt-8 lg:mt-0 bg-gray-50 py-0 pb-8 pt-4">
+    <div className="dark:bg-gray-900 dark:text-white mt- lg:mt-0 bg-gray-50 py-0 pb-8 pt-">
       <section data-aos="fade-up" className="container">
         <h1 className="my-8 flex items-center justify-between py-2 pl-2 text-2xl md:text-3xl font-bold">
           <span className="md:border-l-8 border-l-[6px] border-primary/40 ">   Best Rooms</span>

@@ -5,55 +5,52 @@ import { ImSpinner2 } from "react-icons/im";
 import PlaceCard from "../Places/PlaceCard";
 import { FaAngleDown } from "react-icons/fa";
 
-const Hero = ({handleOrderPopup}) => {
+const Hero = ({ handleOrderPopup }) => {
   const [priceValue, setPriceValue] = useState(2000);
   const [location, setLocation] = useState("All");
   const [searchResults, setSearchResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [limitations, setLimitations] = useState(6);
-  const [roomsC, setRoomsC]= useState();
+  const [roomsC, setRoomsC] = useState(0);
   const [roomLoading, setRoomLoading] = useState(false);
 
-  // Using axios to fetch data from the backend
   const searchRooms = async () => {
     setIsLoading(true);
     try {
       const response = await axios.get("https://offcampusrooms.onrender.com/api/rooms/search", {
         params: {
-          location: location,
+          location,
           maxPrice: priceValue,
           limitBy: limitations,
         },
       });
-      setRoomLoading(true)
+      setRoomLoading(true);
       setSearchResults(response.data.rooms);
-      // setRoomsC(response.data.roomCount) 
-
-      console.log(response.data.rooms.length)
+      setRoomsC(response.data.roomCount); 
     } catch (error) {
       console.error("Error fetching search results:", error);
     } finally {
-      setIsLoading(false); 
-      setRoomLoading(false)
+      setIsLoading(false);
+      setRoomLoading(false);
     }
   };
 
   const handleSearch = () => {
-    searchRooms(); 
+    searchRooms();
   };
 
   useEffect(() => {
     if (limitations > 6) {
-      searchRooms(); 
+      searchRooms();
     }
   }, [limitations]);
 
   const handleResetSearch = () => {
-    setSearchResults(null); 
+    setSearchResults(null);
   };
 
   return (
-    <div className="bg-gradient-to-b from-blac  to-white pt-12 flex justify-center">
+    <div className="bg-gradient-to-b from-blac to-white pt-16 flex justify-center">
       <div className="h-full flex justify-center items-center p-4">
         <div className="container grid grid-cols-1 md:mt-6 w-[90%] md:w-[75%] lg:w-[80%] gap-4">
           {!searchResults ? (
@@ -105,59 +102,55 @@ const Hero = ({handleOrderPopup}) => {
                   </div>
                 </div>
                 <button
-                  className="bg-gradient-to-r from-slate-900 to-slate-950 hover:from-slate-950 hover:to-slate-800 hover:bg-dark text-white font-semibold px-4 py-2 rounded-full mt-6 w-full text-center transition-transform duration-300"
+                  className="bg-gradient-to-r from-slate-900 to-slate-950 hover:from-slate-950 hover:to-slate-800 text-white font-semibold px-4 py-2 rounded-full mt-6 w-full text-center transition-transform duration-300"
                   onClick={handleSearch}
                   disabled={isLoading}
                 >
-                  {isLoading ? (
-                    <ImSpinner2 className="animate-spin inline-block mr-2" />
-                  ) : (
-                    "Search Now"
-                  )}
+                  {isLoading ? <ImSpinner2 className="animate-spin inline-block mr-2" /> : "Search Now"}
                 </button>
               </div>
             </>
           ) : (
             <>
-              <div className="bg-white pb-8 sm:pt-16 absolute top-5 left-0 w-full z-[11] rounded-lg shadow-lg p-6">
+              <div className="bg-gray-100 pb-8 sm:pt-16 absolute top-5 left-0 w-full z-[11] rounded-lg shadow-lg p-6">
                 <button
                   className="text-primary flex items-center mb-3 hover:text-primary-dark"
                   onClick={handleResetSearch}
                 >
                   <FiHome className="mr-2" size={20} />
-                  Back 
+                  Back
                 </button>
-                <div className="text-center w-full pb-2 font-bold ">Your Search Results...</div>
+                <div className="text-center w-full pb-2 font-bold">Your Search Results...</div>
                 {searchResults.length > 0 ? (
-                 <div>
-                   <div className="grid grid-cols-1 mt-4 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 mt-4 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {searchResults.map((item, index) => (
                       <PlaceCard
-                      key={index}
-                      {...item} 
-                      handleOrderPopup={() => handleOrderPopup(item)} 
-                    />
+                        key={index}
+                        {...item}
+                        handleOrderPopup={() => handleOrderPopup(item)}
+                      />
                     ))}
-                   
                   </div>
-                  { roomsC && roomsC <= limitations ? <div className="w-full mt-8 flex justify-center text-lg font-bold">No more rooms maching your criteria</div> : 
-                  <div className="mt-4 w-full items-center flex text-center self-center justify-center font-semibold ">
-                      {/* <span className="w-1/3 h-[2px] bg-dark"></span> */}
-                      <button onClick={() => {
-                            setLimitations(limitations + 6)
-                          }}
-                           className="flex w-[200px] md:w-[30%] text-center py-2 bg-dark/70 hover:bg-dark/60 text-white rounded-full justify-center items-center gap-4">
-                        <span> show more </span><FaAngleDown />
-                      </button>
-                      {/* <span className="w-1/3 h-[2px] bg-dark"></span> */}
-                      {/* Your Seacrh results ends here. */}
-                    </div>
-                    
-                  }
-                 {roomLoading ?  <div className="border-gray-400 flex justify-center border-t-primary w-16 h-16 border-2 animate-spin rounded-full"></div> : ''}
-                 </div>
                 ) : (
                   <p className="text-center text-gray-500">No rooms found matching your criteria.</p>
+                )}
+                {roomsC && roomsC <= limitations ? (
+                  <div className="w-full mt-8 flex justify-center text-lg font-bold">
+                    No more rooms matching your criteria
+                  </div>
+                ) : (
+                  <div className="mt-8 w-full items-center flex text-center justify-center font-semibold">
+                    <button
+                      onClick={() => setLimitations(limitations + 6)}
+                      className="flex shadow-lg w-[200px] md:w-[30%] text-center py-2 px-6 border-2 border-dark text-dark rounded-full transition-all duration-300 hover:bg-dark hover:text-white justify-center items-center gap-4"
+                    >
+                      <span className="font-medium">Show More</span>
+                      <FaAngleDown className="text-xl" />
+                    </button>
+                  </div>
+                )}
+                {roomLoading && (
+                  <div className="border-gray-400 flex justify-center border-t-primary w-16 h-16 border-2 animate-spin rounded-full"></div>
                 )}
               </div>
             </>

@@ -14,7 +14,6 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
 
   const colors = ['#FF5733', '#33FF57', '#5733FF', '#FFD700', '#FF00FF', '#00FFFF', '#800000', '#FF4500', '#2E8B57', '#4B0082'];
 
-  // Random color change every second
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -24,14 +23,12 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
     return () => clearTimeout(timeoutId);
   }, [color]);
 
-  // Set destination coordinates on mount
   useEffect(() => {
     if (latitudeC && longitudeC) {
       setCoordinates({ lat: latitudeC, lng: longitudeC });
     }
   }, [latitudeC, longitudeC]);
 
-  // Function to get directions
   const getDirections = () => {
     setDirectionsStatus('Getting Directions...');
     if (navigator.geolocation) {
@@ -123,7 +120,7 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
       </div>
 
       <button
-        className={`${directionsStatus === 'get directions' ? 'hidden' : 'block'} mt-8 px-4 w-[90%] py-2 flex justify-center items-center gap-3 bg-primary hover:bg-secondary/100 text-white rounded-full`}
+        className={`${directionsStatus === 'get directions' ? 'hidden' : 'block'} font-semibold mt-8 px-4 w-[90%] py-2 flex justify-center items-center gap-3 bg-primary hover:bg-secondary/100 text-white rounded-full`}
         onClick={getDirections}
       >
         <span className={`${directionsStatus === 'Getting Directions...' ? 'block' : 'hidden'} border-gray-400 border-2 border-t-primary w-4 h-4 rounded-full animate-spin`}></span>
