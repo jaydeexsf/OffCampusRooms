@@ -9,7 +9,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
   if (!roomDetails) return null;
 
-  const { title, price, amenities, images, contact, availableRooms, location, coordinates } = roomDetails;
+  const { title, price, amenities, images, contact, availableRooms, location, coordinates, minutesAway } = roomDetails;
 
   const availabilityStatus = availableRooms > 0 ? `${availableRooms} room${availableRooms > 1 ? 's' : ''} available` : "Fully booked";
 
@@ -26,25 +26,31 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
       {orderPopup && (
         <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
           <div className="fixed top-[50%] left-1/2 pb-4 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:max-w-[500px] max-h-[95%] h-fit overflow-y-auto duration-200">
-            <div className="flex sticky pb-4 z-[10] top-[0] bg-primary left-[0] text-white px-2 items-center justify-between">
-              {!showLocation ? <h1 className="text-xl font-semibold text-white">{title}</h1> : '' }
-              {showLocation ? <button
-                  className="mt-6 bg-gray-700 hover:bg-gray-600 text-white pb-2 py-2 px-4 rounded-full shadow flex items-center justify-center"
+          <div className="flex sticky top-0 z-10  py-4 bg-primary text-white px-4 items-center justify-between">
+            {!showLocation ? (
+              <h1 className="text-xl text-center font-semibold">{title}</h1>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <button
+                  className="flex items-center bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-full shadow"
                   onClick={() => setShowLocation(false)}
                 >
                   <IoArrowBackCircle className="mr-2" />
                   Back
-                </button> : '' }
+                </button>
+                <h1 className="text-xl font-semibold">{title}</h1>
+              </div>
+            )}
 
-                {showLocation ?<h1 className="text-xl font-semibold  translate-x-[-25%]  text-white">{title}</h1> : '' }
-              <IoCloseOutline
-                className="text-2xl cursor-pointer mt-4 hover:text-gray-300 transition-colors duration-200"
-                onClick={() => {
-                  setOrderPopup(false)
-                  setShowLocation(false)
-                }}
-              />
-            </div>
+            <IoCloseOutline
+              className="text-2xl cursor-pointer hover:text-gray-300 transition-colors duration-200"
+              onClick={() => {
+                setOrderPopup(false);
+                setShowLocation(false);
+              }}
+            />
+          </div>
+
 
             {!showLocation ? (
               <>
@@ -119,6 +125,16 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                       <p className="text-gray-700 dark:text-gray-300">
                         <strong>Email:</strong> {contact.email}
                       </p>
+                    )}
+                     {location && (
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Location:</strong> {location}
+                      </p>
+                    )}
+                     {minutesAway && (
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <strong>Travel Time:</strong> {minutesAway} min from UL campus via {location}
+                    </p>
                     )}
                   </div>
 

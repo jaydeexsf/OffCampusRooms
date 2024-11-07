@@ -20,10 +20,16 @@ const amenitiesLabels = {
   electricity: "Electricity",
 };
 
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+
 const PlaceCard = ({
   images,
   title,
   description,
+  location,
   price,
   minutesAway,
   handleOrderPopup,
@@ -56,7 +62,7 @@ const PlaceCard = ({
         </div>
         <div className="flex items-center text-[12px] justify-between border-t-2 pt-2 !mt-3">
           <div className="opacity-70">
-            <p>{minutesAway} minutes away from UL campus</p>
+            <p>{minutesAway} Minutes away from UL {capitalizeFirstLetter(location)}</p>
           </div>
           <div className="rounded-md text-black flex flex-shrink-0 shadow-black/40 shadow-md bg-black/10 p-2">
               <p className="text-[12px] flex-shrink-0 font-bold">
