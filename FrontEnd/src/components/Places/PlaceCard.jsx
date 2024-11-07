@@ -60,12 +60,12 @@ const PlaceCard = ({
             ) : null
           )}
         </div>
-        <div className="flex items-center text-[12px] justify-between border-t-2 pt-2 !mt-3">
+        <div className="flex items-center text-[12px] sm:text-[11px] justify-between border-t-2 pt-2 !mt-3">
           <div className="opacity-70">
             <p>{minutesAway} Minutes away from UL {capitalizeFirstLetter(location)}</p>
           </div>
           <div className="rounded-md text-black flex flex-shrink-0 shadow-black/40 shadow-md bg-black/10 p-2">
-              <p className="text-[12px] flex-shrink-0 font-bold">
+              <p className="sm:text-[11px] text-[12px] flex-shrink-0 font-bold">
                 R {price.toLocaleString('en-US').replace(/,/g, ',')} /Month
               </p>
             </div>
