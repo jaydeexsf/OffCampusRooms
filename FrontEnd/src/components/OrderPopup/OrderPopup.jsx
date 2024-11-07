@@ -139,10 +139,10 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   </div>
 
                   <button
-                    className="mt-6 bg-primary w-full text-center hover:bg-secondary duration-200 text-white py-2 px-4 rounded-full shadow flex items-center justify-center"
+                    className="mt-6 bg-primary w-full text-center hover:bg-secondary duration-200 text-white  py-[6px] px-4 rounded-full shadow flex items-center justify-center"
                     onClick={() => setShowLocation(true)}
                   >
-                    <IoArrowForward className="mr-2" />
+                    <IoArrowForward className="mr-1" />
                     See Location
                   </button>
                 </div>
