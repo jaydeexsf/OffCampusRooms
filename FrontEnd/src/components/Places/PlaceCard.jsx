@@ -36,7 +36,7 @@ const PlaceCard = ({
 }) => {
   return (
     <div
-      className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 group cursor-pointer overflow-hidden h-full flex flex-col hover:bg-white/15 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
+      className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 group cursor-pointer overflow-hidden h-full flex flex-col hover:bg-white/15 transition-all duration-300 shadow-xl hover:shadow-2xl"
       onClick={handleOrderPopup}
     >
       {/* Image Container */}

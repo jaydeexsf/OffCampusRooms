@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { IoBed, IoCloseOutline, IoWifi, IoArrowBack, IoArrowForward, IoArrowBackCircle } from "react-icons/io5";
-import { FaWifi, FaShower, FaBed, FaTable, FaBolt } from "react-icons/fa";
+import { FiX, FiChevronLeft, FiChevronRight, FiArrowLeft, FiMapPin, FiClock, FiPhone, FiMail, FiMessageCircle, FiNavigation } from "react-icons/fi";
+import { FiWifi, FiEye } from "react-icons/fi";
+import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
 import LocationGoogle from "../Location/LocationGoogle";
 
 const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
@@ -21,137 +22,184 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     setCurrentImage((prevImage) => (prevImage - 1 + images.length) % images.length);
   };
 
+  const amenitiesIcons = {
+    wifi: <FiWifi className="text-blue-400" title="Free WiFi" />,
+    shower: <MdShower className="text-green-400" title="Shower" />, 
+    bathtub: <MdBathtub className="text-cyan-400" title="Bathtub" />,
+    table: <MdTableRestaurant className="text-yellow-400" title="Table" />, 
+    bed: <MdBed className="text-purple-400" title="Bed" />,
+    electricity: <MdElectricBolt className="text-orange-400" title="Electricity" />, 
+  };
+
+  const amenitiesLabels = {
+    wifi: "WiFi",
+    shower: "Shower",
+    bathtub: "Bathtub",
+    table: "Desk",
+    bed: "Bed",
+    electricity: "Power",
+  };
+
   return (
     <>
       {orderPopup && (
-        <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-          <div className="fixed top-[50%] left-1/2 pb-4 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-gray-950 dark:bg-gray-900 rounded-md w-[90%] md:max-w-[500px] max-h-[95%] h-fit overflow-y-auto duration-200">
-          <div className="flex sticky top-0 z-10  py-4 bg-primary text-white px-4 items-center justify-between">
-            {!showLocation ? (
-              <h1 className="text-xl text-center font-semibold">{title}</h1>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <button
-                  className="flex items-center bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-full shadow"
-                  onClick={() => setShowLocation(false)}
-                >
-                  <IoArrowBackCircle className="mr-2" />
-                  Back
-                </button>
-                <h1 className="text-xl font-semibold">{title}</h1>
-              </div>
-            )}
-
-            <IoCloseOutline
-              className="text-2xl cursor-pointer hover:text-gray-300 transition-colors duration-200"
-              onClick={() => {
-                setOrderPopup(false);
-                setShowLocation(false);
-              }}
-            />
-          </div>
-
-
-            {!showLocation ? (
-              <>
-                <div className="relative px-2 mt-2">
-                  <img
-                    src={images[currentImage]}
-                    alt={`Slide ${currentImage}`}
-                    className="w-full max-h-[500px] object-cover rounded-lg"
-                  />
-
-                  <IoArrowBack
-                    className="absolute top-1/2 left-4 transform -translate-y-1/2 text-4xl text-white bg-primary hover:bg-primary/80 transition-all duration-200 p-2 rounded-full cursor-pointer"
-                    onClick={handlePrevImage}
-                  />
-
-                  <IoArrowForward
-                    className="absolute top-1/2 right-4 transform -translate-y-1/2 text-4xl text-white bg-primary hover:bg-primary/80 transition-all duration-200 p-2 rounded-full cursor-pointer"
-                    onClick={handleNextImage}
-                  />
-                </div>
-
-                <div className="mt-4 px-4">
-                  <p className="font-semibold">Rent: R {price.toLocaleString('en-US').replace(/,/g, ',')} </p>
-                  <p className="mt-2 font-semibold">Amenities:</p>
-                  <div className="flex flex-wrap gap-4 text-sm text-gray-700 dark:text-gray-300">
-                    {amenities.wifi && (
-                      <div className="flex items-center tex">
-                        <IoWifi className="text-sky-400" title="Free WiFi" />
-                        <span className="ml-1">Wifi</span>
-                      </div>
-                    )}
-                    {amenities.shower && (
-                      <div className="flex items-center">
-                        <FaShower className="text-green-400" title="Shower" />
-                        <span className="ml-1">Shower</span>
-                      </div>
-                    )}
-                    {amenities.table && (
-                      <div className="flex items-center">
-                        <span className="text-yellow-400" title="Table">🪑</span>
-                        <span className="ml-1">Table & Chair</span>
-                      </div>
-                    )}
-                    {amenities.bed && (
-                      <div className="flex items-center">
-                        <IoBed className="text-red-400" title="Bed" />
-                        <span className="ml-1">Bed</span>
-                      </div>
-                    )}
-                    {amenities.electricity && (
-                      <div className="flex items-center">
-                        <FaBolt className="text-orange-400" title="Electricity" />
-                        <span className="ml-1">
-                          {amenities.electricity === "free" ? "Free Electricity" : "Buy your own Electricity"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-4">
-                    {contact.phone && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Phone:</strong> {contact.phone}
-                      </p>
-                    )}
-                    {contact.whatsapp && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>WhatsApp:</strong> {contact.whatsapp}
-                      </p>
-                    )}
-                    {contact.email && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Email:</strong> {contact.email}
-                      </p>
-                    )}
-                     {location && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Closest Gate:</strong> {location}
-                      </p>
-                    )}
-                     {minutesAway && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Travel Time:</strong> {minutesAway} min from UL campus via {location}
-                    </p>
-                    )}
-                  </div>
-
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl w-full max-w-lg max-h-[95vh] overflow-hidden shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-blue-600 to-blue-500">
+              {!showLocation ? (
+                <h1 className="text-xl font-bold text-white truncate">{title}</h1>
+              ) : (
+                <div className="flex items-center gap-3">
                   <button
-                    className="mt-6 bg-primary w-full font-semibold text-center hover:bg-secondary duration-200 text-slate-100/80  py-[8px] px-4 rounded-full shadow flex items-center justify-center"
-                    onClick={() => setShowLocation(true)}
+                    className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white py-2 px-4 rounded-lg transition-all duration-200"
+                    onClick={() => setShowLocation(false)}
                   >
-                    <IoArrowForward className="mr-2 font-bold" />
-                    See Location
+                    <FiArrowLeft size={16} />
+                    <span className="text-sm font-medium">Back</span>
                   </button>
+                  <h1 className="text-lg font-bold text-white truncate">{title}</h1>
                 </div>
-              </>
-            ) : (
-              <div className="mt-0">
-                <LocationGoogle latitudeC={coordinates.lat} longitudeC={coordinates.long} />
-              </div>
-            )}
+              )}
+
+              <button
+                className="p-2 hover:bg-white/20 rounded-lg transition-all duration-200"
+                onClick={() => {
+                  setOrderPopup(false);
+                  setShowLocation(false);
+                }}
+              >
+                <FiX className="text-xl text-white" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="overflow-y-auto max-h-[calc(95vh-80px)]">
+              {!showLocation ? (
+                <>
+                  {/* Image Gallery */}
+                  <div className="relative">
+                    <img
+                      src={images[currentImage]}
+                      alt={`Room ${currentImage + 1}`}
+                      className="w-full h-64 object-cover"
+                    />
+
+                    {images.length > 1 && (
+                      <>
+                        <button
+                          className="absolute top-1/2 left-4 -translate-y-1/2 p-2 bg-black/60 hover:bg-black/80 text-white rounded-full transition-all duration-200"
+                          onClick={handlePrevImage}
+                        >
+                          <FiChevronLeft size={20} />
+                        </button>
+
+                        <button
+                          className="absolute top-1/2 right-4 -translate-y-1/2 p-2 bg-black/60 hover:bg-black/80 text-white rounded-full transition-all duration-200"
+                          onClick={handleNextImage}
+                        >
+                          <FiChevronRight size={20} />
+                        </button>
+
+                        {/* Image indicators */}
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                          {images.map((_, index) => (
+                            <div
+                              key={index}
+                              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                                index === currentImage ? 'bg-white' : 'bg-white/50'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Room Details */}
+                  <div className="p-6 space-y-6">
+                    {/* Price */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-2xl font-bold text-white">
+                          R{price.toLocaleString()}
+                          <span className="text-sm text-gray-400 font-normal">/month</span>
+                        </p>
+                        <p className="text-sm text-gray-400">{availabilityStatus}</p>
+                      </div>
+                    </div>
+
+                    {/* Location & Time */}
+                    <div className="flex items-center gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <FiMapPin className="text-blue-400" />
+                        <span className="text-white">{location}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <FiClock className="text-green-400" />
+                        <span className="text-white">{minutesAway}min to UL</span>
+                      </div>
+                    </div>
+
+                    {/* Amenities */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-3">Amenities</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.keys(amenities).map((amenity) => 
+                          amenities[amenity] ? (
+                            <div 
+                              key={amenity} 
+                              className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg text-xs border border-white/20"
+                            >
+                              {amenitiesIcons[amenity]}
+                              <span className="text-white font-medium">{amenitiesLabels[amenity]}</span>
+                            </div>
+                          ) : null
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Contact Information */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-3">Contact Information</h3>
+                      <div className="space-y-3">
+                        {contact.phone && (
+                          <div className="flex items-center gap-3">
+                            <FiPhone className="text-blue-400" />
+                            <span className="text-white">{contact.phone}</span>
+                          </div>
+                        )}
+                        {contact.whatsapp && (
+                          <div className="flex items-center gap-3">
+                            <FiMessageCircle className="text-green-400" />
+                            <span className="text-white">{contact.whatsapp}</span>
+                          </div>
+                        )}
+                        {contact.email && (
+                          <div className="flex items-center gap-3">
+                            <FiMail className="text-purple-400" />
+                            <span className="text-white">{contact.email}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Location Button */}
+                    <button
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      onClick={() => setShowLocation(true)}
+                    >
+                      <FiNavigation className="text-lg" />
+                      <span>View Location & Get Directions</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="h-[500px]">
+                  <LocationGoogle latitudeC={coordinates.lat} longitudeC={coordinates.long} />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

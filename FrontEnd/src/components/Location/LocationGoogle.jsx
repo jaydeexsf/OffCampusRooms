@@ -76,21 +76,21 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
   }
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-full h-[400px]">
+    <div className="flex flex-col h-full">
+      <div className="flex-1 w-full">
         <GoogleMap
           center={coordinates}
           zoom={16}
-          mapContainerStyle={{ width: '100%', height: '100%' }}
+          mapContainerStyle={{ width: '100%', height: '100%', borderRadius: '0.75rem' }}
         >
           <Marker
             position={coordinates}
             icon={{
               path: window.google.maps.SymbolPath.CIRCLE,
-              scale: 6,
+              scale: 8,
               fillColor: color,
               fillOpacity: 1,
-              strokeWeight: 2,
+              strokeWeight: 3,
               strokeColor: '#FFFFFF',
             }}
           />
@@ -100,7 +100,7 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
               position={coordinates}
               icon={{
                 url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                scaledSize: new window.google.maps.Size(30, 30),
+                scaledSize: new window.google.maps.Size(35, 35),
               }}
             />
           )}
@@ -110,8 +110,8 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
               directions={directionsResponse}
               options={{
                 polylineOptions: {
-                  strokeColor: '#3b0764',
-                  strokeWeight: 6,
+                  strokeColor: '#3b82f6',
+                  strokeWeight: 4,
                 },
               }}
             />
@@ -119,13 +119,20 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
         </GoogleMap>
       </div>
 
-      <button
-        className={`${directionsStatus === 'get directions' ? 'hidden' : 'block'} font-semibold mt-8 px-4 w-[90%] py-2 flex justify-center items-center gap-3 bg-primary hover:bg-secondary/100 text-white rounded-full`}
-        onClick={getDirections}
-      >
-        <span className={`${directionsStatus === 'Getting Directions...' ? 'block' : 'hidden'} border-gray-400 border-2 border-t-primary w-4 h-4 rounded-full animate-spin`}></span>
-        {directionsStatus}
-      </button>
+      {directionsStatus !== 'get directions' && (
+        <div className="p-4">
+          <button
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
+            onClick={getDirections}
+            disabled={directionsStatus === 'Getting Directions...'}
+          >
+            {directionsStatus === 'Getting Directions...' && (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            )}
+            <span>{directionsStatus}</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
