@@ -70,7 +70,7 @@ const AllRooms = () => {
     : [];
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 py-10">
+    <div className="bg-gray-50 dark:bg-gray-900 py-10 gradient-dark">
       {loading ? (
         <Loader />
       ) : (
@@ -98,7 +98,7 @@ const AllRooms = () => {
 
           <section className="container md:mx-auto px-0">
             <div className="flex flex-row gap-[-58px]">
-              <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-white dark:bg-gray-800 shadow-lg max-h-[600px] overflow-y-auto">
+              <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-gray-950 dark:bg-gray-800 shadow-lg max-h-[600px] overflow-y-auto">
                 <div className="mb-4">
                   <h2 className="text-xs md:text-sm font-semibold">Filter by Location</h2>
                   <div className="flex flex-col gap-1 mt-2  md:text-xs text-[10px]">

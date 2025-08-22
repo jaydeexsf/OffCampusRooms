@@ -69,7 +69,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className="dark:bg-gray-950 py-10 relative overflow-hidden">
+      <div className="dark:bg-gray-950 py-10  relative overflow-hidden">
         <video
           autoPlay
           loop
@@ -79,7 +79,7 @@ const Footer = () => {
           <source src={UniversityVid} type="video/mp4" />
         </video>
         <div className="container relative">
-          <div className="grid md:grid-cols-3 py-0 bg-white/80 backdrop-blur-sm rounded-t-xl">
+          <div className="grid md:grid-cols-3 py-0 bg-gray-950 backdrop-blur-sm rounded-t-xl">
             {showMessage && (
               <div className="text-center bg-primary px-4 shadow-xl py-2 rounded-md shadow-primary absolute top-[50%] translate-x-[-50%] translate-y-[-50%] left-[50%] text-red-500 text-lg font-semibold">
                 {showMessage}
@@ -123,7 +123,7 @@ const Footer = () => {
                     {FooterLinks.map((link) => (
                       <li
                         key={link.title}
-                        className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]"
+                        className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]"
                       >
                         <Link
                           to={link.title === "Admin" ? "#" : link.link}
@@ -147,13 +147,13 @@ const Footer = () => {
                     Student Resources
                   </h1>
                   <ul className="flex flex-col gap-1">
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
                       <Link to="/frequetly-asked-questions" onClick={() => window.scrollTo(0, 0)}>
                         <span>&#11162;</span>
                         <span>FAQs</span>
                       </Link>
                     </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
                       <Link
                         to="/contact"
                         onClick={() => window.scrollTo(0, 0)}
@@ -163,7 +163,7 @@ const Footer = () => {
                       </Link>
                       
                     </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
                       <Link
                         to="/tips"
                         onClick={() => window.scrollTo(0, 0)}
@@ -174,7 +174,7 @@ const Footer = () => {
                       
                     </li>
 
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-700 dark:text-gray-200 text-[12px]">
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
                       <Link
                         to="/comment"
                         onClick={() => window.scrollTo(0, 0)}

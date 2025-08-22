@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FiHome } from "react-icons/fi";
+import { FiHome, FiMapPin, FiDollarSign, FiSearch, FiZap, FiShield, FiMessageCircle } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import PlaceCard from "../Places/PlaceCard";
 import { FaAngleDown } from "react-icons/fa";
@@ -50,108 +50,202 @@ const Hero = ({ handleOrderPopup }) => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-blac to-white pt-16 flex justify-center">
-      <div className="h-full flex justify-center items-center p-4">
-        <div className="container grid grid-cols-1 md:mt-6 w-[90%] md:w-[75%] lg:w-[80%] gap-4">
+    <div className="gradient-dark pt-20 pb-12 min-h-screen flex items-center">
+      <div className="container mx-auto px-4">
+        <div className="max-w-4xl mx-auto">
           {!searchResults ? (
             <>
-              <div className="text-white text-center">
-                <h1 className="font-bold text-2xl lg:text-3xl mb-4" data-aos="fade-up">
-                  Find Your Perfect Room Near University of Limpopo
+              {/* Hero Header */}
+              <div className="text-center mb-12" data-aos="fade-up">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight">
+                  Find Your Perfect{" "}
+                  <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    Student Room
+                  </span>
+                  <br />
+                  Near University of Limpopo
                 </h1>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                  Discover comfortable, affordable accommodation with modern amenities. 
+                  Your ideal student living experience starts here.
+                </p>
               </div>
-              <div className="bg-white rounded-lg shadow-lg p-6 relative" data-aos="fade-up" data-aos-delay="300">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-2">
-                  <div>
-                    <label htmlFor="section" className="block text-sm text-gray-600 mb-2">
-                      Sort by Location
+
+              {/* Search Card */}
+              <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 max-w-2xl mx-auto shadow-2xl" data-aos="fade-up" data-aos-delay="200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Location Filter */}
+                  <div className="space-y-3">
+                    <label htmlFor="section" className="flex items-center gap-2 text-sm font-medium text-white">
+                      <FiMapPin className="text-blue-400" />
+                      Location
                     </label>
                     <select
                       name="section"
-                      className="w-full text-sm bg-gray-200 border border-gray-300 rounded-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full bg-white/10 border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none cursor-pointer"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
                     >
-                      <option value="All">All</option>
-                      <option value="Gate 1">Gate 1</option>
-                      <option value="Gate 2">Gate 2</option>
-                      <option value="Gate 3">Gate 3</option>
-                      <option value="Ga-motintane">Ga-motintane</option>
+                      <option value="All" className="bg-gray-800 text-white">All Locations</option>
+                      <option value="Gate 1" className="bg-gray-800 text-white">Gate 1</option>
+                      <option value="Gate 2" className="bg-gray-800 text-white">Gate 2</option>
+                      <option value="Gate 3" className="bg-gray-800 text-white">Gate 3</option>
+                      <option value="Ga-motintane" className="bg-gray-800 text-white">Ga-motintane</option>
                     </select>
                   </div>
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <label htmlFor="price" className="block text-sm text-gray-600 -mb-2">
-                        Max Price
+
+                  {/* Price Range */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <label htmlFor="price" className="flex items-center gap-2 text-sm font-medium text-white">
+                        <FiDollarSign className="text-green-400" />
+                        Max Budget
                       </label>
-                      <span className="ml-2 font-bold text-md text-gray-600">R {priceValue}</span>
+                      <span className="text-blue-400 font-mono font-semibold text-lg">
+                        R {priceValue.toLocaleString()}
+                      </span>
                     </div>
-                    <div className="w-full flex justify-between items-center">
+                    <div className="relative">
                       <input
                         type="range"
                         name="price"
                         id="price"
-                        className="w-full bg-gradient-to-r from-primary to-secondary h-2 rounded-full"
+                        className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
                         min="600"
                         max="5000"
                         value={priceValue}
                         step="100"
                         onChange={(e) => setPriceValue(e.target.value)}
+                        style={{
+                          background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((priceValue - 600) / (5000 - 600)) * 100}%, rgba(255,255,255,0.2) ${((priceValue - 600) / (5000 - 600)) * 100}%, rgba(255,255,255,0.2) 100%)`
+                        }}
                       />
+                      <div className="flex justify-between text-xs text-gray-300 mt-2">
+                        <span>R600</span>
+                        <span>R5,000</span>
+                      </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Search Button */}
                 <button
-                  className="bg-gradient-to-r from-slate-900 to-slate-950 hover:from-slate-950 hover:to-slate-800 text-white font-semibold px-4 py-2 rounded-full mt-6 w-full text-center transition-transform duration-300"
+                  className="w-full mt-8 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                   onClick={handleSearch}
                   disabled={isLoading}
                 >
-                  {isLoading ? <ImSpinner2 className="animate-spin inline-block mr-2" /> : "Search Now"}
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-3">
+                      <ImSpinner2 className="animate-spin text-xl" />
+                      <span>Searching...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center gap-3">
+                      <FiSearch className="text-xl" />
+                      <span>Search Rooms</span>
+                    </div>
+                  )}
                 </button>
+              </div>
+
+              {/* Features */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="400">
+                <div className="text-center p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
+                  <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <FiZap className="text-2xl text-blue-400" />
+                  </div>
+                  <h3 className="font-semibold text-white mb-2">Instant Search</h3>
+                  <p className="text-sm text-gray-300">Find available rooms in seconds with our smart filtering system</p>
+                </div>
+                <div className="text-center p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <FiShield className="text-2xl text-green-400" />
+                  </div>
+                  <h3 className="font-semibold text-white mb-2">Verified Listings</h3>
+                  <p className="text-sm text-gray-300">All rooms are verified for quality and safety standards</p>
+                </div>
+                <div className="text-center p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
+                  <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <FiMessageCircle className="text-2xl text-purple-400" />
+                  </div>
+                  <h3 className="font-semibold text-white mb-2">24/7 Support</h3>
+                  <p className="text-sm text-gray-300">Get help anytime with our dedicated student support team</p>
+                </div>
               </div>
             </>
           ) : (
             <>
-              <div className="bg-gray-100 pb-8 sm:pt-16 absolute top-5 left-0 w-full z-[11] rounded-lg shadow-lg p-6">
-                <button
-                  className="text-primary flex items-center mb-3 hover:text-primary-dark"
-                  onClick={handleResetSearch}
-                >
-                  <FiHome className="mr-2" size={20} />
-                  Back
-                </button>
-                <div className="text-center w-full pb-2 font-bold">Your Search Results...</div>
-                {searchResults.length > 0 ? (
-                  <div className="grid grid-cols-1 mt-4 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {searchResults.map((item, index) => (
-                      <PlaceCard
-                        key={index}
-                        {...item}
-                        handleOrderPopup={() => handleOrderPopup(item)}
-                      />
-                    ))}
+              <div className="fixed inset-0 bg-neutral-950/95 backdrop-blur-sm z-50 overflow-y-auto">
+                <div className="container mx-auto px-4 py-8">
+                  <div className="max-w-6xl mx-auto">
+                    {/* Header with back button */}
+                    <div className="flex items-center justify-between mb-8">
+                      <button
+                        className="btn-ghost flex items-center gap-2"
+                        onClick={handleResetSearch}
+                      >
+                        <FiHome size={20} />
+                        <span>Back to Search</span>
+                      </button>
+                      <div className="text-center">
+                        <h2 className="text-2xl font-bold text-neutral-100">Search Results</h2>
+                        <p className="text-neutral-400 text-sm">
+                          {searchResults?.length || 0} rooms found
+                        </p>
+                      </div>
+                      <div className="w-32"></div> {/* Spacer for centering */}
+                    </div>
+
+                    {/* Results Grid */}
+                    {searchResults && searchResults.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                        {searchResults.map((item, index) => (
+                          <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                            <PlaceCard
+                              {...item}
+                              handleOrderPopup={() => handleOrderPopup(item)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-16">
+                        <div className="text-6xl mb-4">🔍</div>
+                        <h3 className="text-xl font-semibold text-neutral-300 mb-2">No rooms found</h3>
+                        <p className="text-neutral-500">Try adjusting your search criteria</p>
+                      </div>
+                    )}
+
+                    {/* Load More Button */}
+                    {searchResults && searchResults.length > 0 && (
+                      <div className="text-center">
+                        {roomsC && roomsC <= limitations ? (
+                          <div className="text-neutral-400 font-medium">
+                            🎉 You've seen all available rooms
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setLimitations(limitations + 6)}
+                            className="btn-secondary flex items-center gap-3 mx-auto"
+                            disabled={roomLoading}
+                          >
+                            {roomLoading ? (
+                              <>
+                                <ImSpinner2 className="animate-spin" />
+                                <span>Loading...</span>
+                              </>
+                            ) : (
+                              <>
+                                <span>Load More Rooms</span>
+                                <FaAngleDown />
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <p className="text-center text-gray-500">No rooms found matching your criteria.</p>
-                )}
-                {roomsC && roomsC <= limitations ? (
-                  <div className="w-full mt-8 flex justify-center text-lg font-bold">
-                    No more rooms matching your criteria
-                  </div>
-                ) : (
-                  <div className="mt-8 w-full items-center flex text-center justify-center font-semibold">
-                    <button
-                      onClick={() => setLimitations(limitations + 6)}
-                      className="flex shadow-lg w-[200px] md:w-[30%] text-center py-2 px-6 border-2 border-dark text-dark rounded-full transition-all duration-300 hover:bg-dark hover:text-white justify-center items-center gap-4"
-                    >
-                      <span className="font-medium">Show More</span>
-                      <FaAngleDown className="text-xl" />
-                    </button>
-                  </div>
-                )}
-                {roomLoading && (
-                  <div className="border-gray-400 flex justify-center border-t-primary w-16 h-16 border-2 animate-spin rounded-full"></div>
-                )}
+                </div>
               </div>
             </>
           )}

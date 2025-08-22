@@ -16,6 +16,7 @@ const Places = ({ handleOrderPopup }) => {
 
       } catch (error) {
         console.error("Error fetching room data:", error);
+
       } finally {
         setLoading(false); 
       }
@@ -29,7 +30,7 @@ const Places = ({ handleOrderPopup }) => {
   }
 
   return (
-    <div className="dark:bg-gray-900 dark:text-white mt- lg:mt-0 bg-gray-50 py-0 pb-8 pt-">
+    <div className="dark:bg-gray-900 dark:text-white mt- lg:mt-[400px] bg-gray-950 py-0 pb-8 mt-[450px]">
       <section data-aos="fade-up" className="container">
         <h1 className="my-8 flex items-center justify-between py-2 pl-2 text-2xl md:text-3xl font-bold">
           <span className="md:border-l-8 border-l-[6px] border-primary/40 ">   Best Rooms</span>

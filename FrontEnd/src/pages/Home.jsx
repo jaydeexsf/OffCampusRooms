@@ -26,7 +26,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="mt-">
+      <div className="mt- gradient-dark bg-gray-950">
         <div className="h-[500px] lg:h-[520px] 2xl:h-[600px] relative">
           <video
             ref={videoRef} 

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import Logo from "../../assets/logo.png";
 import { NavLink, Link } from "react-router-dom";
-import { FaCaretDown } from "react-icons/fa";
+import { FiChevronDown, FiMenu, FiX, FiPhone, FiGift } from "react-icons/fi";
 import ResponsiveMenu from "./ResponsiveMenu";
-import { HiMenuAlt3, HiMenuAlt1 } from "react-icons/hi";
 import { SignedIn, UserButton, useAuth, useUser, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 export const NavbarLinks = [
@@ -46,93 +45,137 @@ const Navbar = ({ handleBookRoomPopup }) => {
 
   return (
     <>
-      <nav className="fixed top-0 right-0 w-full z-50 bg-white dark:bg-gray-900 backdrop-blur-sm text-black dark:text-white shadow-md">
-        <div className="bg-gradient-to-r from-primary to-dark text-white">
-          <div className="container py-[3px] sm:block hidden">
-            <div className="flex text-[12px] items-center justify-between">
-              <p className="">Exclusive student deals on room bookings!</p>
-              <p>Call us at: +27 79 219 2664</p>
-            </div>
-          </div>
-        </div>
-        <div className="container py-2 md:py-0">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4 font-bold text-6xl">
-              <Link to="/" onClick={() => window.scrollTo(0, 0)}>
-                <img src={Logo} alt="StudentRooms Logo" className="h-[50px]" />
-              </Link>
-            </div>
-            <div className="hidden md:block">
-              <ul className="flex items-center gap-6">
-                {NavbarLinks.map((link) => (
-                  <li key={link.name} className="py-4">
-                    <NavLink to={link.link} activeClassName="active" className="hover:text-dark focus:text-dark transition-all">
-                      {link.name}
-                    </NavLink>
-                  </li>
-                ))}
-                <li className="group relative cursor-pointer">
-                  <a href="/#home" className="flex h-[72px] items-center gap-[2px]">
-                    More{" "}
-                    <FaCaretDown className="transition-all duration-200 group-hover:rotate-180" />
-                  </a>
-                  <div className="absolute left-0 z-[9999] hidden w-[150px] rounded-md bg-white dark:bg-gray-900 text-black dark:text-white p-2 group-hover:block shadow-md">
-                    <ul className="space-y-3">
-                      {DropdownLinks.map((data) => (
-                        <li key={data.name}>
-                          <a
-                            className="inline-block w-full rounded-md p-2 hover:bg-primary/20"
-                            href={data.link}
-                          >
-                            {data.name}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div className="flex items-center gap-4">
-              {/* <NavLink to="/bookinginfo"><button
-                className="bg-gradient-to-r hidden md:flex text-[12px] from-primary to-dark hover:from-dark hover:bg-primary transition-all duration-600 text-white px-3 py-1 rounded-full"
-                onClick={() => {
-                  handleBookRoomPopup();
-                }}
-              >
-              book a room
-              </button >  </NavLink> */}
-              {user ? (<div className="hidden md:flex">
-              <SignedIn className="hidden xl:flex">
-                <UserButton size={36}  className="border-red-700" />
-              </SignedIn> 
-              </div>) :
-            <div className="">
-              <SignedOut>
-                        {isLoaded ? (
-                          <div className="flex hover:cursor-pointer hover:bg-primary transition-all duration-300 bg-dark/90 text-white font-semibold py-[4px] px-3 rounded-md justify-center">
-                            <SignInButton />
-                          </div>
-                        ) : (
-                          <div className="flex justify-center">
-                            <div className="border-gray-600 border-t-black border-2 animate-spin w-6 h-6 rounded-full"></div>
-                          </div>
-                        )}
-              </SignedOut>     
-            </div>
-
-            }
-              
-              <div className="md:hidden block">
-                {showMenu ? (
-                  <HiMenuAlt1 onClick={toggleMenu} className="cursor-pointer transition-all" size={30} />
-                ) : (
-                  <HiMenuAlt3 onClick={toggleMenu} className="cursor-pointer transition-all" size={30} />
-                )}
+      <nav className="fixed top-0 right-0 w-full z-50 bg-black/90 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+        {/* Top banner with gradient */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-500">
+          <div className="container py-2 sm:block hidden">
+            <div className="flex text-sm items-center justify-between text-white">
+              <div className="flex items-center gap-2">
+                <FiGift className="text-white" />
+                <span className="font-medium">Exclusive student deals on room bookings!</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FiPhone className="text-white" />
+                <span className="font-mono">+27 79 219 2664</span>
               </div>
             </div>
           </div>
         </div>
+        
+        {/* Main navigation */}
+        <div className="container py-4">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <Link 
+                to="/" 
+                onClick={() => window.scrollTo(0, 0)}
+                className="flex items-center gap-3 group"
+              >
+                <div className="relative">
+                  <img 
+                    src={Logo} 
+                    alt="StudentRooms Logo" 
+                    className="h-10 w-auto transition-transform duration-200 group-hover:scale-105" 
+                  />
+                  <div className="absolute inset-0 bg-blue-500/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent hidden sm:block">
+                  StudentRooms
+                </span>
+              </Link>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:block">
+              <ul className="flex items-center gap-1">
+                {NavbarLinks.map((link) => (
+                  <li key={link.name}>
+                    <NavLink 
+                      to={link.link} 
+                      className={({ isActive }) =>
+                        `px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                          isActive 
+                            ? 'text-blue-400 bg-blue-500/10 border border-blue-500/20' 
+                            : 'text-gray-300 hover:text-white hover:bg-white/10'
+                        }`
+                      }
+                    >
+                      {link.name}
+                    </NavLink>
+                  </li>
+                ))}
+                
+                {/* Dropdown Menu */}
+                <li className="group relative">
+                  <button className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200">
+                    More
+                    <FiChevronDown className="text-sm transition-transform duration-200 group-hover:rotate-180" />
+                  </button>
+                  <div className="absolute right-0 top-full mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
+                    <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl p-2">
+                      {DropdownLinks.map((data) => (
+                        <Link
+                          key={data.name}
+                          to={data.link}
+                          className="flex items-center px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 text-sm font-medium"
+                        >
+                          {data.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+            {/* Right side actions */}
+            <div className="flex items-center gap-3">
+              {user ? (
+                <div className="hidden md:flex items-center">
+                  <SignedIn>
+                    <div className="p-1 rounded-lg bg-white/10 border border-white/20">
+                      <UserButton 
+                        appearance={{
+                          elements: {
+                            avatarBox: "w-8 h-8",
+                          }
+                        }}
+                      />
+                    </div>
+                  </SignedIn> 
+                </div>
+              ) : (
+                <div className="hidden md:block">
+                  <SignedOut>
+                    {isLoaded ? (
+                      <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <SignInButton />
+                      </button>
+                    ) : (
+                      <div className="flex justify-center">
+                        <div className="w-6 h-6 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+                      </div>
+                    )}
+                  </SignedOut>     
+                </div>
+              )}
+              
+              {/* Mobile menu button */}
+              <button
+                onClick={toggleMenu}
+                className="md:hidden p-2 rounded-lg bg-white/10 border border-white/20 text-gray-300 hover:text-white hover:bg-white/20 transition-all duration-200"
+              >
+                {showMenu ? (
+                  <FiX size={20} />
+                ) : (
+                  <FiMenu size={20} />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+        
         <ResponsiveMenu setShowMenu={setShowMenu} showMenu={showMenu} />
       </nav>
     </>

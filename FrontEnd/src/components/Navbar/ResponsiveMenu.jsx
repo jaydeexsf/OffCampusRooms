@@ -2,54 +2,116 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { NavbarLinks } from "./Navbar";
 import { SignedIn, UserButton, useAuth, useUser } from "@clerk/clerk-react";
-import { FaUserCircle } from "react-icons/fa";
+import { FiUser, FiGithub, FiHeart } from "react-icons/fi";
 
 const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
   const { user, isLoaded } = useUser()
 
   return (
-    <div className={`${showMenu ? "left-0" : "-left-[100%]"} fixed bottom-0 top-0 z-20 flex h-screen w-[75%] flex-col justify-between bg-white dark:bg-gray-900 dark:text-white px-8 pb-6 pt-16 text-black transition-all duration-300 md:hidden rounded-r-xl shadow-md`}>
-      <div className="card">
-        <div className="flex items-center justify-start gap-3">
-          <div>
-            {user ?
-            <SignedIn>
-              <UserButton size={36}  className="border-red-700" />
-            </SignedIn>
-            :
-             <FaUserCircle size={34} /> }
+    <>
+      {/* Backdrop */}
+      <div 
+        className={`${showMenu ? "opacity-100 visible" : "opacity-0 invisible"} fixed inset-0 bg-black/80 backdrop-blur-sm z-40 transition-all duration-300 md:hidden`}
+        onClick={() => setShowMenu(false)}
+      />
+      
+      {/* Menu Panel */}
+      <div className={`${showMenu ? "translate-x-0" : "-translate-x-full"} fixed left-0 top-0 z-50 h-screen w-80 bg-black/95 backdrop-blur-xl border-r border-white/20 transition-transform duration-300 md:hidden`}>
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <div className="p-6 border-b border-white/20">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                {user ? (
+                  <SignedIn>
+                    <div className="p-1 rounded-lg bg-white/10 border border-white/20">
+                      <UserButton 
+                        appearance={{
+                          elements: {
+                            avatarBox: "w-10 h-10",
+                          }
+                        }}
+                      />
+                    </div>
+                  </SignedIn>
+                ) : (
+                  <div className="p-2 rounded-lg bg-white/10 border border-white/20">
+                    <FiUser size={24} className="text-gray-400" />
+                  </div>
+                )}
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white">Welcome!</p>
+                <p className="text-xs text-gray-400">
+                  {!isLoaded ? (
+                    <div className="w-4 h-4 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+                  ) : user ? (
+                    `${user.firstName} ${user.lastName || ''}`
+                  ) : (
+                    "Guest User"
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="text-xs">
-            <h1>Welcome!</h1>
-            <h1 className="text- text-slate-500">
-              {!isLoaded ? (
-                <div className="border-gray-600 border-4 border-t-black animate-spin rounded-full w-4 h-4"></div>
-              ) : user ? (
-                `${user.firstName} ${user.lastName ? user.lastName  : ''}`
-              ) : (
-                "User"
-              )}
-            </h1>
-          </div>
-        </div>
-        <nav className="mt-4">
-          <ul className="space-y-4 text-xl">
-            {NavbarLinks.map((data, index) => (
-              <li key={index}>
-                <Link to={data.link} onClick={() => setShowMenu(false)} className="mb-2 text-sm inline-block hover:text-primary transition-all">
-                  {data.name}
+
+          {/* Navigation */}
+          <nav className="flex-1 p-6">
+            <ul className="space-y-2">
+              {NavbarLinks.map((data, index) => (
+                <li key={index}>
+                  <Link 
+                    to={data.link} 
+                    onClick={() => setShowMenu(false)} 
+                    className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
+                  >
+                    {data.name}
+                  </Link>
+                </li>
+              ))}
+              
+              {/* Additional Links */}
+              <li className="pt-4 border-t border-white/20 mt-4">
+                <Link 
+                  to="/tips" 
+                  onClick={() => setShowMenu(false)} 
+                  className="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all duration-200 text-sm"
+                >
+                  Student Tips
                 </Link>
               </li>
-            ))}
-          </ul>
-        </nav>
+              <li>
+                <Link 
+                  to="/contact" 
+                  onClick={() => setShowMenu(false)} 
+                  className="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all duration-200 text-sm"
+                >
+                  Contact Us
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          {/* Footer */}
+          <div className="p-6 border-t border-white/20">
+            <div className="text-center">
+              <p className="text-xs text-gray-400 flex items-center justify-center gap-1">
+                Made with <FiHeart className="text-red-400 text-xs" /> by{" "}
+                <a 
+                  href="https://github.com/jaydeexsf" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 transition-colors duration-200 flex items-center gap-1"
+                >
+                  <FiGithub className="text-xs" />
+                  Moloantoa J.
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="footer">
-        <h1 className="text-center">
-          Made with ❤ by <a href="https://github.com/jaydeexsf" target="_blank" rel="noopener noreferrer">Moloantoa J.</a>
-        </h1>
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -25,7 +25,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     <>
       {orderPopup && (
         <div className="h-screen w-[100vw] fixed overflow-hidden top-0 left-0 bg-black/50 z-50 backdrop-blur-sm">
-          <div className="fixed top-[50%] left-1/2 pb-4 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-white dark:bg-gray-900 rounded-md w-[90%] md:max-w-[500px] max-h-[95%] h-fit overflow-y-auto duration-200">
+          <div className="fixed top-[50%] left-1/2 pb-4 -translate-x-1/2 -translate-y-[52%] px-0 py-0 shadow-md items-center bg-gray-950 dark:bg-gray-900 rounded-md w-[90%] md:max-w-[500px] max-h-[95%] h-fit overflow-y-auto duration-200">
           <div className="flex sticky top-0 z-10  py-4 bg-primary text-white px-4 items-center justify-between">
             {!showLocation ? (
               <h1 className="text-xl text-center font-semibold">{title}</h1>
