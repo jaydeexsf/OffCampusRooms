@@ -50,7 +50,7 @@ const Hero = ({ handleOrderPopup }) => {
   };
 
   return (
-    <div className="gradient-dark pt-20 pb-12 min-h-screen flex items-center">
+    <div className="gradient-dark pt-20 pb-16 h-full flex items-center justify-center">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           {!searchResults ? (
@@ -146,39 +146,6 @@ const Hero = ({ handleOrderPopup }) => {
                     </div>
                   )}
                 </button>
-              </div>
-              {/* Features */}
-              <div 
-                className="sm:grid grid-cols-3 gap-4 mt-16 max-w-4xl mx-auto hidden" 
-                data-aos="fade-up" 
-                data-aos-delay="400"
-              >
-                {/* Card 1 */}
-                <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <FiZap className="text-lg text-blue-400" />
-                  </div>
-                  <h3 className="font-medium text-sm text-white mb-1">Instant Search</h3>
-                  <p className="text-xs text-gray-300">Find rooms in seconds with smart filtering</p>
-                </div>
-
-                {/* Card 2 */}
-                <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <FiShield className="text-lg text-green-400" />
-                  </div>
-                  <h3 className="font-medium text-sm text-white mb-1">Verified Listings</h3>
-                  <p className="text-xs text-gray-300">All rooms verified for quality & safety</p>
-                </div>
-
-                {/* Card 3 */}
-                <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <FiMessageCircle className="text-lg text-purple-400" />
-                  </div>
-                  <h3 className="font-medium text-sm text-white mb-1">24/7 Support</h3>
-                  <p className="text-xs text-gray-300">Get help anytime with our student team</p>
-                </div>
               </div>
             </>
           ) : (

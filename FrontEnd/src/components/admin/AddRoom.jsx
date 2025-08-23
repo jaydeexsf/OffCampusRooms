@@ -45,26 +45,73 @@ const AddRoomForm = () => {
     const [myLocationLong, setmyLocationLong] = useState(null)
 
     function getUserCoordinates() {
+        console.log('🔍 Starting geolocation request...');
+        
         if (navigator.geolocation) {
+          console.log('✅ Geolocation is supported by this browser');
+          
           navigator.geolocation.getCurrentPosition(
             function (position) {
               const latitude = position.coords.latitude;
               const longitude = position.coords.longitude;
+              console.log('✅ Location obtained successfully:', { latitude, longitude });
+              
               setMyLocationLat(latitude);
               setmyLocationLong(longitude);
-              setNewRoom({...newRoom, coordinates: {...newRoom.coordinates, lat: latitude, long: longitude}});
+              setNewRoom(prevRoom => ({
+                ...prevRoom, 
+                coordinates: { lat: latitude, long: longitude }
+              }));
             },
             function (error) {
-              console.error("Error occurred. Error code: " + error.code);
+              console.error('❌ Geolocation error occurred:', {
+                code: error.code,
+                message: error.message,
+                errorTypes: {
+                  1: 'PERMISSION_DENIED - User denied location access',
+                  2: 'POSITION_UNAVAILABLE - Location information unavailable', 
+                  3: 'TIMEOUT - Location request timed out'
+                }
+              });
+              
+              // Fallback to default coordinates (University of Limpopo area)
+              const fallbackLat = -23.888;
+              const fallbackLong = 29.735;
+              console.log('🔄 Using fallback coordinates:', { fallbackLat, fallbackLong });
+              
+              setMyLocationLat(fallbackLat);
+              setmyLocationLong(fallbackLong);
+              setNewRoom(prevRoom => ({
+                ...prevRoom,
+                coordinates: { lat: fallbackLat, long: fallbackLong }
+              }));
+              
+              setError('Could not access your location. Using approximate campus location instead.');
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 300000
             }
           );
         } else {
-          console.error("Geolocation is not supported by this browser.");
+          console.error('❌ Geolocation is not supported by this browser');
+          // Use fallback coordinates
+          const fallbackLat = -23.888;
+          const fallbackLong = 29.735;
+          setMyLocationLat(fallbackLat);
+          setmyLocationLong(fallbackLong);
+          setNewRoom(prevRoom => ({
+            ...prevRoom,
+            coordinates: { lat: fallbackLat, long: fallbackLong }
+          }));
+          setError('Geolocation not supported. Using approximate campus location.');
         }
       }
 
-      useEffect(()=> {
-        getUserCoordinates()
+      useEffect(() => {
+        console.log('🚀 Component mounted, requesting user coordinates...');
+        getUserCoordinates();
       }, [])
       
     const destinations = [
@@ -86,27 +133,122 @@ const AddRoomForm = () => {
     
     const BURL = `https://offcampusrooms.onrender.com/api/google/distance`;
     
+    // Calculate straight-line distance using Haversine formula
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // Earth's radius in kilometers
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const distance = R * c;
+        return distance;
+    };
+
     const getDistance = async () => {
+        console.log('🚗 Starting distance calculation...');
+        console.log('📍 Request data:', everything);
+        
         try {
             const response = await axios.post(BURL, everything);
-            setDistance(response.data.rows[0].elements.map(c => c.distance.text ))
-            setTime(response.data.rows[0].elements.map(c => c.duration.text ))
-            console.log(response.data);
-            // setLocation(response.data); 
+            console.log('✅ Distance API response:', response.data);
+            
+            // Check if Google API is working
+            if (response.data && response.data.status === 'REQUEST_DENIED') {
+                console.log('⚠️ Google API billing issue detected, using fallback calculation');
+                
+                // Fallback: Calculate distances manually
+                const userLat = myLocationLat;
+                const userLon = myLocationLong;
+                
+                const gateDistances = destinations.map((gate, index) => {
+                    const distanceKm = calculateDistance(userLat, userLon, gate.lat, gate.long);
+                    const distanceText = `${distanceKm.toFixed(1)} km`;
+                    // Estimate time: assume 40km/h average speed in urban area
+                    const timeMinutes = Math.round((distanceKm / 40) * 60);
+                    const timeText = `${timeMinutes} min`;
+                    
+                    console.log(`📏 Gate ${index + 1}: ${distanceText}, ${timeText}`);
+                    return { distance: distanceText, time: timeText };
+                });
+                
+                const distances = gateDistances.map(g => g.distance);
+                const times = gateDistances.map(g => g.time);
+                
+                console.log('📏 Fallback distances:', distances);
+                console.log('⏱️ Fallback times:', times);
+                
+                setDistance(distances);
+                setTime(times);
+                return;
+            }
+            
+            if (response.data && response.data.rows && response.data.rows[0] && response.data.rows[0].elements) {
+                const elements = response.data.rows[0].elements;
+                console.log('📊 Distance elements:', elements);
+                
+                const distances = elements.map(c => c.distance?.text || 'N/A');
+                const times = elements.map(c => c.duration?.text || 'N/A');
+                
+                console.log('📏 Distances:', distances);
+                console.log('⏱️ Times:', times);
+                
+                setDistance(distances);
+                setTime(times);
+            } else {
+                console.error('❌ Invalid response structure:', response.data);
+                throw new Error('Invalid API response');
+            }
         } catch (err) {
-            console.log('There was an error:', err.message);
+            console.error('❌ Distance calculation error, using fallback:', {
+                message: err.message,
+                response: err.response?.data,
+                status: err.response?.status
+            });
+            
+            // Fallback calculation when API fails
+            console.log('🔄 Using manual distance calculation...');
+            const userLat = myLocationLat;
+            const userLon = myLocationLong;
+            
+            const gateDistances = destinations.map((gate, index) => {
+                const distanceKm = calculateDistance(userLat, userLon, gate.lat, gate.long);
+                const distanceText = `${distanceKm.toFixed(1)} km`;
+                // Estimate time: assume 40km/h average speed
+                const timeMinutes = Math.round((distanceKm / 40) * 60);
+                const timeText = `${timeMinutes} min`;
+                
+                console.log(`📏 Fallback Gate ${index + 1}: ${distanceText}, ${timeText}`);
+                return { distance: distanceText, time: timeText };
+            });
+            
+            const distances = gateDistances.map(g => g.distance);
+            const times = gateDistances.map(g => g.time);
+            
+            console.log('📏 Manual distances:', distances);
+            console.log('⏱️ Manual times:', times);
+            
+            setDistance(distances);
+            setTime(times);
         }
     };
 
     useEffect(() => {
+        console.log('🔄 Processing time data:', time);
+        
         if (time.length === 3) { 
             const gateTimes = [
-                { time: parseInt(time[0]), name: 'Gate 2' }, // Gate 1
-                { time: parseInt(time[1]), name: 'Gate 3' }, // Gate 2
-                { time: parseInt(time[2]), name: 'Gate 1' }  // Gate 3
+                { time: parseInt(time[0]) || 999, name: 'Gate 2' },
+                { time: parseInt(time[1]) || 999, name: 'Gate 3' },
+                { time: parseInt(time[2]) || 999, name: 'Gate 1' }
             ];
+            
+            console.log('🚪 Gate times calculated:', gateTimes);
     
             const closestGate = gateTimes.reduce((prev, curr) => (curr.time < prev.time ? curr : prev));
+            console.log('🎯 Closest gate determined:', closestGate);
             
             setTimeToCampus(closestGate.time); 
             setGateName(closestGate.name);
@@ -117,7 +259,9 @@ const AddRoomForm = () => {
                 location: closestGate.name.toLowerCase(),
             }));
     
-            console.log(`${closestGate.name} is the closest gate with a time of ${closestGate.time} minutes away.`);
+            console.log(`✅ ${closestGate.name} is the closest gate with a time of ${closestGate.time} minutes away.`);
+        } else {
+            console.log('⏳ Waiting for all gate times... Current count:', time.length);
         }
     }, [time]);
     
@@ -127,8 +271,16 @@ const AddRoomForm = () => {
     
     useEffect(() => {
         const fetchData = async () => {
+            console.log('🔄 Location coordinates changed:', { myLocationLat, myLocationLong });
+            
             if (myLocationLat && myLocationLong) {
+                console.log('✅ Both coordinates available, fetching distance...');
                 await getDistance(); 
+            } else {
+                console.log('⏳ Waiting for coordinates...', { 
+                    lat: myLocationLat ? '✅' : '❌', 
+                    long: myLocationLong ? '✅' : '❌' 
+                });
             }
         };
         fetchData();
@@ -185,27 +337,67 @@ const AddRoomForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+
+        // Validation
+        if (!newRoom.title.trim()) {
+            setError('Room title is required.');
+            return;
+        }
 
         if (newRoom.images.length === 0) {
             setError('Please upload at least 1 image before submitting.');
             return;
         }
 
-        if (newRoom.price <= 0) {
+        if (!newRoom.price || newRoom.price <= 0) {
             setError('Price must be a positive number.');
             return;
         }
 
-        if (newRoom.availableRooms < 0) {
-            setError('Available rooms cannot be negative.');
+        if (!newRoom.availableRooms || newRoom.availableRooms < 0) {
+            setError('Available rooms must be a positive number.');
             return;
         }
 
+        if (!newRoom.location || !newRoom.minutesAway) {
+            setError('Please wait for location calculation to complete.');
+            return;
+        }
+
+        if (!newRoom.coordinates.lat || !newRoom.coordinates.long) {
+            setError('Location coordinates are required. Please enable location access.');
+            return;
+        }
+
+        // Prepare data for backend
+        const roomData = {
+            title: newRoom.title.trim(),
+            description: newRoom.description.trim(),
+            price: parseInt(newRoom.price),
+            minutesAway: parseInt(newRoom.minutesAway),
+            location: newRoom.location,
+            amenities: newRoom.amenities,
+            contact: {
+                phone: newRoom.contact.phone.trim(),
+                whatsapp: newRoom.contact.whatsapp.trim(),
+                email: newRoom.contact.email.trim()
+            },
+            images: newRoom.images,
+            availableRooms: parseInt(newRoom.availableRooms),
+            coordinates: {
+                lat: parseFloat(newRoom.coordinates.lat),
+                long: parseFloat(newRoom.coordinates.long)
+            },
+            bestRoom: newRoom.bestRooms || false
+        };
+
         try {
-            await addRoom(newRoom);
+            await addRoom(roomData);
             navigate(-1);
         } catch (error) {
-            setError('Error adding room. Please try again later.');
+            console.error('Error adding room:', error);
+            setError('Error adding room. Please check your connection and try again.');
         }
     };
 
@@ -218,76 +410,95 @@ const AddRoomForm = () => {
     };
 
     return (
-        <div className="relative text-white bg-slate-900 pt-[100px] pb-16">
-            <button onClick={() => navigate(-1)} className="absolute top-[70px] left-4 text-gray-100 hover:text-gray-300">
-                <IoArrowBack size={24} />
-            </button>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-20 pb-16">
+            <div className="container mx-auto px-4">
+                <div className="flex items-center gap-4 mb-8">
+                    <button 
+                        onClick={() => navigate(-1)} 
+                        className="bg-white/10 backdrop-blur-lg border border-white/20 text-white p-3 rounded-xl hover:bg-white/20 transition-all duration-200"
+                    >
+                        <IoArrowBack size={20} />
+                    </button>
+                    <h1 className="text-3xl font-bold text-white">Add New Room</h1>
+                </div>
 
-            <div className="bg-slate-950 p-8  rounded-md shadow-lg w-[90%] max-w-[500px] mx-auto">
-                <form onSubmit={handleSubmit} className="space-y-4 text-xs" aria-labelledby="add-room-form">
-                    <h2 className="text-2xl font-bold text-gray-200 text-center mb-2" id="add-room-form">Add a New Room</h2>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 max-w-2xl mx-auto shadow-2xl">
+                    <form onSubmit={handleSubmit} className="space-y-6" aria-labelledby="add-room-form">
 
-                    <input
-                        type="text"
-                        name="title"
-                        placeholder="Room Title"
-                        value={newRoom.title}
-                        onChange={(e) => setNewRoom({ ...newRoom, title: e.target.value })}
-                        required
-                        className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                        aria-label="Room Title"
-                    />
-
-                    <textarea
-                        name="description"
-                        placeholder="Room Description"
-                        value={newRoom.description}
-                        onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
-                        className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                        aria-label="Room Description"
-                    ></textarea>
-
-                    <input
-                            type="number"
-                            name="price"
-                            placeholder="Room Price"
-                            value={newRoom.price}
-                            onChange={(e) => setNewRoom({ ...newRoom, price: Math.max(0, e.target.value) })} // Prevent negative price
-                            required
-                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                            aria-label="Room Price"
-                        />
-
-                    <div className="flex items-center justify-between gap-4">
-
-                         {gateName ? 
-                             <input
-                            type="text"
-                            name="minutesAway"
-                            disabled={true}
-                            placeholder="Minutes Away from Campus"
-                            value={gateName + ' is the closest Gate'}
-                            className="border-transparent hover:cursor-not-allowed border-b-gray-700 border-2 bg-transparent text-gray-400/50 rounded p-2 w-1/2 focus:outline-none focus:border-b-gray-300 focus:ring-sky-700"
-                        /> :
-                        <div className='w-[90%] flex justify-center'> 
-                             <div className="border-t-2 border-t-white border-gray-600 border-2 rounded-full w-4 h-4 animate-spin" ></div>
+                        <div className="space-y-2">
+                            <label className="text-white font-medium">Room Title *</label>
+                            <input
+                                type="text"
+                                name="title"
+                                placeholder="Enter room title"
+                                value={newRoom.title}
+                                onChange={(e) => setNewRoom({ ...newRoom, title: e.target.value })}
+                                required
+                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            />
                         </div>
-                    }
 
-                        {timeToCampus ? <input
-                            type="text"
-                            name="minutesAway"
-                            disabled={true}
-                            placeholder="Minutes Away from Campus"
-                            value={timeToCampus + ' min away from campus'}
-                            className="border-transparent hover:cursor-not-allowed border-b-gray-700 border-2 bg-transparent text-gray-400/50 rounded p-2 w-1/2 focus:outline-none focus:border-b-gray-300 focus:ring-sky-700"
-                            aria-label="Minutes Away from Campus"
-                        /> :
-                         <div className='w-[50%] flex justify-center'>
-                             <div className="border-t-2 border-t-white border-gray-600 border-2 rounded-full w-4 h-4 animate-spin" ></div>
+                        <div className="space-y-2">
+                            <label className="text-white font-medium">Room Description</label>
+                            <textarea
+                                name="description"
+                                placeholder="Describe the room features and details"
+                                value={newRoom.description}
+                                onChange={(e) => setNewRoom({ ...newRoom, description: e.target.value })}
+                                rows={4}
+                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                            />
                         </div>
-                         }
-                    </div>
+
+                        <div className="space-y-2">
+                            <label className="text-white font-medium">Monthly Price (R) *</label>
+                            <input
+                                type="number"
+                                name="price"
+                                placeholder="0"
+                                value={newRoom.price || ''}
+                                onChange={(e) => setNewRoom({ ...newRoom, price: Math.max(0, parseInt(e.target.value) || 0) })}
+                                required
+                                min="0"
+                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-white font-medium">Closest Gate</label>
+                                {gateName ? (
+                                    <div className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-gray-300 flex items-center gap-2">
+                                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        </svg>
+                                        {gateName}
+                                    </div>
+                                ) : (
+                                    <div className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-center">
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <span className="ml-2 text-gray-400">Calculating...</span>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-white font-medium">Distance to Campus</label>
+                                {timeToCampus ? (
+                                    <div className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-gray-300 flex items-center gap-2">
+                                        <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        {timeToCampus} min away
+                                    </div>
+                                ) : (
+                                    <div className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-center">
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <span className="ml-2 text-gray-400">Calculating...</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
 
 
                     {/* <select
@@ -301,122 +512,169 @@ const AddRoomForm = () => {
                         <option value="gate 3">Gate 3</option>
                     </select> */}
 
-                    <div className="space-y-2">
-                        <h4 className="font-semibold text-md text-gray-200">Amenities:</h4>
-                        <div className="grid grid-cols-2 gap-2 text-[11px]">
-                            {Object.keys(newRoom.amenities).map((amenity) => (
-                                <label key={amenity} className="flex text-gray-400 items-center space-x-1">
-                                    <input
-                                    className="bg-green-700 focus:bg-green-900 text-red-700 mr-2"
-                                        type="checkbox"
-                                        name={amenity}
-                                        checked={newRoom.amenities[amenity]}
-                                        onChange={(e) =>
-                                            setNewRoom({
-                                                ...newRoom,
-                                                amenities: { ...newRoom.amenities, [amenity]: e.target.checked }
-                                            })
-                                        }
-                                        aria-label={`Amenity: ${amenity.charAt(0).toUpperCase() + amenity.slice(1)}`}
-                                    />
-                                    <span>{amenity.charAt(0).toUpperCase() + amenity.slice(1)}</span>
-                                </label>
-                            ))}
+                        <div className="space-y-4">
+                            <label className="text-white font-medium">Amenities</label>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                {Object.keys(newRoom.amenities).map((amenity) => (
+                                    <label key={amenity} className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-200 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            name={amenity}
+                                            checked={newRoom.amenities[amenity]}
+                                            onChange={(e) =>
+                                                setNewRoom({
+                                                    ...newRoom,
+                                                    amenities: { ...newRoom.amenities, [amenity]: e.target.checked }
+                                                })
+                                            }
+                                            className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+                                        />
+                                        <span className="text-white text-sm capitalize">{amenity}</span>
+                                    </label>
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    <h4 className="font-semibold text-md text-gray-200">Contact Information:</h4>
-                    <div className="flex text-[10px] flex-col gap-4">
-                        <input
-                            type="text"
-                            name="phone"
-                            placeholder="Phone Number"
-                            value={newRoom.contact.phone}
-                            onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, phone: e.target.value } })}
-                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                            aria-label="Phone Number"
-                        />
-                        <input
-                            type="text"
-                            name="whatsapp"
-                            placeholder="WhatsApp Number"
-                            value={newRoom.contact.whatsapp}
-                            onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, whatsapp: e.target.value } })}
-                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                            aria-label="WhatsApp Number"
-                        />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email Address"
-                            value={newRoom.contact.email}
-                            onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, email: e.target.value } })}
-                            className="border border-gray-700 bg-slate-900 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                            aria-label="Email Address"
-                        />
-                    </div>
+                        <div className="space-y-4">
+                            <label className="text-white font-medium">Contact Information</label>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    placeholder="Phone Number"
+                                    value={newRoom.contact.phone}
+                                    onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, phone: e.target.value } })}
+                                    className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                />
+                                <input
+                                    type="tel"
+                                    name="whatsapp"
+                                    placeholder="WhatsApp Number"
+                                    value={newRoom.contact.whatsapp}
+                                    onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, whatsapp: e.target.value } })}
+                                    className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email Address"
+                                    value={newRoom.contact.email}
+                                    onChange={(e) => setNewRoom({ ...newRoom, contact: { ...newRoom.contact, email: e.target.value } })}
+                                    className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                />
+                            </div>
+                        </div>
 
-                    <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={handleImageUpload}
-                        className="border border-gray-700 bg-slate-900 text-gray-700 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                        aria-label="Upload Room Images"
-                    />
+                        <div className="space-y-4">
+                            <label className="text-white font-medium">Room Images (Max 5) *</label>
+                            <div className="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:border-white/40 transition-all duration-200">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleImageUpload}
+                                    className="hidden"
+                                    id="image-upload"
+                                />
+                                <label htmlFor="image-upload" className="cursor-pointer">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <span className="text-gray-400">Click to upload images</span>
+                                        <span className="text-gray-500 text-sm">PNG, JPG up to 10MB each</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                     
-                    {imagePreviews.length > 0 && (
-                         <div className="flex gap-4 my-4">
-                         {imagePreviews.map((preview, index) => (
-                             <img
-                                 key={index}
-                                 src={preview}
-                                 alt={`Preview ${index + 1}`}
-                                 className="h-20 w-20 object-cover rounded cursor-pointer"
-                                 onClick={() => handleImageClick(preview)} 
-                             />
-                         ))}
-                     </div>
-                    )}
+                        {imagePreviews.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                {imagePreviews.map((preview, index) => (
+                                    <div key={index} className="relative group">
+                                        <img
+                                            src={preview}
+                                            alt={`Preview ${index + 1}`}
+                                            className="w-full h-24 object-cover rounded-xl cursor-pointer group-hover:opacity-80 transition-opacity duration-200"
+                                            onClick={() => handleImageClick(preview)}
+                                        />
+                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl flex items-center justify-center">
+                                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-                     {fullscreenImage && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={closeFullscreen}>
-                    <img src={fullscreenImage} alt={fullscreenImage.title} className="max-w-full max-h-full object-contain" />
-                    <button className="absolute top-4 right-4 text-white text-2xl" onClick={closeFullscreen}>✕</button>
+                        {fullscreenImage && (
+                            <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex justify-center items-center z-50" onClick={closeFullscreen}>
+                                <img src={fullscreenImage} alt="Preview" className="max-w-full max-h-full object-contain" />
+                                <button className="absolute top-4 right-4 bg-white/10 backdrop-blur-sm text-white p-2 rounded-full hover:bg-white/20 transition-all duration-200" onClick={closeFullscreen}>
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
+
+                        <div className="space-y-2">
+                            <label className="text-white font-medium">Available Rooms *</label>
+                            <input
+                                type="number"
+                                name="availableRooms"
+                                placeholder="0"
+                                value={newRoom.availableRooms || ''}
+                                onChange={(e) => setNewRoom({ ...newRoom, availableRooms: Math.max(0, parseInt(e.target.value) || 0) })}
+                                required
+                                min="0"
+                                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            />
+                        </div>
+
+                        {error && (
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
+                                <svg className="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                                <span className="text-red-400">{error}</span>
+                            </div>
+                        )}
+
+                        <div className="flex gap-4 pt-4">
+                            <button
+                                type="button"
+                                onClick={() => navigate(-1)}
+                                className="flex-1 bg-white/10 border border-white/20 text-white font-semibold py-3 px-6 rounded-xl hover:bg-white/20 transition-all duration-200"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className={`flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 ${
+                                    isAddingRoom ? 'opacity-50 cursor-not-allowed' : 'shadow-lg hover:shadow-xl'
+                                }`}
+                                disabled={isAddingRoom}
+                            >
+                                {isAddingRoom ? (
+                                    <>
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        Adding Room...
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        Add Room
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            )}
-
-                    <input
-                        type="number"
-                        name="availableRooms"
-                        placeholder="Number of Available Rooms"
-                        value={newRoom.availableRooms}
-                        onChange={(e) => setNewRoom({ ...newRoom, availableRooms: Math.max(0, e.target.value) })} 
-                        required
-                        className="border bg-slate-900 border-gray-700 text-white rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-sky-700"
-                        aria-label="Number of Available Rooms"
-                    />
-
-                    {error && <div className="text-red-500">{error}</div>}
-
-                    <button
-                        type="submit"
-                        className={`bg-gradient-to-r from-black to-dark/50 hover:from-dark/50 hover:to-black rounded-full text-white font-bold py-2  hover:bg-dark/80 transition duration-300 w-full ${
-                            isAddingRoom ? 'opacity-50 cursor-not-allowed' : ''
-                        }`}
-                        disabled={isAddingRoom}
-                    >
-                        {isAddingRoom ? 'Adding Room...' : 'Add Room'}
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                        className="bg-gray-300 rounded-full text-gray-700 font-bold py-2 hover:bg-gray-400 transition duration-300 w-full"
-                    >
-                        Cancel
-                    </button>
-                </form>
             </div>
         </div>
     );

@@ -17,6 +17,15 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
       
       {/* Menu Panel */}
       <div className={`${showMenu ? "translate-x-0" : "-translate-x-full"} fixed left-0 top-0 z-50 h-screen w-80 bg-black/95 backdrop-blur-xl border-r border-white/20 transition-transform duration-300 md:hidden`}>
+        {/* Close Button */}
+        <button
+          onClick={() => setShowMenu(false)}
+          className="absolute top-4 right-4 p-2 rounded-lg bg-white/10 border border-white/20 text-gray-300 hover:text-white hover:bg-white/20 transition-all duration-200 z-10"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-6 border-b border-white/20">
@@ -75,20 +84,40 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
                 <Link 
                   to="/tips" 
                   onClick={() => setShowMenu(false)} 
-                  className="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all duration-200 text-sm"
+                  className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
                 >
                   Student Tips
                 </Link>
               </li>
               <li>
                 <Link 
+                  to="/resources" 
+                  onClick={() => setShowMenu(false)} 
+                  className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
+                >
+                  Student Resources
+                </Link>
+              </li>
+              <li>
+                <Link 
                   to="/contact" 
                   onClick={() => setShowMenu(false)} 
-                  className="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-all duration-200 text-sm"
+                  className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
                 >
                   Contact Us
                 </Link>
               </li>
+              {user && (
+                <li>
+                  <Link 
+                    to="/dashboard" 
+                    onClick={() => setShowMenu(false)} 
+                    className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
 

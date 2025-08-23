@@ -33,13 +33,13 @@ const Home = () => {
     <>
       <div className="gradient-dark bg-gray-950">
         {/* Hero Section with Video Background */}
-        <div className="h-[500px] lg:h-[520px] 2xl:h-[600px] relative">
+        <div className="relative">
           <video
             ref={videoRef} 
             autoPlay
             loop
             muted
-            className="absolute right-0 top-0 h-[500px] lg:h-[520px] 2xl:h-[600px] w-full object-cover z-[-1]"
+            className="absolute right-0 top-0 h-full w-full object-cover z-[-1]"
           >
             <source src={NatureVid} type="video/mp4" />
           </video>
@@ -58,8 +58,6 @@ const Home = () => {
         {/* Featured Locations Section */}
         <FeaturedLocations />
 
-        {/* Banner Section */}
-        <Banner />
 
         {/* Why Choose Us Section */}
         <WhyChooseUs />

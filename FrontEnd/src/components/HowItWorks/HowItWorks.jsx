@@ -68,7 +68,7 @@ const HowItWorks = () => {
                 </div>
 
                 {/* Step Card */}
-                <div className={`bg-gradient-to-br ${step.bgColor} border ${step.borderColor} rounded-2xl p-6 h-full group-hover:scale-105 transition-all duration-300`}>
+                <div className={`bg-gradient-to-br ${step.bgColor} border ${step.borderColor} rounded-2xl p-6 h-full transition-all duration-300`}>
                   <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${step.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <div className="text-white">
                       {step.icon}

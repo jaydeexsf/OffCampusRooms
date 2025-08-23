@@ -31,10 +31,10 @@ const Places = ({ handleOrderPopup }) => {
   // }
 
   return (
-    <div className="mainclassless dark:bg-gray-900 dark:text-white bg-gray-950 py-12 pt-[320px] xl:pt-[17vw] xxl:pt-[400px]">
+    <div className="dark:bg-gray-900 dark:text-white bg-gray-950 ">
       <section data-aos="fade-up" className="container">
         <div className="max-w-6xl mx-auto">
-          <h1 className="my-6 flex flex sm:flex-row items-start sm:items-center justify-between py-2 text-2xl md:text-3xl font-bold">
+          <h1 className="pt-6 flex flex sm:flex-row items-start sm:items-center justify-between py-2 text-2xl md:text-3xl font-bold">
             <span className="md:border-l-8 border-l-[6px] border-primary-500/40 pl-4 mb-4 sm:mb-0">Best Rooms</span>
             <span className="hover:bg-gradient-to-r transition-all duration-[0.2s] hover:cursor-pointer text-xs lg:text-[13px] bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 duration-600 hover:text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl">
               <Link to="all-rooms">View All Rooms</Link>

@@ -78,7 +78,7 @@ const Statistics = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-950">
+    <section className="py-20 bg-gray-950">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}

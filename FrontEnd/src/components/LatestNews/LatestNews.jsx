@@ -71,7 +71,7 @@ const LatestNews = () => {
           {/* Featured Article */}
           <div className="mb-12" data-aos="fade-up" data-aos-delay="200">
             {newsArticles.filter(article => article.featured).map((article) => (
-              <div key={article.id} className="relative overflow-hidden bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl group hover:scale-[1.02] transition-all duration-300">
+              <div key={article.id} className="relative overflow-hidden bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl group transition-all duration-300">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                   {/* Image */}
                   <div className="relative h-64 lg:h-full overflow-hidden">
@@ -122,7 +122,7 @@ const LatestNews = () => {
             {newsArticles.filter(article => !article.featured).map((article) => (
               <div 
                 key={article.id}
-                className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden group hover:scale-105 transition-all duration-300"
+                className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden group transition-all duration-300"
               >
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
