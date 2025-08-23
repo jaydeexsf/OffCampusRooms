@@ -30,6 +30,10 @@ const DropdownLinks = [
     link: "/tips",
   },
   {
+    name: "Student Resources",
+    link: "/resources",
+  },
+  {
     name: "Contact Us",
     link: "/contact",
   },
@@ -132,8 +136,14 @@ const Navbar = ({ handleBookRoomPopup }) => {
             {/* Right side actions */}
             <div className="flex items-center gap-3">
               {user ? (
-                <div className="hidden md:flex items-center">
+                <div className="hidden md:flex items-center gap-3">
                   <SignedIn>
+                    <Link 
+                      to="/dashboard"
+                      className="text-gray-300 hover:text-white font-medium transition-colors duration-200"
+                    >
+                      Dashboard
+                    </Link>
                     <div className="p-1 rounded-lg bg-white/10 border border-white/20">
                       <UserButton 
                         appearance={{

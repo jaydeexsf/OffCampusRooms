@@ -2,8 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import Hero from "../components/Hero/Hero";
 import NatureVid from "../assets/video/main.mp4";
 import Places from "../components/Places/Places";
-import Testimonial from "../components/Testimonial/Testimonial";
+import Statistics from "../components/Statistics/Statistics";
+import HowItWorks from "../components/HowItWorks/HowItWorks";
+import FeaturedLocations from "../components/FeaturedLocations/FeaturedLocations";
 import Banner from "../components/Banner/Banner";
+import WhyChooseUs from "../components/WhyChooseUs/WhyChooseUs";
+import StudentTestimonials from "../components/StudentTestimonials/StudentTestimonials";
+import LatestNews from "../components/LatestNews/LatestNews";
 import OrderPopup from "../components/OrderPopup/OrderPopup";
 // import roomsData from "../assets/RoomsData"; 
 
@@ -26,7 +31,8 @@ const Home = () => {
 
   return (
     <>
-      <div className="mt- gradient-dark bg-gray-950">
+      <div className="gradient-dark bg-gray-950">
+        {/* Hero Section with Video Background */}
         <div className="h-[500px] lg:h-[520px] 2xl:h-[600px] relative">
           <video
             ref={videoRef} 
@@ -39,16 +45,37 @@ const Home = () => {
           </video>
           <Hero handleOrderPopup={handleOrderPopup} />
         </div>
-        <div>
-          <Places handleOrderPopup={handleOrderPopup} />
-          <Banner />
-          <Testimonial />
-          <OrderPopup
-            orderPopup={orderPopup}
-            setOrderPopup={setOrderPopup}
-            roomDetails={selectedRoom}
-          />
-        </div>
+
+        {/* Statistics Section */}
+        <Statistics />
+
+        {/* Best Rooms Section */}
+        <Places handleOrderPopup={handleOrderPopup} />
+
+        {/* How It Works Section */}
+        <HowItWorks />
+
+        {/* Featured Locations Section */}
+        <FeaturedLocations />
+
+        {/* Banner Section */}
+        <Banner />
+
+        {/* Why Choose Us Section */}
+        <WhyChooseUs />
+
+        {/* Student Testimonials Section */}
+        <StudentTestimonials />
+
+        {/* Latest News Section */}
+        <LatestNews />
+
+        {/* Order Popup */}
+        <OrderPopup
+          orderPopup={orderPopup}
+          setOrderPopup={setOrderPopup}
+          roomDetails={selectedRoom}
+        />
       </div>
     </>
   );

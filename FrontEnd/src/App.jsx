@@ -20,6 +20,8 @@ import Contact from "./pages/Contact";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import Comments from "./pages/Comments";
+import StudentDashboard from "./pages/StudentDashboard";
+import StudentResources from "./pages/StudentResources";
 
 const App = () => {
   const { globalLoader } = useContext(GlobalContext);
@@ -50,6 +52,8 @@ const App = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="comment" element={<Comments />} />
+            <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="resources" element={<StudentResources />} />
             
             <Route path="admin" element={
               <ProtectedRoute adminOnly={true}>

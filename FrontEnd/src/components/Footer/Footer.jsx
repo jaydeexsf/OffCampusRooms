@@ -155,13 +155,12 @@ const Footer = () => {
                     </li>
                     <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
                       <Link
-                        to="/contact"
+                        to="/resources"
                         onClick={() => window.scrollTo(0, 0)}
                       >
                         <span>&#11162;</span>
-                        <span>Support</span>
+                        <span>Student Resources</span>
                       </Link>
-                      
                     </li>
                     <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
                       <Link
@@ -171,18 +170,24 @@ const Footer = () => {
                         <span>&#11162;</span>
                         <span>Student Tips</span>
                       </Link>
-                      
                     </li>
-
+                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
+                      <Link
+                        to="/contact"
+                        onClick={() => window.scrollTo(0, 0)}
+                      >
+                        <span>&#11162;</span>
+                        <span>Support</span>
+                      </Link>
+                    </li>
                     <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
                       <Link
                         to="/comment"
                         onClick={() => window.scrollTo(0, 0)}
                       >
                         <span>&#11162;</span>
-                        <span>FeedBack</span>
+                        <span>Feedback</span>
                       </Link>
-                      
                     </li>
                   </ul>
                 </div>
