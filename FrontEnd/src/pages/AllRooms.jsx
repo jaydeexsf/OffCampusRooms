@@ -4,6 +4,7 @@ import OrderPopup from "../components/OrderPopup/OrderPopup";
 import Img1 from "../assets/places/boat.jpg";
 import { GlobalContext } from "../components/GlobalContext";
 import Loader from './Loader';
+import { FiFilter } from "react-icons/fi";
 
 const AllRooms = () => {
   const { fetchAllRooms, allRooms } = useContext(GlobalContext);
@@ -14,7 +15,8 @@ const AllRooms = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDistance, setSelectedDistance] = useState(null);
   const [roomsData, setRooomsData] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   useEffect(() => {
     fetchAllRooms();
@@ -75,61 +77,204 @@ const AllRooms = () => {
         <Loader />
       ) : (
         <>
+          {/* Banner Section */}
           <div className="relative">
             <img
               src={Img1}
               alt="Banner"
-              className="w-full h-[200px] object-cover"
+              className="w-full h-[200px] md:h-[250px] object-cover"
             />
-            <div className="absolute top-[0px] left-0 w-full h-full flex items-center justify-center bg-black/50 text-white">
-              <h1 className="text-4xl mb-16 font-bold">Browse Rooms</h1>
-            </div>
-
-            <div className="absolute bottom-12 left-1/2 transform max-w-[600px] -translate-x-1/2 w-[80%]">
-              <input
-                type="text"
-                placeholder="Search by title or description"
-                className="w-full text-xs p-3 px-5 border text-white focus:outline-none focus:shadow-dark focus:shadow-md focus:border-dark bg-primary border-dark rounded-full"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 flex items-center justify-center">
+              <h1 className="text-3xl md:text-4xl font-bold text-white">Browse All Rooms</h1>
             </div>
           </div>
 
-          <section className="container md:mx-auto px-0">
-            <div className="flex flex-row gap-[-58px]">
-              <div className="md:w-1/4 w-[35%] sticky top-[60px] p-2 bg-gray-950 dark:bg-gray-800 shadow-lg max-h-[600px] overflow-y-auto">
-                <div className="mb-4">
-                  <h2 className="text-xs md:text-sm font-semibold">Filter by Location</h2>
-                  <div className="flex flex-col gap-1 mt-2  md:text-xs text-[10px]">
+          {/* Search Section */}
+          <div className="container mx-auto px-4 -mt-8 md:-mt-12 relative z-10">
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-2 shadow-xl">
+                <input
+                  type="text"
+                  placeholder="Search by title, description, or location..."
+                  className="w-full bg-transparent text-white placeholder-gray-300 px-4 py-3 focus:outline-none text-base"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Section */}
+          <section className="container mx-auto px-4 py-8">
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Filter Sidebar */}
+              <div className="lg:w-1/4">
+                <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 sticky top-6">
+                  <h2 className="text-xl font-bold text-white mb-6">Filters</h2>
+                  
+                  {/* Location Filter */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-white mb-3">Location</h3>
+                    <div className="space-y-2">
+                      {["gate 1", "gate 2", "gate 3", "motintane"].map((loc) => (
+                        <label key={loc} className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedLocation.includes(loc)}
+                            onChange={() => handleLocationChange(loc)}
+                            className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                          />
+                          <span className="text-gray-200">
+                            {loc.charAt(0).toUpperCase() + loc.slice(1)}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Amenities Filter */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-white mb-3">Amenities</h3>
+                    <div className="space-y-2">
+                      {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map(
+                        (amenity) => (
+                          <label
+                            key={amenity}
+                            className="flex items-center gap-3 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedAmenities.includes(amenity)}
+                              onChange={() => handleAmenityChange(amenity)}
+                              className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                            />
+                            <span className="text-gray-200">
+                              {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
+                            </span>
+                          </label>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Distance Filter */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-white mb-3">Distance to Campus</h3>
+                    <div className="space-y-2">
+                      {[5, 10, 20, 30, 40, 50].map((distance) => (
+                        <label key={distance} className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="distance"
+                            checked={selectedDistance === distance}
+                            onChange={() => handleDistanceChange(distance)}
+                            className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                          />
+                          <span className="text-gray-200">{distance} minutes or less</span>
+                        </label>
+                      ))}
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="distance"
+                          checked={selectedDistance === null}
+                          onChange={() => handleDistanceChange(null)}
+                          className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                        />
+                        <span className="text-gray-200">Any distance</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Room Cards Grid */}
+              <div className="lg:w-3/4">
+                <div className="mb-4 flex justify-between items-center">
+                  <p className="text-gray-300">
+                    Showing {filteredRooms.length} room{filteredRooms.length !== 1 ? 's' : ''}
+                  </p>
+                  {/* Mobile Filter Toggle Button */}
+                  <button
+                    className="lg:hidden flex items-center gap-2 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg px-4 py-2 text-white"
+                    onClick={() => setShowMobileFilters(!showMobileFilters)}
+                  >
+                    <FiFilter />
+                    <span>Filters</span>
+                  </button>
+                </div>
+                
+                {filteredRooms.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {filteredRooms.map((room, index) => (
+                      <PlaceCard
+                        key={index}
+                        {...room}
+                        handleOrderPopup={() => handleOrderPopup(room)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <h3 className="text-xl font-semibold text-gray-300 mb-2">No rooms found</h3>
+                    <p className="text-gray-500">Try adjusting your filters to see more results</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Mobile Filter Overlay */}
+          {showMobileFilters && (
+            <div className="lg:hidden fixed inset-0 bg-black/70 z-50 overflow-y-auto">
+              <div className="bg-gray-900 min-h-screen p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold text-white">Filters</h2>
+                  <button
+                    className="text-white text-2xl"
+                    onClick={() => setShowMobileFilters(false)}
+                  >
+                    &times;
+                  </button>
+                </div>
+                
+                {/* Location Filter */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-3">Location</h3>
+                  <div className="space-y-2">
                     {["gate 1", "gate 2", "gate 3", "motintane"].map((loc) => (
-                      <label key={loc} className="flex items-center gap-1">
+                      <label key={loc} className="flex items-center gap-3 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={selectedLocation.includes(loc)}
                           onChange={() => handleLocationChange(loc)}
+                          className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
                         />
-                        <span>{loc.slice(0, 1).toUpperCase() +loc.slice(1, loc.length) }</span>
+                        <span className="text-gray-200">
+                          {loc.charAt(0).toUpperCase() + loc.slice(1)}
+                        </span>
                       </label>
                     ))}
                   </div>
                 </div>
 
-                <div className=" mb-4">
-                  <h2 className="text-xs md:text-sm font-semibold">Filter by Amenities</h2>
-                  <div className="flex flex-col gap-1 mt-2 md:text-xs text-[10px]">
+                {/* Amenities Filter */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-3">Amenities</h3>
+                  <div className="space-y-2">
                     {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map(
                       (amenity) => (
                         <label
                           key={amenity}
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-3 cursor-pointer"
                         >
                           <input
                             type="checkbox"
                             checked={selectedAmenities.includes(amenity)}
                             onChange={() => handleAmenityChange(amenity)}
+                            className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
                           />
-                          <span>
+                          <span className="text-gray-200">
                             {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
                           </span>
                         </label>
@@ -138,45 +283,37 @@ const AllRooms = () => {
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <h2 className="text-xs md:text-sm  font-semibold">
-                    Filter by Distance (away from campus)
-                  </h2>
-                  <div className="flex flex-col gap-1 mt-2 md:text-xs text-[8px]">
+                {/* Distance Filter */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-3">Distance to Campus</h3>
+                  <div className="space-y-2">
                     {[5, 10, 20, 30, 40, 50].map((distance) => (
-                      <label key={distance} className="flex items-center gap-1">
+                      <label key={distance} className="flex items-center gap-3 cursor-pointer">
                         <input
                           type="radio"
                           name="distance"
                           checked={selectedDistance === distance}
                           onChange={() => handleDistanceChange(distance)}
+                          className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
                         />
-                        <span>{distance} minutes or less</span>
+                        <span className="text-gray-200">{distance} minutes or less</span>
                       </label>
                     ))}
-                    <label className="flex items-center gap-1">
+                    <label className="flex items-center gap-3 cursor-pointer">
                       <input
                         type="radio"
                         name="distance"
                         checked={selectedDistance === null}
                         onChange={() => handleDistanceChange(null)}
+                        className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
                       />
-                      <span>Any distance</span>
+                      <span className="text-gray-200">Any distance</span>
                     </label>
                   </div>
                 </div>
               </div>
-
-              <div className="md:w-[100%] grid grid-cols-1 ml-[-10px] md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
-                {filteredRooms.map((room, index) => (
-                  <PlaceCard
-                    {...room}
-                    handleOrderPopup={() => handleOrderPopup(room)}
-                  />
-                ))}
-              </div>
             </div>
-          </section>
+          )}
 
           {orderPopup && selectedRoom && (
             <OrderPopup

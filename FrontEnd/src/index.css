@@ -131,3 +131,9 @@
   height: 2px;
   @apply bg-primary-400 rounded-full;
 }
+
+@media (min-width: 1280px) and (max-width: 1536px) {
+  .mainclassless {
+    padding-top: 320px !important;
+  }
+}

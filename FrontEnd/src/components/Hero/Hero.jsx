@@ -147,29 +147,37 @@ const Hero = ({ handleOrderPopup }) => {
                   )}
                 </button>
               </div>
-
               {/* Features */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="400">
-                <div className="text-center p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <FiZap className="text-2xl text-blue-400" />
+              <div 
+                className="sm:grid grid-cols-3 gap-4 mt-16 max-w-4xl mx-auto hidden" 
+                data-aos="fade-up" 
+                data-aos-delay="400"
+              >
+                {/* Card 1 */}
+                <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
+                  <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <FiZap className="text-lg text-blue-400" />
                   </div>
-                  <h3 className="font-semibold text-white mb-2">Instant Search</h3>
-                  <p className="text-sm text-gray-300">Find available rooms in seconds with our smart filtering system</p>
+                  <h3 className="font-medium text-sm text-white mb-1">Instant Search</h3>
+                  <p className="text-xs text-gray-300">Find rooms in seconds with smart filtering</p>
                 </div>
-                <div className="text-center p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <FiShield className="text-2xl text-green-400" />
+
+                {/* Card 2 */}
+                <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
+                  <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <FiShield className="text-lg text-green-400" />
                   </div>
-                  <h3 className="font-semibold text-white mb-2">Verified Listings</h3>
-                  <p className="text-sm text-gray-300">All rooms are verified for quality and safety standards</p>
+                  <h3 className="font-medium text-sm text-white mb-1">Verified Listings</h3>
+                  <p className="text-xs text-gray-300">All rooms verified for quality & safety</p>
                 </div>
-                <div className="text-center p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <FiMessageCircle className="text-2xl text-purple-400" />
+
+                {/* Card 3 */}
+                <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
+                  <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <FiMessageCircle className="text-lg text-purple-400" />
                   </div>
-                  <h3 className="font-semibold text-white mb-2">24/7 Support</h3>
-                  <p className="text-sm text-gray-300">Get help anytime with our dedicated student support team</p>
+                  <h3 className="font-medium text-sm text-white mb-1">24/7 Support</h3>
+                  <p className="text-xs text-gray-300">Get help anytime with our student team</p>
                 </div>
               </div>
             </>
