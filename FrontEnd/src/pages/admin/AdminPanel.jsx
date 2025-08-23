@@ -13,7 +13,7 @@ import {
   HiOutlineUsers,
   HiOutlineDocumentText
 } from 'react-icons/hi';
-import { FiUsers, FiSettings, FiBarChart3, FiFileText } from 'react-icons/fi';
+
 
 const AdminPanel = () => {
   const { allRooms, faqs } = useContext(GlobalContext);

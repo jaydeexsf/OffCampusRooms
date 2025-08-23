@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from "react-slick";
-import { FiStar, FiQuote } from 'react-icons/fi';
+import { FiStar, FiMessageSquare } from 'react-icons/fi';
 
 const StudentTestimonials = () => {
   const testimonials = [
@@ -133,12 +133,12 @@ const StudentTestimonials = () => {
                 <div key={testimonial.id} className="px-4">
                   <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 h-full">
                     {/* Quote Icon */}
-                    <div className="flex justify-between items-start mb-4">
-                      <FiQuote className="text-blue-400 w-6 h-6" />
-                      <div className="flex gap-1">
-                        {renderStars(testimonial.rating)}
-                      </div>
-                    </div>
+                                         <div className="flex justify-between items-start mb-4">
+                       <FiMessageSquare className="text-blue-400 w-6 h-6" />
+                       <div className="flex gap-1">
+                         {renderStars(testimonial.rating)}
+                       </div>
+                     </div>
 
                     {/* Review Text */}
                     <p className="text-gray-300 text-sm leading-relaxed mb-6">

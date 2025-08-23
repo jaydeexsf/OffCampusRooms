@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiCalculator, FiMapPin, FiFileText, FiPhone, FiMail, FiClock, FiShield, FiHome, FiUsers, FiDollarSign } from 'react-icons/fi';
+import { FiGrid, FiMapPin, FiFileText, FiPhone, FiMail, FiClock, FiShield, FiHome, FiUsers, FiDollarSign } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 const StudentResources = () => {
@@ -133,7 +133,7 @@ const StudentResources = () => {
         {/* Budget Calculator */}
         <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-12">
           <div className="text-center mb-8">
-            <FiCalculator className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                         <FiGrid className="w-12 h-12 text-blue-400 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-white mb-2">Student Budget Calculator</h2>
             <p className="text-gray-400">Plan your monthly expenses and track your budget</p>
           </div>

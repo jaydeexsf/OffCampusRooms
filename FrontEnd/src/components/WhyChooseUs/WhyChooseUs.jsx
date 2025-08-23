@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiShield, FiClock, FiDollarSign, FiUsers, FiMapPin, FiCheckCircle } from 'react-icons/fi';
+import { FiShield, FiClock, FiDollarSign, FiUsers, FiMapPin, FiCheck } from 'react-icons/fi';
 
 const WhyChooseUs = () => {
   const features = [
@@ -43,14 +43,14 @@ const WhyChooseUs = () => {
       bgColor: "from-red-500/20 to-red-600/20",
       borderColor: "border-red-500/30"
     },
-    {
-      icon: <FiCheckCircle className="w-8 h-8" />,
-      title: "Quality Guarantee",
-      description: "We guarantee the quality of all our listings. If you're not satisfied, we'll help you find a better option.",
-      color: "from-teal-500 to-teal-600",
-      bgColor: "from-teal-500/20 to-teal-600/20",
-      borderColor: "border-teal-500/30"
-    }
+         {
+       icon: <FiCheck className="w-8 h-8" />,
+       title: "Quality Guarantee",
+       description: "We guarantee the quality of all our listings. If you're not satisfied, we'll help you find a better option.",
+       color: "from-teal-500 to-teal-600",
+       bgColor: "from-teal-500/20 to-teal-600/20",
+       borderColor: "border-teal-500/30"
+     }
   ];
 
   return (
