@@ -128,39 +128,15 @@ const PlaceCard = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-auto space-y-3">
+        <div className="mt-auto">
           {/* View Details Button */}
-          <button 
+          <button
             onClick={handleOrderPopup}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
           >
             <FiEye className="text-lg" />
             <span>View Details</span>
           </button>
-          
-          {/* Rate & Comment Buttons */}
-          <div className="flex gap-2">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onRateClick) onRateClick(_id);
-              }}
-              className="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-            >
-              <FiStar className="text-sm" />
-              <span className="text-sm">Rate</span>
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onCommentClick) onCommentClick(_id);
-              }}
-              className="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-            >
-              <FiMessageCircle className="text-sm" />
-              <span className="text-sm">Comment</span>
-            </button>
-          </div>
         </div>
       </div>
     </div>

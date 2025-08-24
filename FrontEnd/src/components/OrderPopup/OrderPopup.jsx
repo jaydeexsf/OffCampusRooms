@@ -3,6 +3,7 @@ import { FiX, FiChevronLeft, FiChevronRight, FiArrowLeft, FiMapPin, FiClock, FiP
 import { FiWifi, FiEye } from "react-icons/fi";
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
 import LocationGoogle from "../Location/LocationGoogle";
+import RatingComponent from "../Rating/RatingComponent";
 
 const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -43,8 +44,8 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
   return (
     <>
       {orderPopup && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl w-full max-w-4xl max-h-[95vh] overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl w-full max-w-6xl max-h-[95vh] overflow-hidden shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-blue-600 to-blue-500">
               {!showLocation ? (
@@ -84,7 +85,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                       <img
                         src={images[currentImage]}
                         alt={`Room ${currentImage + 1}`}
-                        className="w-full h-64 lg:h-full lg:object-cover"
+                        className="w-full h-64 lg:h-full object-cover lg:object-contain"
                       />
 
                       {images.length > 1 && (
@@ -194,6 +195,10 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                         <FiNavigation className="text-lg" />
                         <span>View Location & Get Directions</span>
                       </button>
+{/* Rating Component */}
+                      <div className="pt-4">
+                        <RatingComponent roomId={roomDetails._id} />
+                      </div>
                     </div>
                   </div>
                 </>

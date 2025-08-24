@@ -113,7 +113,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className="gradient-dark bg-gray-950 py-16 relative overflow-hidden">
+      <div className="gradient-dark bg-gray-950 py-12 sm:py-16 lg:py-20 relative overflow-hidden">
         <video
           autoPlay
           loop
@@ -123,78 +123,93 @@ const Footer = () => {
           <source src={UniversityVid} type="video/mp4" />
         </video>
         
-        <div className="container relative mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 py-0 bg-gray-950/80 backdrop-blur-sm rounded-2xl p-8">
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 py-8 sm:py-10 lg:py-12 bg-gray-950/85 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10">
             {showMessage && (
-              <div className="text-center bg-red-500/90 backdrop-blur-lg px-6 py-3 rounded-xl shadow-xl absolute top-[50%] translate-x-[-50%] translate-y-[-50%] left-[50%] text-white text-lg font-semibold z-50">
+              <div className="text-center bg-red-500/90 backdrop-blur-lg px-4 sm:px-6 py-3 rounded-xl shadow-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-sm sm:text-lg font-semibold z-50 w-11/12 sm:w-auto">
                 {showMessage}
               </div>
             )}
             
             {/* Company Info */}
-            <div className="space-y-6">
+            <div className="space-y-6 lg:space-y-8">
               <div className="flex items-center gap-3">
-                <img src={FooterLogo} alt="logo" className="h-12 w-auto" />
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                <img src={FooterLogo} alt="OffCampusRooms Logo" className="h-10 sm:h-12 w-auto" />
+                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  OffCampusRooms
                 </h1>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed">
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed pr-0 lg:pr-4">
                 Find the best rooms around the University of Limpopo. We provide affordable, 
                 student-friendly accommodation with easy access to campus.
               </p>
               
               {/* Contact Info */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <FiMapPin className="text-blue-400 flex-shrink-0" />
-                  <span className="text-sm">Mankweng, Polokwane</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <FiPhone className="text-green-400 flex-shrink-0" />
-                  <span className="text-sm">+27 79 219 2664</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <FiMail className="text-purple-400 flex-shrink-0" />
-                  <span className="text-sm">OffCampusRooms@gmail.com</span>
+              <div className="space-y-4">
+                <h4 className="text-white font-semibold text-sm sm:text-base mb-3">Contact Information</h4>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3 text-gray-300">
+                    <FiMapPin className="text-blue-400 flex-shrink-0 mt-0.5" size={16} />
+                    <span className="text-sm sm:text-base">Mankweng, Polokwane</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-300">
+                    <FiPhone className="text-green-400 flex-shrink-0" size={16} />
+                    <a href="tel:+27792192664" className="text-sm sm:text-base hover:text-green-400 transition-colors">
+                      +27 79 219 2664
+                    </a>
+                  </div>
+                  <div className="flex items-start gap-3 text-gray-300">
+                    <FiMail className="text-purple-400 flex-shrink-0 mt-0.5" size={16} />
+                    <a href="mailto:OffCampusRooms@gmail.com" className="text-sm sm:text-base hover:text-purple-400 transition-colors break-all">
+                      OffCampusRooms@gmail.com
+                    </a>
+                  </div>
                 </div>
               </div>
               
               {/* Social Media */}
-              <div className="flex gap-4">
-                <a 
-                  href="https://wa.me/+27792192664" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-green-600 hover:bg-green-500 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
-                >
-                  <FaWhatsapp className="text-white text-lg" />
-                </a>
-                <a 
-                  href="https://instagram.com/offcampusrooms" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
-                >
-                  <FaInstagram className="text-white text-lg" />
-                </a>
-                <a 
-                  href="https://linkedin.com/in/offcampusrooms" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
-                >
-                  <FaLinkedin className="text-white text-lg" />
-                </a>
+              <div className="pt-2">
+                <h4 className="text-white font-semibold text-sm sm:text-base mb-4">Follow Us</h4>
+                <div className="flex gap-3 sm:gap-4">
+                  <a 
+                    href="https://wa.me/+27792192664" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-green-600 hover:bg-green-500 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
+                    aria-label="Contact us on WhatsApp"
+                  >
+                    <FaWhatsapp className="text-white text-lg sm:text-xl" />
+                  </a>
+                  <a 
+                    href="https://instagram.com/offcampusrooms" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
+                    aria-label="Follow us on Instagram"
+                  >
+                    <FaInstagram className="text-white text-lg sm:text-xl" />
+                  </a>
+                  <a 
+                    href="https://linkedin.com/in/offcampusrooms" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-500 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
+                    aria-label="Connect with us on LinkedIn"
+                  >
+                    <FaLinkedin className="text-white text-lg sm:text-xl" />
+                  </a>
+                </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div className="space-y-8">
+            <div className="space-y-6 lg:space-y-8">
               <div>
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
+                  <FiArrowRight className="text-blue-400" size={20} />
                   Quick Links
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-2 sm:space-y-3">
                   {FooterLinks.map((link) => {
                     const IconComponent = link.icon;
                     return (
@@ -206,10 +221,10 @@ const Footer = () => {
                               ? handleAdminClick
                               : () => window.scrollTo(0, 0)
                           }
-                          className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group"
+                          className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group py-1 px-2 rounded-lg hover:bg-white/5"
                         >
-                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="text-sm font-medium">{link.title}</span>
+                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" size={16} />
+                          <span className="text-sm sm:text-base font-medium">{link.title}</span>
                         </Link>
                       </li>
                     );
@@ -219,12 +234,13 @@ const Footer = () => {
             </div>
 
             {/* Student Resources */}
-            <div className="space-y-8">
+            <div className="space-y-6 lg:space-y-8">
               <div>
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                  Student Resources
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 flex-wrap">
+                  <FaBook className="text-blue-400 flex-shrink-0" size={20} />
+                  <span className="break-words">Student Resources</span>
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-2 sm:space-y-3">
                   {ResourceLinks.map((link) => {
                     const IconComponent = link.icon;
                     return (
@@ -232,10 +248,10 @@ const Footer = () => {
                         <Link
                           to={link.link}
                           onClick={() => window.scrollTo(0, 0)}
-                          className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group"
+                          className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group py-1 px-2 rounded-lg hover:bg-white/5"
                         >
-                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300" />
-                          <span className="text-sm font-medium">{link.title}</span>
+                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" size={16} />
+                          <span className="text-sm sm:text-base font-medium break-words">{link.title}</span>
                         </Link>
                       </li>
                     );
@@ -246,9 +262,9 @@ const Footer = () => {
           </div>
           
           {/* Copyright */}
-          <div className="text-center py-6 mt-8 border-t border-white/10">
-            <p className="text-gray-400 text-sm">
-              &copy; 2024 All rights reserved || Built for UL Students by Johannes M.
+          <div className="text-center py-6 sm:py-8 mt-6 sm:mt-8 border-t border-white/10">
+            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed px-4">
+              &copy; 2024 OffCampusRooms. All rights reserved. Built for UL Students by Johannes M.
             </p>
           </div>
         </div>
