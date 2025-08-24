@@ -14,16 +14,29 @@ export const API_ENDPOINTS = {
   ADD_ROOM: `${API_BASE_URL}/api/rooms/add-room`,
   UPDATE_ROOM: `${API_BASE_URL}/api/rooms/update-room`,
   DELETE_ROOM: `${API_BASE_URL}/api/rooms/delete-room`,
-  
+
   // FAQ
   GET_FAQS: `${API_BASE_URL}/api/faq/questions`,
   ADD_FAQ: `${API_BASE_URL}/api/faq/add-qanda`,
   DELETE_FAQ: `${API_BASE_URL}/api/rooms/del-faq`,
-  
+
   // Comments
   GET_COMMENTS: `${API_BASE_URL}/api/comments`,
   ADD_COMMENT: `${API_BASE_URL}/api/comments/add`,
-  
+  GET_ROOM_COMMENTS: `${API_BASE_URL}/api/comments/room`,
+  UPDATE_COMMENT: `${API_BASE_URL}/api/comments`,
+  DELETE_COMMENT: `${API_BASE_URL}/api/comments`,
+
+  // Ratings
+  GET_ROOM_RATINGS: `${API_BASE_URL}/api/ratings/room`,
+  GET_USER_RATING: `${API_BASE_URL}/api/ratings/user`,
+  ADD_RATING: `${API_BASE_URL}/api/ratings`,
+  DELETE_RATING: `${API_BASE_URL}/api/ratings`,
+
+  // Statistics
+  GET_STATISTICS: `${API_BASE_URL}/api/statistics`,
+  GET_ROOM_STATISTICS: `${API_BASE_URL}/api/statistics/room`,
+
   // Distance
   CALCULATE_DISTANCE: `${API_BASE_URL}/api/distance/calculate`,
 };

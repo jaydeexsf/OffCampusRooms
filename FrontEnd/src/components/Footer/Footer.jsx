@@ -136,7 +136,6 @@ const Footer = () => {
               <div className="flex items-center gap-3">
                 <img src={FooterLogo} alt="logo" className="h-12 w-auto" />
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                  StudentRooms
                 </h1>
               </div>
               <p className="text-gray-300 text-sm leading-relaxed">
@@ -193,7 +192,6 @@ const Footer = () => {
             <div className="space-y-8">
               <div>
                 <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                  <FiArrowRight className="text-blue-400" />
                   Quick Links
                 </h3>
                 <ul className="space-y-3">
@@ -224,7 +222,6 @@ const Footer = () => {
             <div className="space-y-8">
               <div>
                 <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                  <FaBook className="text-blue-400" />
                   Student Resources
                 </h3>
                 <ul className="space-y-3">

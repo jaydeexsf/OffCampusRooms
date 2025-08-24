@@ -7,6 +7,8 @@ const roomRoutes = require("./routes/roomRoutes");
 const faqRoutes = require("./routes/faqRoutes")
 const distanceRoute = require('./routes/distanceRoute')
 const commentRoutes = require('./routes/CommentRoutes');
+const ratingRoutes = require('./routes/ratingRoutes');
+const statisticsRoutes = require('./routes/statisticsRoutes');
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ app.use("/api/rooms", roomRoutes);
 app.use('/api/faq', faqRoutes);
 app.use('/api/google', distanceRoute);
 app.use('/api/comments', commentRoutes);
+app.use('/api/ratings', ratingRoutes);
+app.use('/api/statistics', statisticsRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 5000;

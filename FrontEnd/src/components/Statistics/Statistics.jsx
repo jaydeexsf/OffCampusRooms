@@ -1,37 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { FiHome, FiUsers, FiStar, FiMapPin } from 'react-icons/fi';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
 
 const Statistics = () => {
   const [stats, setStats] = useState({
     totalRooms: 0,
-    studentsHoused: 0,
-    averageRating: 4.8,
+    totalRatings: 0,
+    averageRating: 0,
     averageDistance: 0
   });
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('https://offcampusrooms.onrender.com/api/rooms');
-        const rooms = response.data.rooms || [];
+        const response = await axios.get(API_ENDPOINTS.GET_STATISTICS);
+        const data = response.data;
         
-        // Calculate statistics
-        const totalRooms = rooms.length;
-        const availableRooms = rooms.filter(room => room.availableRooms > 0).length;
-        const totalCapacity = rooms.reduce((sum, room) => sum + (room.availableRooms || 0), 0);
-        const avgDistance = rooms.length > 0 
-          ? Math.round(rooms.reduce((sum, room) => sum + (room.minutesAway || 0), 0) / rooms.length)
-          : 0;
-
         setStats({
-          totalRooms: totalRooms,
-          studentsHoused: totalCapacity,
-          averageRating: 4.8, // You can calculate this from reviews later
-          averageDistance: avgDistance
+          totalRooms: data.totalRooms || 0,
+          totalRatings: data.totalRatings || 0,
+          averageRating: data.averageRating || 0,
+          averageDistance: data.averageDistance || 0
         });
       } catch (error) {
         console.error('Error fetching statistics:', error);
+        // Fallback to basic room count
+        try {
+          const roomsResponse = await axios.get(API_ENDPOINTS.ALL_ROOMS);
+          const rooms = roomsResponse.data.rooms || [];
+          const avgDistance = rooms.length > 0 
+            ? Math.round(rooms.reduce((sum, room) => sum + (room.minutesAway || 0), 0) / rooms.length)
+            : 0;
+
+          setStats({
+            totalRooms: rooms.length,
+            totalRatings: 0,
+            averageRating: 0,
+            averageDistance: avgDistance
+          });
+        } catch (fallbackError) {
+          console.error('Error fetching fallback statistics:', fallbackError);
+        }
       }
     };
 
@@ -50,16 +60,16 @@ const Statistics = () => {
     },
     {
       icon: <FiUsers className="w-8 h-8" />,
-      value: stats.studentsHoused,
-      label: "Students Housed",
-      description: "Happy residents",
+      value: stats.totalRatings,
+      label: "Total Ratings",
+      description: "Student reviews",
       color: "from-green-500 to-green-600",
       bgColor: "from-green-500/20 to-green-600/20",
       borderColor: "border-green-500/30"
     },
     {
       icon: <FiStar className="w-8 h-8" />,
-      value: stats.averageRating,
+      value: stats.averageRating > 0 ? stats.averageRating.toFixed(1) : 'N/A',
       label: "Average Rating",
       description: "Student satisfaction",
       color: "from-yellow-500 to-yellow-600",

@@ -1,5 +1,5 @@
 import React from "react";
-import { FiWifi, FiMapPin, FiClock, FiEye } from "react-icons/fi";
+import { FiWifi, FiMapPin, FiClock, FiEye, FiStar, FiMessageCircle } from "react-icons/fi";
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
 
 const amenitiesIcons = {
@@ -25,6 +25,7 @@ function capitalizeFirstLetter(str) {
 }
 
 const PlaceCard = ({
+  _id,
   images,
   title,
   description,
@@ -32,7 +33,11 @@ const PlaceCard = ({
   price,
   minutesAway,
   handleOrderPopup,
-  amenities
+  amenities,
+  averageRating = 0,
+  totalRatings = 0,
+  onRateClick,
+  onCommentClick
 }) => {
   return (
     <div
@@ -76,6 +81,30 @@ const PlaceCard = ({
           </div>
         </div>
 
+        {/* Rating Display */}
+        {averageRating > 0 && (
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FiStar
+                  key={star}
+                  className={`${
+                    star <= averageRating
+                      ? 'text-yellow-400 fill-current'
+                      : 'text-gray-400'
+                  } text-sm`}
+                />
+              ))}
+            </div>
+            <span className="text-white text-sm font-medium">
+              {averageRating.toFixed(1)}
+            </span>
+            <span className="text-gray-400 text-sm">
+              ({totalRatings} reviews)
+            </span>
+          </div>
+        )}
+
         {/* Amenities */}
         <div className="flex flex-wrap gap-2 mb-6">
           {Object.keys(amenities).slice(0, 4).map((amenity) => 
@@ -98,12 +127,40 @@ const PlaceCard = ({
           )}
         </div>
 
-        {/* Action Button */}
-        <div className="mt-auto">
-          <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+        {/* Action Buttons */}
+        <div className="mt-auto space-y-3">
+          {/* View Details Button */}
+          <button 
+            onClick={handleOrderPopup}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+          >
             <FiEye className="text-lg" />
             <span>View Details</span>
           </button>
+          
+          {/* Rate & Comment Buttons */}
+          <div className="flex gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onRateClick) onRateClick(_id);
+              }}
+              className="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <FiStar className="text-sm" />
+              <span className="text-sm">Rate</span>
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onCommentClick) onCommentClick(_id);
+              }}
+              className="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <FiMessageCircle className="text-sm" />
+              <span className="text-sm">Comment</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -131,6 +131,59 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
+    // Rating functions
+    const addRating = async (ratingData) => {
+        try {
+            const response = await axios.post(API_ENDPOINTS.ADD_RATING, ratingData);
+            return response.data;
+        } catch (error) {
+            console.error('Error adding rating:', error);
+            throw error;
+        }
+    };
+
+    const getRoomRatings = async (roomId) => {
+        try {
+            const response = await axios.get(`${API_ENDPOINTS.GET_ROOM_RATINGS}/${roomId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching room ratings:', error);
+            throw error;
+        }
+    };
+
+    // Comment functions
+    const addComment = async (commentData) => {
+        try {
+            const response = await axios.post(API_ENDPOINTS.ADD_COMMENT, commentData);
+            return response.data;
+        } catch (error) {
+            console.error('Error adding comment:', error);
+            throw error;
+        }
+    };
+
+    const getRoomComments = async (roomId) => {
+        try {
+            const response = await axios.get(`${API_ENDPOINTS.GET_ROOM_COMMENTS}/${roomId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching room comments:', error);
+            throw error;
+        }
+    };
+
+    // Statistics function
+    const getStatistics = async () => {
+        try {
+            const response = await axios.get(API_ENDPOINTS.GET_STATISTICS);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching statistics:', error);
+            throw error;
+        }
+    };
+
     return (
         <GlobalContext.Provider
             value={{
@@ -151,7 +204,11 @@ export const GlobalProvider = ({ children }) => {
                 fetchAllRooms,
                 isLoggedIn: isSignedIn,
                 isAdmin,
-
+                addRating,
+                getRoomRatings,
+                addComment,
+                getRoomComments,
+                getStatistics,
             }}
         >
             {children}
