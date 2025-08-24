@@ -7,7 +7,7 @@ import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
 const RatingComponent = ({ roomId, onRatingUpdate }) => {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, getToken } = useAuth();
   const { user } = useUser();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -26,7 +26,12 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
 
   const fetchUserRating = async () => {
     try {
-      const response = await axios.get(`${API_ENDPOINTS.GET_USER_RATING}/${roomId}`);
+      const token = await getToken();
+      const response = await axios.get(`${API_ENDPOINTS.GET_USER_RATING}/${roomId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (response.data.rating) {
         setUserRating(response.data.rating);
         setRating(response.data.rating.rating);
@@ -58,13 +63,18 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
 
     setIsSubmitting(true);
     try {
+      const token = await getToken();
       const ratingData = {
         roomId,
         rating,
         review: review.trim()
       };
 
-      const response = await axios.post(API_ENDPOINTS.ADD_RATING, ratingData);
+      const response = await axios.post(API_ENDPOINTS.ADD_RATING, ratingData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       
       setUserRating(response.data.rating);
       setShowRatingForm(false);
@@ -85,7 +95,12 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
     if (!isSignedIn) return;
 
     try {
-      await axios.delete(`${API_ENDPOINTS.DELETE_RATING}/${roomId}`);
+      const token = await getToken();
+      await axios.delete(`${API_ENDPOINTS.DELETE_RATING}/${roomId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setUserRating(null);
       setRating(0);
       setReview('');

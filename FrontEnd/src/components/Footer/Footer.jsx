@@ -113,7 +113,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className="gradient-dark bg-gray-950 py-12 sm:py-16 lg:py-20 relative overflow-hidden">
+      <div className="gradient-dark bg-gray-950 pt-12 sm:pt-16 lg:pt-20 relative overflow-hidden">
         <video
           autoPlay
           loop
@@ -136,7 +136,6 @@ const Footer = () => {
               <div className="flex items-center gap-3">
                 <img src={FooterLogo} alt="OffCampusRooms Logo" className="h-10 sm:h-12 w-auto" />
                 <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                  OffCampusRooms
                 </h1>
               </div>
               <p className="text-gray-300 text-sm sm:text-base leading-relaxed pr-0 lg:pr-4">
@@ -206,7 +205,6 @@ const Footer = () => {
             <div className="space-y-6 lg:space-y-8">
               <div>
                 <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
-                  <FiArrowRight className="text-blue-400" size={20} />
                   Quick Links
                 </h3>
                 <ul className="space-y-2 sm:space-y-3">
@@ -237,7 +235,6 @@ const Footer = () => {
             <div className="space-y-6 lg:space-y-8">
               <div>
                 <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 flex-wrap">
-                  <FaBook className="text-blue-400 flex-shrink-0" size={20} />
                   <span className="break-words">Student Resources</span>
                 </h3>
                 <ul className="space-y-2 sm:space-y-3">

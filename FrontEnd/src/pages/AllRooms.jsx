@@ -259,9 +259,7 @@ const AllRooms = () => {
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 py-10 gradient-dark">
-      {loading ? (
-        <Loader />
-      ) : (
+    
         <>
           {/* Sticky Apply Filters Button - Always visible when filters are selected */}
           {hasActiveFilters && (
@@ -477,7 +475,28 @@ const AllRooms = () => {
                   </button>
                 </div>
                 
-                {displayedRooms.length > 0 ? (
+                {loading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                    {[1, 2, 3, 4, 5, 6].map((index) => (
+                      <div key={index} className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 group overflow-hidden h-full flex flex-col animate-pulse">
+                        <div className="relative overflow-hidden rounded-xl mb-4">
+                          <div className="w-full h-48 bg-gray-700 rounded-xl"></div>
+                        </div>
+                        <div className="flex-1 flex flex-col">
+                          <div className="h-6 bg-gray-700 rounded mb-3"></div>
+                          <div className="flex items-center gap-4 mb-4">
+                            <div className="h-4 bg-gray-700 rounded w-1/3"></div>
+                            <div className="h-4 bg-gray-700 rounded w-1/3"></div>
+                          </div>
+                          <div className="h-4 bg-gray-700 rounded mb-6"></div>
+                          <div className="mt-auto">
+                            <div className="h-10 bg-gray-700 rounded-xl"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : displayedRooms.length > 0 ? (
                   <>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
                       {displayedRooms.map((room, index) => (
@@ -669,7 +688,6 @@ const AllRooms = () => {
             />
           )}
         </>
-      )}
     </div>
   );
 };

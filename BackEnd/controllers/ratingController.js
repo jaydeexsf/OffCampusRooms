@@ -4,8 +4,24 @@ const Room = require('../models/roomModel');
 // Add or update a rating
 const addRating = async (req, res) => {
   try {
+    console.log('Rating request body:', req.body);
+    console.log('User from auth:', req.user);
+    
     const { roomId, rating, review } = req.body;
     const { userId, userName, userImage } = req.user; // From Clerk auth
+
+    // Validate required fields
+    if (!roomId || !rating || !userId) {
+      return res.status(400).json({ 
+        message: 'Missing required fields',
+        received: { roomId, rating, userId }
+      });
+    }
+
+    // Validate rating value
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+    }
 
     // Validate room exists
     const room = await Room.findById(roomId);
@@ -19,7 +35,7 @@ const addRating = async (req, res) => {
     if (existingRating) {
       // Update existing rating
       existingRating.rating = rating;
-      existingRating.review = review;
+      existingRating.review = review || '';
       await existingRating.save();
       
       return res.status(200).json({
@@ -31,10 +47,10 @@ const addRating = async (req, res) => {
       const newRating = new Rating({
         roomId,
         userId,
-        userName,
-        userImage,
+        userName: userName || 'Anonymous User',
+        userImage: userImage || '',
         rating,
-        review
+        review: review || ''
       });
       
       await newRating.save();
@@ -46,7 +62,12 @@ const addRating = async (req, res) => {
     }
   } catch (error) {
     console.error('Error adding rating:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      message: 'Internal server error',
+      error: error.message 
+    });
   }
 };
 
