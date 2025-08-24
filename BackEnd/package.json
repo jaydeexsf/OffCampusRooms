@@ -1,6 +1,10 @@
 {
+  "name": "offcampusrooms-backend",
+  "version": "1.0.0",
+  "description": "Backend API for OffCampusRooms application",
+  "main": "server.js",
   "dependencies": {
-    "@clerk/clerk-react": "^5.11.0",
+    "@clerk/clerk-sdk-node": "^5.0.0",
     "axios": "^1.7.7",
     "body-parser": "^1.20.3",
     "cloudinary": "^2.5.0",
@@ -14,6 +18,10 @@
     "nodemon": "^3.1.7"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
