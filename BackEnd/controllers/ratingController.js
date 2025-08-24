@@ -71,23 +71,36 @@ const addRating = async (req, res) => {
   }
 };
 
-// Get ratings for a specific room
+// Get ratings for a specific room with pagination
 const getRoomRatings = async (req, res) => {
   try {
     const { roomId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
     
+    // Get paginated ratings
     const ratings = await Rating.find({ roomId })
       .sort({ createdAt: -1 })
-      .limit(10);
+      .skip(skip)
+      .limit(limit);
     
-    // Calculate average rating
-    const totalRating = ratings.reduce((sum, r) => sum + r.rating, 0);
-    const averageRating = ratings.length > 0 ? totalRating / ratings.length : 0;
+    // Get total count for pagination
+    const totalRatings = await Rating.countDocuments({ roomId });
+    
+    // Calculate average rating from all ratings (not just current page)
+    const allRatings = await Rating.find({ roomId }, 'rating');
+    const totalRating = allRatings.reduce((sum, r) => sum + r.rating, 0);
+    const averageRating = allRatings.length > 0 ? totalRating / allRatings.length : 0;
     
     res.status(200).json({
       ratings,
       averageRating: Math.round(averageRating * 10) / 10,
-      totalRatings: ratings.length
+      totalRatings,
+      currentPage: page,
+      totalPages: Math.ceil(totalRatings / limit),
+      hasNextPage: page < Math.ceil(totalRatings / limit),
+      hasPrevPage: page > 1
     });
   } catch (error) {
     console.error('Error getting room ratings:', error);

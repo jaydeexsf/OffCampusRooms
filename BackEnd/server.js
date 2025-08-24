@@ -81,9 +81,10 @@ const authMiddleware = async (req, res, next) => {
 app.use("/api/rooms", roomRoutes);
 app.use('/api/faq', faqRoutes);
 app.use('/api/google', distanceRoute);
-// Apply auth middleware to comment and rating routes
+// Apply auth middleware to comment routes
 app.use('/api/comments', authMiddleware, commentRoutes);
-app.use('/api/ratings', authMiddleware, ratingRoutes);
+// Rating routes with selective auth middleware
+app.use('/api/ratings', ratingRoutes);
 app.use('/api/statistics', statisticsRoutes);
 
 // Server listening

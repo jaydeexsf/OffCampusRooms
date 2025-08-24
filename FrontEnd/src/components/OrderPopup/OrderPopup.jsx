@@ -3,7 +3,7 @@ import { FiX, FiChevronLeft, FiChevronRight, FiArrowLeft, FiMapPin, FiClock, FiP
 import { FiWifi, FiEye } from "react-icons/fi";
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
 import LocationGoogle from "../Location/LocationGoogle";
-import RatingComponent from "../Rating/RatingComponent";
+import RoomRatingActions from "../Rating/RoomRatingActions";
 
 const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -195,9 +195,14 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                         <FiNavigation className="text-lg" />
                         <span>View Location & Get Directions</span>
                       </button>
-{/* Rating Component */}
+
+                      {/* Professional Rating Actions */}
                       <div className="pt-4">
-                        <RatingComponent roomId={roomDetails._id} />
+                        <RoomRatingActions 
+                          roomId={roomDetails._id} 
+                          roomTitle={roomDetails.title}
+                          className="w-full"
+                        />
                       </div>
                     </div>
                   </div>

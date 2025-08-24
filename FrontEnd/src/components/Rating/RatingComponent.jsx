@@ -150,13 +150,18 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
 
   return (
     <>
-      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Rate this room</h3>
+      <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+              <FiStar className="text-white text-lg" />
+            </div>
+            <h3 className="text-xl font-bold text-white">Rate this room</h3>
+          </div>
           {userRating && (
             <button
               onClick={handleDeleteRating}
-              className="text-red-400 hover:text-red-300 text-sm"
+              className="text-red-400 hover:text-red-300 text-sm font-medium px-3 py-1 rounded-lg hover:bg-red-500/10 transition-all duration-200"
             >
               Remove Rating
             </button>
@@ -164,44 +169,55 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
         </div>
 
         {!showRatingForm && !userRating ? (
-          <button
-            onClick={handleRatingClick}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            Rate this room
-          </button>
+          <div className="text-center">
+            <button
+              onClick={handleRatingClick}
+              className="w-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 hover:from-blue-500 hover:via-purple-500 hover:to-blue-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-3"
+            >
+              <FiStar className="text-xl" />
+              Rate this room
+            </button>
+            <p className="text-gray-400 text-sm mt-3">Share your experience with other students</p>
+          </div>
         ) : (
-          <div className="space-y-4">
-            {/* Stars */}
-            <div className="flex justify-center space-x-2">
-              {renderStars()}
+          <div className="space-y-6">
+            {/* Rating Stars Section */}
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h4 className="text-white font-semibold mb-3 text-center">How would you rate this room?</h4>
+              <div className="flex justify-center space-x-3 mb-4">
+                {renderStars()}
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-medium text-white">
+                  {rating === 0 && 'Select a rating'}
+                  {rating === 1 && '⭐ Poor'}
+                  {rating === 2 && '⭐⭐ Fair'}
+                  {rating === 3 && '⭐⭐⭐ Good'}
+                  {rating === 4 && '⭐⭐⭐⭐ Very Good'}
+                  {rating === 5 && '⭐⭐⭐⭐⭐ Excellent'}
+                </p>
+              </div>
             </div>
 
-            {/* Rating Text */}
-            <div className="text-center">
-              <p className="text-gray-300">
-                {rating === 0 && 'Select a rating'}
-                {rating === 1 && 'Poor'}
-                {rating === 2 && 'Fair'}
-                {rating === 3 && 'Good'}
-                {rating === 4 && 'Very Good'}
-                {rating === 5 && 'Excellent'}
-              </p>
-            </div>
-
-            {/* Review Text */}
-            <div>
+            {/* Review Section */}
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h4 className="text-white font-semibold mb-3">Write a review (optional)</h4>
               <textarea
                 value={review}
                 onChange={(e) => setReview(e.target.value)}
-                placeholder="Write a review (optional)..."
-                className="w-full bg-white/10 border border-white/20 rounded-lg p-3 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 resize-none"
-                rows="3"
+                placeholder="Share your experience about this room... What did you like or dislike?"
+                className="w-full bg-white/10 border border-white/20 rounded-xl p-4 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none transition-all duration-200"
+                rows="4"
                 maxLength="500"
               />
-              <p className="text-xs text-gray-400 mt-1">
-                {review.length}/500 characters
-              </p>
+              <div className="flex justify-between items-center mt-2">
+                <p className="text-xs text-gray-400">
+                  {review.length}/500 characters
+                </p>
+                <div className="flex items-center gap-1 text-xs text-gray-400">
+                  <span>💡 Tip: Be helpful and honest</span>
+                </div>
+              </div>
             </div>
 
             {/* Action Buttons */}
@@ -209,15 +225,25 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
               <button
                 onClick={handleSubmitRating}
                 disabled={isSubmitting || rating === 0}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] flex items-center justify-center gap-2"
               >
-                {isSubmitting ? 'Submitting...' : userRating ? 'Update Rating' : 'Submit Rating'}
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <FiStar className="text-lg" />
+                    {userRating ? 'Update Rating' : 'Submit Rating'}
+                  </>
+                )}
               </button>
               
               {!userRating && (
                 <button
                   onClick={() => setShowRatingForm(false)}
-                  className="px-4 py-3 text-gray-400 hover:text-white transition-colors duration-200"
+                  className="px-6 py-4 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
                 >
                   <FiX size={20} />
                 </button>
@@ -228,34 +254,64 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
 
         {/* Show current user rating */}
         {userRating && !showRatingForm && (
-          <div className="mt-4 p-4 bg-white/5 rounded-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <FiStar
-                      key={star}
-                      className={`${
-                        star <= userRating.rating
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-400'
-                      }`}
-                    />
-                  ))}
-                  <span className="text-white font-semibold">
-                    {userRating.rating}/5
-                  </span>
+          <div className="mt-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-5">
+            <div className="flex items-start gap-4">
+              {/* User Avatar */}
+              <div className="flex-shrink-0">
+                <img
+                  src={userRating.userImage || user?.imageUrl || '/default-avatar.png'}
+                  alt={userRating.userName || user?.firstName || 'User'}
+                  className="w-12 h-12 rounded-full border-2 border-white/20 object-cover"
+                  onError={(e) => {
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userRating.userName || 'User')}&background=3b82f6&color=fff&size=48`;
+                  }}
+                />
+              </div>
+              
+              {/* Rating Content */}
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <h5 className="text-white font-semibold">
+                      {userRating.userName || user?.firstName || 'You'}
+                    </h5>
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <FiStar
+                          key={star}
+                          size={16}
+                          className={`${
+                            star <= userRating.rating
+                              ? 'text-yellow-400 fill-current'
+                              : 'text-gray-400'
+                          }`}
+                        />
+                      ))}
+                      <span className="text-white font-semibold ml-1">
+                        {userRating.rating}/5
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowRatingForm(true)}
+                    className="text-blue-400 hover:text-blue-300 text-sm font-medium px-3 py-1 rounded-lg hover:bg-blue-500/10 transition-all duration-200"
+                  >
+                    Edit
+                  </button>
                 </div>
                 {userRating.review && (
-                  <p className="text-gray-300 text-sm">{userRating.review}</p>
+                  <p className="text-gray-300 text-sm leading-relaxed bg-white/5 rounded-lg p-3 border border-white/10">
+                    "{userRating.review}"
+                  </p>
                 )}
+                <p className="text-xs text-gray-400 mt-2">
+                  {new Date(userRating.createdAt || Date.now()).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
               </div>
-              <button
-                onClick={() => setShowRatingForm(true)}
-                className="text-blue-400 hover:text-blue-300 text-sm"
-              >
-                Edit
-              </button>
             </div>
           </div>
         )}
