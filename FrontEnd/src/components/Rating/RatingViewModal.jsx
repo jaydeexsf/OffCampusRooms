@@ -89,8 +89,8 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700 rounded-3xl w-full max-w-5xl h-[95vh] sm:h-[90vh] overflow-hidden shadow-2xl flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 relative">
           <button
@@ -107,7 +107,7 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <div className="flex-1 p-4 sm:p-6 overflow-y-auto min-h-0">
           {loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -137,17 +137,17 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
           ) : (
             <>
               {/* Rating Summary */}
-              <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-6 mb-6">
-                <div className="flex flex-col lg:flex-row gap-6">
+              <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
                   {/* Average Rating */}
                   <div className="text-center lg:text-left">
-                    <div className="text-5xl font-bold text-white mb-2">
+                    <div className="text-4xl sm:text-5xl font-bold text-white mb-2">
                       {averageRating.toFixed(1)}
                     </div>
                     <div className="flex items-center justify-center lg:justify-start gap-1 mb-2">
                       {renderStars(Math.round(averageRating))}
                     </div>
-                    <p className="text-gray-300">
+                    <p className="text-gray-300 text-sm sm:text-base">
                       Based on {totalRatings} review{totalRatings !== 1 ? 's' : ''}
                     </p>
                   </div>
@@ -155,17 +155,17 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
                   {/* Rating Distribution */}
                   {totalRatings > 0 && (
                     <div className="flex-1">
-                      <h4 className="text-white font-semibold mb-3">Rating Distribution</h4>
+                      <h4 className="text-white font-semibold mb-3 text-sm sm:text-base">Rating Distribution</h4>
                       {Object.entries(getRatingDistribution()).reverse().map(([stars, count]) => (
-                        <div key={stars} className="flex items-center gap-3 mb-2">
-                          <span className="text-gray-300 text-sm w-8">{stars}★</span>
+                        <div key={stars} className="flex items-center gap-2 sm:gap-3 mb-2">
+                          <span className="text-gray-300 text-xs sm:text-sm w-6 sm:w-8">{stars}★</span>
                           <div className="flex-1 bg-gray-600 rounded-full h-2">
                             <div
                               className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${totalRatings > 0 ? (count / totalRatings) * 100 : 0}%` }}
                             ></div>
                           </div>
-                          <span className="text-gray-400 text-sm w-8">{count}</span>
+                          <span className="text-gray-400 text-xs sm:text-sm w-6 sm:w-8">{count}</span>
                         </div>
                       ))}
                     </div>
@@ -182,19 +182,19 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
                 </div>
               ) : (
                 <>
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {currentRatings.map((rating, index) => (
                       <div
                         key={rating._id || index}
-                        className="bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-5 hover:from-gray-700 hover:to-gray-600 transition-all duration-300"
+                        className="bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-3 sm:p-5 hover:from-gray-700 hover:to-gray-600 transition-all duration-300"
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3 sm:gap-4">
                           {/* User Avatar */}
                           <div className="flex-shrink-0">
                             <img
                               src={rating.userImage || '/default-avatar.png'}
                               alt={rating.userName || 'User'}
-                              className="w-14 h-14 rounded-full border-2 border-gray-500 object-cover"
+                              className="w-10 h-10 sm:w-14 sm:h-14 rounded-full border-2 border-gray-500 object-cover"
                               onError={(e) => {
                                 e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(rating.userName || 'User')}&background=6366f1&color=fff&size=56`;
                               }}
@@ -202,30 +202,30 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
                           </div>
                           
                           {/* Rating Content */}
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-3">
-                              <div className="flex items-center gap-3">
-                                <h5 className="text-white font-semibold text-lg">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 sm:mb-3 gap-2">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                <h5 className="text-white font-semibold text-base sm:text-lg truncate">
                                   {rating.userName || 'Anonymous Student'}
                                 </h5>
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-1 flex-wrap">
                                   {renderStars(rating.rating)}
-                                  <span className="text-white font-medium ml-2">
+                                  <span className="text-white font-medium ml-1 sm:ml-2 text-sm sm:text-base">
                                     {rating.rating}/5
                                   </span>
-                                  <span className="text-gray-400 text-sm ml-2">
+                                  <span className="text-gray-400 text-xs sm:text-sm ml-1 sm:ml-2">
                                     • {getRatingText(rating.rating)}
                                   </span>
                                 </div>
                               </div>
-                              <span className="text-sm text-gray-400">
+                              <span className="text-xs sm:text-sm text-gray-400 flex-shrink-0">
                                 {formatDate(rating.createdAt)}
                               </span>
                             </div>
                             
                             {rating.review && (
-                              <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-600">
-                                <p className="text-gray-200 leading-relaxed">
+                              <div className="bg-gray-900/50 rounded-lg p-3 sm:p-4 border border-gray-600">
+                                <p className="text-gray-200 leading-relaxed text-sm sm:text-base break-words">
                                   "{rating.review}"
                                 </p>
                               </div>
@@ -238,39 +238,54 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-4 mt-8">
+                    <div className="flex items-center justify-center gap-2 sm:gap-4 mt-6 sm:mt-8 px-2">
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded-lg transition-colors"
+                        className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded-lg transition-colors text-sm sm:text-base"
                       >
-                        <FiChevronLeft size={16} />
-                        Previous
+                        <FiChevronLeft size={14} />
+                        <span className="hidden sm:inline">Previous</span>
+                        <span className="sm:hidden">Prev</span>
                       </button>
                       
-                      <div className="flex items-center gap-2">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                          <button
-                            key={page}
-                            onClick={() => setCurrentPage(page)}
-                            className={`w-10 h-10 rounded-lg font-medium transition-colors ${
-                              currentPage === page
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        ))}
+                      <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto max-w-[200px] sm:max-w-none">
+                        {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                          let page;
+                          if (totalPages <= 5) {
+                            page = i + 1;
+                          } else if (currentPage <= 3) {
+                            page = i + 1;
+                          } else if (currentPage >= totalPages - 2) {
+                            page = totalPages - 4 + i;
+                          } else {
+                            page = currentPage - 2 + i;
+                          }
+                          
+                          return (
+                            <button
+                              key={page}
+                              onClick={() => setCurrentPage(page)}
+                              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg font-medium transition-colors text-sm sm:text-base ${
+                                currentPage === page
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          );
+                        })}
                       </div>
                       
                       <button
                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                         disabled={currentPage === totalPages}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded-lg transition-colors"
+                        className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded-lg transition-colors text-sm sm:text-base"
                       >
-                        Next
-                        <FiChevronRight size={16} />
+                        <span className="hidden sm:inline">Next</span>
+                        <span className="sm:hidden">Next</span>
+                        <FiChevronRight size={14} />
                       </button>
                     </div>
                   )}
