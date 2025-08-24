@@ -4,8 +4,9 @@ import OrderPopup from "../components/OrderPopup/OrderPopup";
 import Img1 from "../assets/places/boat.jpg";
 import { GlobalContext } from "../components/GlobalContext";
 import Loader from './Loader';
-import { FiFilter, FiX } from "react-icons/fi";
+import { FiFilter, FiX, FiSearch, FiLoader } from "react-icons/fi";
 import axios from "axios";
+import { API_ENDPOINTS } from '../config/api';
 
 const AllRooms = () => {
   const { fetchAllRooms, allRooms } = useContext(GlobalContext);
@@ -22,7 +23,14 @@ const AllRooms = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const ROOMS_PER_PAGE = 4;
+  const [filterLoading, setFilterLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [tempFilters, setTempFilters] = useState({
+    location: [],
+    amenities: [],
+    distance: null
+  });
+  const ROOMS_PER_PAGE = 6;
 
   useEffect(() => {
     fetchAllRooms();
@@ -31,32 +39,133 @@ const AllRooms = () => {
   useEffect(() => {
     if (allRooms) {
       setRooomsData(allRooms);
+      // Set initial displayed rooms
+      const initialRooms = allRooms.slice(0, ROOMS_PER_PAGE);
+      setDisplayedRooms(initialRooms);
+      setCurrentPage(1);
+      setHasMore(allRooms.length > ROOMS_PER_PAGE);
       setLoading(false); 
     }
   }, [allRooms]);
 
-  // Update displayed rooms when filters change
-  useEffect(() => {
-    const filtered = getFilteredRooms();
-    const initialRooms = filtered.slice(0, ROOMS_PER_PAGE);
-    setDisplayedRooms(initialRooms);
-    setCurrentPage(1);
-    setHasMore(filtered.length > ROOMS_PER_PAGE);
-  }, [roomsData, selectedLocation, selectedAmenities, searchTerm, selectedDistance]);
+  // Function to fetch filtered rooms from API
+  const fetchFilteredRooms = async (filters) => {
+    setFilterLoading(true);
+    try {
+      // Check if any filters are actually applied
+      const hasLocationFilter = filters.location.length > 0;
+      const hasAmenitiesFilter = filters.amenities.length > 0;
+      const hasDistanceFilter = filters.distance !== null;
+      
+      // If no filters are applied, fetch all rooms instead
+      if (!hasLocationFilter && !hasAmenitiesFilter && !hasDistanceFilter) {
+        await fetchAllRooms();
+        setFilterLoading(false);
+        return;
+      }
+      
+      // If no locations selected, don't send location parameter (defaults to all)
+      const params = {
+        limitBy: 50 // Get more results for filtering
+      };
+      
+      // Only add location parameter if specific locations are selected
+      if (hasLocationFilter) {
+        params.location = filters.location.join(',');
+      }
+      
+      // Only add amenities parameter if specific amenities are selected
+      if (hasAmenitiesFilter) {
+        params.amenities = filters.amenities.join(',');
+      }
+      
+      // Only add distance parameter if specific distance is selected
+      if (hasDistanceFilter) {
+        params.maxDistance = filters.distance;
+      }
+      
+      const response = await axios.get(API_ENDPOINTS.SEARCH_ROOMS, { params });
+      
+      const filteredRooms = response.data.rooms || [];
+      setRooomsData(filteredRooms);
+      
+      // Reset pagination
+      const initialRooms = filteredRooms.slice(0, ROOMS_PER_PAGE);
+      setDisplayedRooms(initialRooms);
+      setCurrentPage(1);
+      setHasMore(filteredRooms.length > ROOMS_PER_PAGE);
+    } catch (error) {
+      console.error("Error fetching filtered rooms:", error);
+      // Fallback to client-side filtering if API fails
+      const filtered = getFilteredRooms();
+      const initialRooms = filtered.slice(0, ROOMS_PER_PAGE);
+      setDisplayedRooms(initialRooms);
+      setCurrentPage(1);
+      setHasMore(filtered.length > ROOMS_PER_PAGE);
+    } finally {
+      setFilterLoading(false);
+    }
+  };
 
+  // Function to search rooms from API
+  const searchRooms = async () => {
+    if (!searchTerm.trim()) {
+      // If search is empty, reset to all rooms
+      fetchAllRooms();
+      return;
+    }
+    
+    setSearchLoading(true);
+    try {
+      const response = await axios.get(API_ENDPOINTS.SEARCH_ROOMS, {
+        params: {
+          search: searchTerm,
+          limitBy: 50
+        },
+      });
+      
+      const searchResults = response.data.rooms || [];
+      setRooomsData(searchResults);
+      
+      // Reset pagination
+      const initialRooms = searchResults.slice(0, ROOMS_PER_PAGE);
+      setDisplayedRooms(initialRooms);
+      setCurrentPage(1);
+      setHasMore(searchResults.length > ROOMS_PER_PAGE);
+    } catch (error) {
+      console.error("Error searching rooms:", error);
+      // Fallback to client-side search if API fails
+      const filtered = getFilteredRooms();
+      const initialRooms = filtered.slice(0, ROOMS_PER_PAGE);
+      setDisplayedRooms(initialRooms);
+      setCurrentPage(1);
+      setHasMore(filtered.length > ROOMS_PER_PAGE);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  // Client-side filtering fallback
   const getFilteredRooms = () => {
     if (!roomsData) return [];
     return roomsData.filter((room) => {
-      const locationMatch =
-        selectedLocation.length === 0 || selectedLocation.includes(room.location);
-      const amenitiesMatch = selectedAmenities.every(
+      // Location match: if no locations selected, show all (default behavior)
+      // If locations selected, show rooms that match ANY of the selected locations (OR logic)
+      const locationMatch = selectedLocation.length === 0 || selectedLocation.includes(room.location);
+      
+      // Amenities match: if no amenities selected, show all
+      // If amenities selected, show rooms that have ANY of the selected amenities (OR logic)
+      const amenitiesMatch = selectedAmenities.length === 0 || selectedAmenities.some(
         (amenity) => room.amenities[amenity]
       );
-      const searchMatch =
+      
+      // Search match: if no search term, show all
+      const searchMatch = !searchTerm.trim() || 
         room.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         room.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const distanceMatch =
-        selectedDistance === null || room.minutesAway <= selectedDistance;
+      
+      // Distance match: if no distance selected, show all
+      const distanceMatch = selectedDistance === null || room.minutesAway <= selectedDistance;
 
       return locationMatch && amenitiesMatch && searchMatch && distanceMatch;
     });
@@ -75,12 +184,36 @@ const AllRooms = () => {
       setCurrentPage(nextPage);
       setHasMore(endIndex < filtered.length);
       setLoadingMore(false);
-    }, 500); // Simulate API delay
+    }, 500);
   };
 
   const applyFilters = () => {
     setShowMobileFilters(false);
-    // Filters are automatically applied via useEffect
+    const filters = {
+      location: selectedLocation,
+      amenities: selectedAmenities,
+      distance: selectedDistance
+    };
+    
+    // Check if any filters are actually selected
+    const hasAnyFilters = selectedLocation.length > 0 || selectedAmenities.length > 0 || selectedDistance !== null;
+    
+    if (!hasAnyFilters) {
+      // If no filters selected, just fetch all rooms
+      fetchAllRooms();
+    } else {
+      // Apply the selected filters
+      fetchFilteredRooms(filters);
+    }
+  };
+
+  const clearAllFilters = () => {
+    setSelectedLocation([]);
+    setSelectedAmenities([]);
+    setSelectedDistance(null);
+    setSearchTerm("");
+    // Reset to all rooms
+    fetchAllRooms();
   };
 
   const handleLocationChange = (location) => {
@@ -108,7 +241,21 @@ const AllRooms = () => {
     setOrderPopup(true);
   };
 
-  const totalFilteredRooms = getFilteredRooms().length;
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    searchRooms();
+  };
+
+  // Reset search and show all rooms
+  const handleSearchClear = () => {
+    setSearchTerm("");
+    fetchAllRooms();
+  };
+
+  const totalFilteredRooms = roomsData ? roomsData.length : 0;
+  
+  // Check if any filters are selected
+  const hasActiveFilters = selectedLocation.length > 0 || selectedAmenities.length > 0 || selectedDistance !== null;
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 py-10 gradient-dark">
@@ -116,6 +263,31 @@ const AllRooms = () => {
         <Loader />
       ) : (
         <>
+          {/* Sticky Apply Filters Button - Always visible when filters are selected */}
+          {hasActiveFilters && (
+            <div className="bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden lg:fixed">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-full shadow-2xl border-2 border-white/20 backdrop-blur-lg">
+                <button
+                  onClick={applyFilters}
+                  disabled={filterLoading}
+                  className="px-8 py-4 text-white font-semibold rounded-full transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
+                >
+                  {filterLoading ? (
+                    <>
+                      <FiLoader className="animate-spin text-lg" />
+                      <span>Applying Filters...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FiFilter className="text-lg" />
+                      <span>Apply Filters ({selectedLocation.length + selectedAmenities.length + (selectedDistance ? 1 : 0)} selected)</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Banner Section */}
           <div className="relative">
             <img
@@ -131,20 +303,42 @@ const AllRooms = () => {
           {/* Search Section */}
           <div className="container mx-auto px-4 -mt-8 md:-mt-12 relative z-10">
             <div className="max-w-2xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-2 shadow-xl">
-                <input
-                  type="text"
-                  placeholder="Search by title, description, or location..."
-                  className="w-full bg-transparent text-white placeholder-gray-300 px-4 py-3 focus:outline-none text-base"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+                             <form onSubmit={handleSearchSubmit} className="relative">
+                 <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-2 shadow-xl flex">
+                   <input
+                     type="text"
+                     placeholder="Search by title, description, or location..."
+                     className="flex-1 bg-transparent text-white placeholder-gray-300 px-4 py-3 focus:outline-none text-base"
+                     value={searchTerm}
+                     onChange={(e) => setSearchTerm(e.target.value)}
+                   />
+                   {searchTerm && (
+                     <button
+                       type="button"
+                       onClick={handleSearchClear}
+                       className="px-3 py-3 text-gray-400 hover:text-white transition-colors duration-200"
+                     >
+                       <FiX size={18} />
+                     </button>
+                   )}
+                   <button
+                     type="submit"
+                     disabled={searchLoading}
+                     className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                   >
+                     {searchLoading ? (
+                       <FiLoader className="animate-spin" />
+                     ) : (
+                       <FiSearch />
+                     )}
+                   </button>
+                 </div>
+               </form>
             </div>
           </div>
 
           {/* Main Content Section */}
-          <section className="container mx-auto px-4 py-8">
+          <section className="max-w-[1600px] mx-auto px-4 py-8 w-full">
             <div className="flex flex-col lg:flex-row gap-6">
               {/* Filter Sidebar - Hidden on mobile/tablet */}
               <div className="hidden lg:block lg:w-1/4">
@@ -224,6 +418,46 @@ const AllRooms = () => {
                       </label>
                     </div>
                   </div>
+
+                                     {/* Apply Filters Button */}
+                   <div className="sticky bottom-0 pt-4 bg-gray-900/95 backdrop-blur-lg border-t border-white/10 -mx-6 -mb-6 px-6 pb-6">
+                     <button
+                       onClick={applyFilters}
+                       disabled={filterLoading || !hasActiveFilters}
+                       className={`w-full font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 ${
+                         hasActiveFilters 
+                           ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white' 
+                           : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                       }`}
+                     >
+                       {filterLoading ? (
+                         <>
+                           <FiLoader className="animate-spin text-lg" />
+                           <span>Applying Filters...</span>
+                         </>
+                       ) : (
+                         <>
+                           <FiFilter className="text-lg" />
+                           <span>
+                             {hasActiveFilters 
+                               ? `Apply Filters (${selectedLocation.length + selectedAmenities.length + (selectedDistance ? 1 : 0)} selected)`
+                               : 'Select filters to apply'
+                             }
+                           </span>
+                         </>
+                       )}
+                     </button>
+                     
+                     {/* Clear Filters Button */}
+                     {hasActiveFilters && (
+                       <button
+                         onClick={clearAllFilters}
+                         className="w-full mt-3 text-gray-400 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:bg-white/5"
+                       >
+                         Clear All Filters
+                       </button>
+                     )}
+                   </div>
                 </div>
               </div>
 
@@ -383,15 +617,45 @@ const AllRooms = () => {
                     </div>
                   </div>
                   
-                  {/* Apply Button */}
-                  <div className="mt-8 pt-6 border-t border-white/20">
-                    <button
-                      onClick={applyFilters}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-                    >
-                      Apply Filters
-                    </button>
-                  </div>
+                                     {/* Apply Button */}
+                   <div className="mt-8 pt-6 border-t border-white/20">
+                     <button
+                       onClick={applyFilters}
+                       disabled={filterLoading || !hasActiveFilters}
+                       className={`w-full font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 ${
+                         hasActiveFilters 
+                           ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white' 
+                           : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                       }`}
+                     >
+                       {filterLoading ? (
+                         <>
+                           <FiLoader className="animate-spin text-lg" />
+                           <span>Applying Filters...</span>
+                         </>
+                       ) : (
+                         <>
+                           <FiFilter className="text-lg" />
+                           <span>
+                             {hasActiveFilters 
+                               ? `Apply Filters (${selectedLocation.length + selectedAmenities.length + (selectedDistance ? 1 : 0)} selected)`
+                               : 'Select filters to apply'
+                             }
+                           </span>
+                         </>
+                       )}
+                     </button>
+                     
+                     {/* Clear Filters Button */}
+                     {hasActiveFilters && (
+                       <button
+                         onClick={clearAllFilters}
+                         className="w-full mt-3 text-gray-400 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:bg-white/5"
+                       >
+                         Clear All Filters
+                       </button>
+                     )}
+                   </div>
                 </div>
               </div>
             </>

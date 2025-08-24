@@ -58,15 +58,8 @@ const Home = () => {
         {/* Featured Locations Section */}
         <FeaturedLocations />
 
-
-        {/* Why Choose Us Section */}
-        <WhyChooseUs />
-
         {/* Student Testimonials Section */}
         <StudentTestimonials />
-
-        {/* Latest News Section */}
-        <LatestNews />
 
         {/* Order Popup */}
         <OrderPopup

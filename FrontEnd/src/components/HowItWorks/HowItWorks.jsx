@@ -92,32 +92,21 @@ const HowItWorks = () => {
             ))}
           </div>
 
-          {/* Features Highlight */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6" data-aos="fade-up" data-aos-delay="600">
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <FiCheck className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Verified Listings</h3>
-              <p className="text-gray-400 text-sm">All rooms are verified for quality and safety</p>
-            </div>
-
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <FiPhone className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">24/7 Support</h3>
-              <p className="text-gray-400 text-sm">Get help anytime with our student team</p>
-            </div>
-
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <FiSearch className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Smart Search</h3>
-              <p className="text-gray-400 text-sm">Find rooms in seconds with advanced filtering</p>
+           {/* Call to Action */}
+           <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="600">
+            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Ready to Find Your Perfect Room?
+              </h3>
+              <p className="text-gray-300 mb-6">
+                Start your search today and join the community of satisfied students
+              </p>
+              <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                Browse All Rooms
+              </button>
             </div>
           </div>
+         
         </div>
       </div>
     </section>

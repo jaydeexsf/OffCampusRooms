@@ -6,7 +6,18 @@ import {
   FaWhatsapp,
   FaMobileAlt,
   FaMapMarkerAlt,
+  FaHome,
+  FaInfoCircle,
+  FaBed,
+  FaEnvelope,
+  FaCog,
+  FaQuestionCircle,
+  FaBook,
+  FaLightbulb,
+  FaHeadset,
+  FaComments
 } from "react-icons/fa";
+import { FiMail, FiPhone, FiMapPin, FiArrowRight } from "react-icons/fi";
 import UniversityVid from "../../assets/video/footer.mp4";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react"; 
@@ -15,22 +26,55 @@ const FooterLinks = [
   {
     title: "Home",
     link: "/",
+    icon: FaHome
   },
   {
     title: "About Us",
     link: "/about",
+    icon: FaInfoCircle
   },
   {
     title: "All Rooms",
     link: "/all-rooms",
+    icon: FaBed
   },
   {
     title: "Contact",
     link: "/contact",
+    icon: FaEnvelope
   },
   {
     title: "Admin",
     link: "/admin",
+    icon: FaCog
+  },
+];
+
+const ResourceLinks = [
+  {
+    title: "FAQs",
+    link: "/frequetly-asked-questions",
+    icon: FaQuestionCircle
+  },
+  {
+    title: "Student Resources",
+    link: "/resources",
+    icon: FaBook
+  },
+  {
+    title: "Student Tips",
+    link: "/tips",
+    icon: FaLightbulb
+  },
+  {
+    title: "Support",
+    link: "/contact",
+    icon: FaHeadset
+  },
+  {
+    title: "Feedback",
+    link: "/comment",
+    icon: FaComments
   },
 ];
 
@@ -69,7 +113,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className="dark:bg-gray-950 py-10  relative overflow-hidden">
+      <div className="gradient-dark bg-gray-950 py-16 relative overflow-hidden">
         <video
           autoPlay
           loop
@@ -78,53 +122,85 @@ const Footer = () => {
         >
           <source src={UniversityVid} type="video/mp4" />
         </video>
-        <div className="container relative">
-          <div className="grid md:grid-cols-3 py-0 bg-gray-950 backdrop-blur-sm rounded-t-xl">
+        
+        <div className="container relative mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-8 py-0 bg-gray-950/80 backdrop-blur-sm rounded-2xl p-8">
             {showMessage && (
-              <div className="text-center bg-primary px-4 shadow-xl py-2 rounded-md shadow-primary absolute top-[50%] translate-x-[-50%] translate-y-[-50%] left-[50%] text-red-500 text-lg font-semibold">
+              <div className="text-center bg-red-500/90 backdrop-blur-lg px-6 py-3 rounded-xl shadow-xl absolute top-[50%] translate-x-[-50%] translate-y-[-50%] left-[50%] text-white text-lg font-semibold z-50">
                 {showMessage}
               </div>
             )}
-            <div className="pt-8 lg:pb-12 text-xs px-4">
-              <h1 className="flex items-center mb-4 gap-3 text-xl sm:text-3xl font-bold text-justify sm:text-left">
-                <img src={FooterLogo} alt="logo" className="max-h-[60px]" />
-              </h1>
-              <p className="text-xs">
-                Find the best rooms around the University of Limpopo. We provide affordable, student-friendly accommodation with easy access to campus.
-              </p>
-              <br />
+            
+            {/* Company Info */}
+            <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <FaMapMarkerAlt />
-                <p>Mankweng, Polokwane</p>
+                <img src={FooterLogo} alt="logo" className="h-12 w-auto" />
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  StudentRooms
+                </h1>
               </div>
-              <div className="flex items-center gap-3 mt-1 ">
-                <FaMobileAlt />
-                <p>+27 79 219 2664</p>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Find the best rooms around the University of Limpopo. We provide affordable, 
+                student-friendly accommodation with easy access to campus.
+              </p>
+              
+              {/* Contact Info */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-gray-300">
+                  <FiMapPin className="text-blue-400 flex-shrink-0" />
+                  <span className="text-sm">Mankweng, Polokwane</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-300">
+                  <FiPhone className="text-green-400 flex-shrink-0" />
+                  <span className="text-sm">+27 79 219 2664</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-300">
+                  <FiMail className="text-purple-400 flex-shrink-0" />
+                  <span className="text-sm">OffCampusRooms@gmail.com</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 mt-3">
-                <a target="-"  href="https://wa.me/+2772192664">
-                  <FaWhatsapp className="text-[15px]  hover:text-dark/80" />
+              
+              {/* Social Media */}
+              <div className="flex gap-4">
+                <a 
+                  href="https://wa.me/+27792192664" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-green-600 hover:bg-green-500 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
+                >
+                  <FaWhatsapp className="text-white text-lg" />
                 </a>
-                <a target="-"  href="https://instagram.com/offcampusrooms">
-                  <FaInstagram className="text-[15px]  hover:text-dark/80" />
+                <a 
+                  href="https://instagram.com/offcampusrooms" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
+                >
+                  <FaInstagram className="text-white text-lg" />
                 </a>
-                <a target="-" href="https://linkedin.com/in/offcampusrooms">
-                  <FaLinkedin className="text-[15px] hover:text-dark/80" />
+                <a 
+                  href="https://linkedin.com/in/offcampusrooms" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-blue-600 hover:bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
+                >
+                  <FaLinkedin className="text-white text-lg" />
                 </a>
               </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 col-span-2 md:pl-10">
+
+            {/* Quick Links */}
+            <div className="space-y-8">
               <div>
-                <div className="py-8 px-4">
-                  <h1 className="text-[18px] lg:text-lg font-bold text-justify sm:text-left mb-2">
-                    Quick Links
-                  </h1>
-                  <ul className="flex flex-col gap-1">
-                    {FooterLinks.map((link) => (
-                      <li
-                        key={link.title}
-                        className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]"
-                      >
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  <FiArrowRight className="text-blue-400" />
+                  Quick Links
+                </h3>
+                <ul className="space-y-3">
+                  {FooterLinks.map((link) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <li key={link.title}>
                         <Link
                           to={link.title === "Admin" ? "#" : link.link}
                           onClick={
@@ -132,70 +208,51 @@ const Footer = () => {
                               ? handleAdminClick
                               : () => window.scrollTo(0, 0)
                           }
+                          className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group"
                         >
-                          <span>&#11162;</span>
-                          <span>{link.title}</span>
+                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="text-sm font-medium">{link.title}</span>
                         </Link>
                       </li>
-                    ))}
-                  </ul>
-                </div>
+                    );
+                  })}
+                </ul>
               </div>
+            </div>
+
+            {/* Student Resources */}
+            <div className="space-y-8">
               <div>
-                <div className="py-8 px-4">
-                  <h1 className="text-[18px] lg:text-lg font-bold text-justify sm:text-left mb-2">
-                    Student Resources
-                  </h1>
-                  <ul className="flex flex-col gap-1">
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
-                      <Link to="/frequetly-asked-questions" onClick={() => window.scrollTo(0, 0)}>
-                        <span>&#11162;</span>
-                        <span>FAQs</span>
-                      </Link>
-                    </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
-                      <Link
-                        to="/resources"
-                        onClick={() => window.scrollTo(0, 0)}
-                      >
-                        <span>&#11162;</span>
-                        <span>Student Resources</span>
-                      </Link>
-                    </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
-                      <Link
-                        to="/tips"
-                        onClick={() => window.scrollTo(0, 0)}
-                      >
-                        <span>&#11162;</span>
-                        <span>Student Tips</span>
-                      </Link>
-                    </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
-                      <Link
-                        to="/contact"
-                        onClick={() => window.scrollTo(0, 0)}
-                      >
-                        <span>&#11162;</span>
-                        <span>Support</span>
-                      </Link>
-                    </li>
-                    <li className="cursor-pointer hover:translate-x-1 duration-300 hover:!text-primary space-x-1 text-gray-400 dark:text-gray-200 text-[12px]">
-                      <Link
-                        to="/comment"
-                        onClick={() => window.scrollTo(0, 0)}
-                      >
-                        <span>&#11162;</span>
-                        <span>Feedback</span>
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
+                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  <FaBook className="text-blue-400" />
+                  Student Resources
+                </h3>
+                <ul className="space-y-3">
+                  {ResourceLinks.map((link) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <li key={link.title}>
+                        <Link
+                          to={link.link}
+                          onClick={() => window.scrollTo(0, 0)}
+                          className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group"
+                        >
+                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="text-sm font-medium">{link.title}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             </div>
           </div>
-          <div className="text-center py-2 text-[8px] lg:text-[12px] border-t-2 border-gray-300/50 bg-primary text-white">
-            &copy; 2024 All rights reserved || Built for UL Students by Johannes M.
+          
+          {/* Copyright */}
+          <div className="text-center py-6 mt-8 border-t border-white/10">
+            <p className="text-gray-400 text-sm">
+              &copy; 2024 All rights reserved || Built for UL Students by Johannes M.
+            </p>
           </div>
         </div>
       </div>

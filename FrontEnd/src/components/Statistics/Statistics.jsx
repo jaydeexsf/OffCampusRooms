@@ -123,20 +123,6 @@ const Statistics = () => {
             ))}
           </div>
 
-          {/* Call to Action */}
-          <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="600">
-            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Ready to Find Your Perfect Room?
-              </h3>
-              <p className="text-gray-300 mb-6">
-                Start your search today and join the community of satisfied students
-              </p>
-              <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                Browse All Rooms
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </section>

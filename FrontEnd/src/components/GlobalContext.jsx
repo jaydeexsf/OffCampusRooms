@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useUser, useAuth } from "@clerk/clerk-react";
+import { API_ENDPOINTS, getRoomUrl, getFaqUrl } from '../config/api';
 
 export const GlobalContext = createContext();
 
@@ -47,7 +48,7 @@ export const GlobalProvider = ({ children }) => {
      const fetchAllRooms = async () => {
         setGolbalLoader(true);
             try {
-                const response = await axios.get("https://offcampusrooms.onrender.com/api/rooms/all");
+                const response = await axios.get(API_ENDPOINTS.ALL_ROOMS);
                 setAllRooms(response.data.rooms);
             } catch (error) {
                 console.error('Error fetching all rooms:', error);
@@ -59,7 +60,7 @@ export const GlobalProvider = ({ children }) => {
         const fetchFAQs = async () => {
             setIsFaqLoading(true);
             try {
-                const response = await axios.get("https://offcampusrooms.onrender.com/api/faq/questions");
+                const response = await axios.get(API_ENDPOINTS.GET_FAQS);
                 setFaqs(response.data);
             } catch (error) {
                 console.error('Error fetching FAQs:', error);
@@ -71,7 +72,7 @@ export const GlobalProvider = ({ children }) => {
     const addRoom = async (newRoom) => {
         setIsAddingRoom(true);
         try {
-            const response = await axios.post("https://offcampusrooms.onrender.com/api/rooms/add-room", newRoom);
+            const response = await axios.post(API_ENDPOINTS.ADD_ROOM, newRoom);
             console.log(newRoom)
             console.log('ss')
             setAllRooms((prevRooms) => [...prevRooms, response.data]);
@@ -85,7 +86,7 @@ export const GlobalProvider = ({ children }) => {
     const updateRoom = async (roomId, updatedRoom) => {
         setIsUpdatingRoom(true);
         try {
-            const response = await axios.put(`https://offcampusrooms.onrender.com/api/rooms/update-room/${roomId}`, updatedRoom);
+            const response = await axios.put(getRoomUrl(roomId, 'update'), updatedRoom);
             setAllRooms((prevRooms) =>
                 prevRooms.map((room) => (room._id === roomId ? response.data : room))
             );
@@ -99,7 +100,7 @@ export const GlobalProvider = ({ children }) => {
     const deleteRoom = async (roomId) => {
         setIsDeletingRoom(true);
         try {
-            await axios.delete(`https://offcampusrooms.onrender.com/api/rooms/delete-room/${roomId}`);
+            await axios.delete(getRoomUrl(roomId, 'delete'));
             setAllRooms((prevRooms) => prevRooms.filter((room) => room._id !== roomId));
         } catch (error) {
             console.error('Error deleting room:', error);
@@ -112,7 +113,7 @@ export const GlobalProvider = ({ children }) => {
     const addFaq = async (newFaq) => {
         setIsPostingFaq(true);
         try {
-            const response = await axios.post("https://offcampusrooms.onrender.com/api/faq/add-qanda", newFaq);
+            const response = await axios.post(API_ENDPOINTS.ADD_FAQ, newFaq);
             setFaqs((prevFaqs) => [...prevFaqs, response.data]);
         } catch (error) {
             console.error('Error adding FAQ:', error);
@@ -123,7 +124,7 @@ export const GlobalProvider = ({ children }) => {
 
     const deleteFaq = async (faqId) => {
         try {
-            await axios.delete(`https://offcampusrooms.onrender.com/api/rooms/del-faq/${faqId}`);
+            await axios.delete(getFaqUrl(faqId, 'delete'));
             setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== faqId));
         } catch (error) {
             console.error('Error deleting FAQ:', error);
