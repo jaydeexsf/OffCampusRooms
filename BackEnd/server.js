@@ -30,37 +30,50 @@ app.use(express.json()); // Allows the server to accept JSON requests
 // Authentication middleware
 const authMiddleware = async (req, res, next) => {
   try {
+    console.log('Auth middleware - headers:', req.headers.authorization);
+    
     const authHeader = req.headers.authorization;
     if (!authHeader) {
+      console.log('No authorization header provided');
       return res.status(401).json({ message: 'No authorization header' });
     }
     
     const token = authHeader.replace('Bearer ', '');
     if (!token) {
+      console.log('No token found in authorization header');
       return res.status(401).json({ message: 'No token provided' });
     }
     
+    console.log('Verifying token with Clerk...');
     // Verify the token with Clerk
     const session = await clerkClient.sessions.verifySessionToken(token);
     if (!session) {
+      console.log('Invalid session token');
       return res.status(401).json({ message: 'Invalid token' });
     }
     
+    console.log('Session verified, getting user details...');
     // Get user details
     const user = await clerkClient.users.getUser(session.userId);
     
     // Add user info to request object
     req.user = {
       userId: session.userId,
-      userName: user.firstName + ' ' + user.lastName,
-      userImage: user.imageUrl,
-      imageUrl: user.imageUrl // For comment controller compatibility
+      userName: (user.firstName || '') + ' ' + (user.lastName || ''),
+      userImage: user.imageUrl || '',
+      imageUrl: user.imageUrl || '' // For comment controller compatibility
     };
     
+    console.log('User authenticated successfully:', req.user);
     next();
   } catch (error) {
     console.error('Authentication error:', error);
-    return res.status(401).json({ message: 'Authentication failed' });
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    return res.status(401).json({ 
+      message: 'Authentication failed',
+      error: error.message 
+    });
   }
 };
 

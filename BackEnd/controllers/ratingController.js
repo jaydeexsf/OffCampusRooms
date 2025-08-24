@@ -98,22 +98,50 @@ const getRoomRatings = async (req, res) => {
 // Get user's rating for a specific room
 const getUserRating = async (req, res) => {
   try {
+    console.log('Get user rating - params:', req.params);
+    console.log('Get user rating - user:', req.user);
+    
     const { roomId } = req.params;
+    
+    // Check if user is authenticated
+    if (!req.user || !req.user.userId) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    
     const { userId } = req.user;
+    
+    // Validate roomId
+    if (!roomId) {
+      return res.status(400).json({ message: 'Room ID is required' });
+    }
     
     const rating = await Rating.findOne({ roomId, userId });
     
     res.status(200).json({ rating });
   } catch (error) {
     console.error('Error getting user rating:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      message: 'Internal server error',
+      error: error.message 
+    });
   }
 };
 
 // Delete user's rating
 const deleteRating = async (req, res) => {
   try {
+    console.log('Delete rating - params:', req.params);
+    console.log('Delete rating - user:', req.user);
+    
     const { roomId } = req.params;
+    
+    // Check if user is authenticated
+    if (!req.user || !req.user.userId) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    
     const { userId } = req.user;
     
     const rating = await Rating.findOneAndDelete({ roomId, userId });
@@ -125,7 +153,11 @@ const deleteRating = async (req, res) => {
     res.status(200).json({ message: 'Rating deleted successfully' });
   } catch (error) {
     console.error('Error deleting rating:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error details:', error.message);
+    res.status(500).json({ 
+      message: 'Internal server error',
+      error: error.message 
+    });
   }
 };
 
