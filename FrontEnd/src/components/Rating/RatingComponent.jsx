@@ -26,10 +26,14 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
 
   const fetchUserRating = async () => {
     try {
+      console.log('Fetching user rating...');
       const token = await getToken();
+      console.log('Token for fetch:', token ? 'Token exists' : 'No token');
+      
       const response = await axios.get(`${API_ENDPOINTS.GET_USER_RATING}/${roomId}`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
       if (response.data.rating) {
@@ -39,6 +43,8 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
       }
     } catch (error) {
       console.error('Error fetching user rating:', error);
+      console.error('Fetch error response:', error.response?.data);
+      console.error('Fetch error status:', error.response?.status);
     }
   };
 
@@ -63,16 +69,21 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
 
     setIsSubmitting(true);
     try {
+      console.log('Getting token...');
       const token = await getToken();
+      console.log('Token received:', token ? 'Token exists' : 'No token');
+      
       const ratingData = {
         roomId,
         rating,
         review: review.trim()
       };
 
+      console.log('Submitting rating data:', ratingData);
       const response = await axios.post(API_ENDPOINTS.ADD_RATING, ratingData, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
       
@@ -85,6 +96,8 @@ const RatingComponent = ({ roomId, onRatingUpdate }) => {
       }
     } catch (error) {
       console.error('Error submitting rating:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
       alert('Failed to submit rating. Please try again.');
     } finally {
       setIsSubmitting(false);

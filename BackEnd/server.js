@@ -45,20 +45,20 @@ const authMiddleware = async (req, res, next) => {
     }
     
     console.log('Verifying token with Clerk...');
-    // Verify the token with Clerk
-    const session = await clerkClient.sessions.verifySessionToken(token);
-    if (!session) {
+    // Verify the token with Clerk using the correct v5 API
+    const payload = await clerkClient.verifyToken(token);
+    if (!payload || !payload.sub) {
       console.log('Invalid session token');
       return res.status(401).json({ message: 'Invalid token' });
     }
     
-    console.log('Session verified, getting user details...');
-    // Get user details
-    const user = await clerkClient.users.getUser(session.userId);
+    console.log('Token verified, getting user details...');
+    // Get user details using the user ID from token payload
+    const user = await clerkClient.users.getUser(payload.sub);
     
     // Add user info to request object
     req.user = {
-      userId: session.userId,
+      userId: payload.sub,
       userName: (user.firstName || '') + ' ' + (user.lastName || ''),
       userImage: user.imageUrl || '',
       imageUrl: user.imageUrl || '' // For comment controller compatibility
