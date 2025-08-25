@@ -5,7 +5,7 @@ import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 import LoginPopup from '../LoginPopup/LoginPopup';
 
-const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate }) => {
+const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, embedded = false }) => {
   const { isSignedIn, getToken } = useAuth();
   const { user } = useUser();
   const [rating, setRating] = useState(0);
@@ -167,6 +167,115 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate })
   if (!isOpen) return null;
 
   const ratingInfo = getRatingText(rating);
+
+  if (embedded) {
+    return (
+      <>
+        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700 rounded-2xl w-full h-full overflow-hidden shadow-xl flex flex-col">
+          {/* Header */}
+          {/* <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-4">
+            <div>
+              <h2 className="text-xl font-bold text-white mb-1">
+                {userRating && !isEditing ? 'Your Review' : 'Rate This Room fgf'}
+              </h2>
+              <p className="text-purple-100 text-sm">{roomTitle}</p>
+            </div>
+          </div> */}
+
+          {/* Content */}
+          <div className="flex-1 p-4 overflow-y-auto">
+            {!isSignedIn ? (
+              <div className="text-center py-8">
+                <FiUser className="text-gray-400 text-4xl mx-auto mb-3" />
+                <h3 className="text-lg font-semibold text-white mb-2">Sign in to rate this room</h3>
+                <p className="text-gray-400 mb-4 text-sm">Share your experience with other students</p>
+                <button
+                  onClick={() => setShowLoginPopup(true)}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-2 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform text-sm"
+                >
+                  Sign In to Rate
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Rating Stars */}
+                <div className="text-center">
+                  <h3 className="text-white font-semibold mb-3 text-sm">How would you rate this room?</h3>
+                  <div className="flex justify-center gap-2 mb-3">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="transition-all duration-200 transform hover:scale-110"
+                      >
+                        <FiStar
+                          size={28}
+                          className={`${
+                            star <= (hoverRating || rating)
+                              ? 'text-yellow-400 fill-current'
+                              : 'text-gray-400'
+                          } transition-colors duration-200`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  {rating > 0 && (
+                    <div className={`text-center ${ratingInfo.color} font-medium text-sm`}>
+                      <span className="mr-2">{ratingInfo.emoji}</span>
+                      {ratingInfo.text}
+                    </div>
+                  )}
+                </div>
+
+                {/* Review Text */}
+                <div>
+                  <label className="block text-white font-medium mb-2 text-sm">
+                    Share your experience (optional)
+                  </label>
+                  <textarea
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                    placeholder="Tell other students about your experience with this room..."
+                    className="w-full bg-gray-800 border border-gray-600 rounded-xl p-3 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 resize-none text-sm"
+                    rows={4}
+                    maxLength={500}
+                  />
+                  <div className="text-right text-xs text-gray-400 mt-1">
+                    {review.length}/500 characters
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={rating === 0 || isSubmitting}
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none disabled:cursor-not-allowed text-sm"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Submitting...</span>
+                    </div>
+                  ) : (
+                    `${userRating ? 'Update' : 'Submit'} Rating`
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Login Popup */}
+        <LoginPopup 
+          isOpen={showLoginPopup} 
+          onClose={() => setShowLoginPopup(false)} 
+        />
+      </>
+    );
+  }
 
   return (
     <>

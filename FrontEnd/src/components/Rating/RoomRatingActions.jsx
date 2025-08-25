@@ -96,7 +96,7 @@ const RoomRatingActions = ({ roomId, roomTitle, className = '' }) => {
           {/* Rate Room Button */}
           <button
             onClick={() => setShowRateModal(true)}
-            className={`${totalRatings > 0 ? 'flex-1' : 'w-full'} flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600/80 to-purple-500/80 hover:from-purple-600 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] backdrop-blur-sm border border-purple-500/30`}
+            className={`${totalRatings > 0 ? 'flex-1' : 'w-full'} flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600/80 to-purple-500/80 hover:from-purple-600 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform backdrop-blur-sm border border-purple-500/30`}
           >
             <FiStar size={16} />
             <span className="hidden sm:inline">Rate Room</span>

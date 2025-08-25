@@ -3,7 +3,7 @@ import { FiStar, FiX, FiUser, FiMessageCircle, FiChevronLeft, FiChevronRight } f
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
-const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
+const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle, embedded = false }) => {
   const [ratings, setRatings] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [totalRatings, setTotalRatings] = useState(0);
@@ -87,6 +87,126 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle }) => {
   const totalPages = Math.ceil(ratings.length / ratingsPerPage);
 
   if (!isOpen) return null;
+
+  if (embedded) {
+    return (
+      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700 rounded-2xl w-full h-full overflow-hidden shadow-xl flex flex-col">
+        {/* Header */}
+        {/* <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-1">Student Reviews</h2>
+            <p className="text-blue-100 text-sm">{roomTitle}</p>
+          </div>
+        </div> */}
+
+        {/* Content */}
+        <div className="flex-1 p-4 overflow-y-auto min-h-0">
+          {loading ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="flex gap-4 p-4 bg-gray-800 rounded-xl">
+                    <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-700 rounded mb-2 w-1/3"></div>
+                      <div className="h-3 bg-gray-700 rounded mb-2 w-1/4"></div>
+                      <div className="h-16 bg-gray-700 rounded w-full"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <FiMessageCircle className="text-red-400 text-3xl mx-auto mb-3" />
+              <p className="text-red-300 font-medium mb-3">{error}</p>
+              <button
+                onClick={fetchRatings}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Rating Summary */}
+              <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl p-4 mb-4">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-white mb-2">
+                    {averageRating.toFixed(1)}
+                  </div>
+                  <div className="flex items-center justify-center gap-1 mb-2">
+                    {renderStars(Math.round(averageRating))}
+                  </div>
+                  <p className="text-gray-300 text-sm">
+                    Based on {totalRatings} review{totalRatings !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+
+              {/* Reviews List */}
+              {totalRatings === 0 ? (
+                <div className="text-center py-8">
+                  <FiMessageCircle className="text-gray-400 text-4xl mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-white mb-2">No reviews yet</h3>
+                  <p className="text-gray-400 text-sm">Be the first to share your experience!</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {currentRatings.map((rating, index) => (
+                    <div
+                      key={rating._id || index}
+                      className="bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-3 hover:from-gray-700 hover:to-gray-600 transition-all duration-300"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0">
+                          <img
+                            src={rating.userImage || '/default-avatar.png'}
+                            alt={rating.userName || 'User'}
+                            className="w-10 h-10 rounded-full border-2 border-gray-500 object-cover"
+                            onError={(e) => {
+                              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(rating.userName || 'User')}&background=6366f1&color=fff&size=40`;
+                            }}
+                          />
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <h5 className="text-white font-semibold text-sm truncate">
+                                {rating.userName || 'Anonymous Student'}
+                              </h5>
+                              <div className="flex items-center gap-1">
+                                {renderStars(rating.rating)}
+                                <span className="text-white font-medium ml-1 text-xs">
+                                  {rating.rating}/5
+                                </span>
+                              </div>
+                            </div>
+                            <span className="text-xs text-gray-400">
+                              {formatDate(rating.createdAt)}
+                            </span>
+                          </div>
+                          
+                          {rating.review && (
+                            <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-600">
+                              <p className="text-gray-200 leading-relaxed text-sm break-words">
+                                "{rating.review}"
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">

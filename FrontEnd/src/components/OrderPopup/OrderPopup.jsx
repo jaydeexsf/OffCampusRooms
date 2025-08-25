@@ -1,13 +1,76 @@
 import React, { useState } from "react";
-import { FiX, FiChevronLeft, FiChevronRight, FiArrowLeft, FiMapPin, FiClock, FiPhone, FiMail, FiMessageCircle, FiNavigation } from "react-icons/fi";
-import { FiWifi, FiEye } from "react-icons/fi";
+import { FiX, FiChevronLeft, FiChevronRight, FiArrowLeft, FiMapPin, FiClock, FiPhone, FiMail, FiMessageCircle, FiNavigation, FiStar, FiEye } from "react-icons/fi";
+import { FiWifi } from "react-icons/fi";
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
 import LocationGoogle from "../Location/LocationGoogle";
-import RoomRatingActions from "../Rating/RoomRatingActions";
+import RatingViewModal from "../Rating/RatingViewModal";
+import RatingFormModal from "../Rating/RatingFormModal";
+import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
 
 const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [showLocation, setShowLocation] = useState(false);
+  const [showRatings, setShowRatings] = useState(false);
+  const [showRateForm, setShowRateForm] = useState(false);
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalRatings, setTotalRatings] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch ratings data
+  React.useEffect(() => {
+    if (roomDetails?._id) {
+      fetchRatingsSummary();
+    }
+  }, [roomDetails?._id]);
+
+  const fetchRatingsSummary = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_ENDPOINTS.GET_ROOM_RATINGS}/${roomDetails._id}`);
+      setAverageRating(response.data.averageRating || 0);
+      setTotalRatings(response.data.totalRatings || 0);
+    } catch (error) {
+      console.error('Error fetching ratings summary:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRatingUpdate = () => {
+    fetchRatingsSummary();
+  };
+
+  const renderStars = (rating) => {
+    return [1, 2, 3, 4, 5].map((star) => (
+      <FiStar
+        key={star}
+        size={14}
+        className={`${
+          star <= Math.round(rating)
+            ? 'text-yellow-400 fill-current'
+            : 'text-gray-400'
+        }`}
+      />
+    ));
+  };
+
+  const handleBackNavigation = () => {
+    if (showLocation) {
+      setShowLocation(false);
+    } else if (showRatings) {
+      setShowRatings(false);
+    } else if (showRateForm) {
+      setShowRateForm(false);
+    }
+  };
+
+  const getCurrentView = () => {
+    if (showLocation) return 'Location & Directions';
+    if (showRatings) return 'Room Reviews';
+    if (showRateForm) return 'Rate Room';
+    return title;
+  };
 
   if (!roomDetails) return null;
 
@@ -48,18 +111,18 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
           <div className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl w-full max-w-6xl max-h-[95vh] overflow-hidden shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-blue-600 to-blue-500">
-              {!showLocation ? (
+              {!showLocation && !showRatings && !showRateForm ? (
                 <h1 className="text-xl font-bold text-white truncate">{title}</h1>
               ) : (
                 <div className="flex items-center gap-3">
                   <button
                     className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white py-2 px-4 rounded-lg transition-all duration-200"
-                    onClick={() => setShowLocation(false)}
+                    onClick={handleBackNavigation}
                   >
                     <FiArrowLeft size={16} />
                     <span className="text-sm font-medium">Back</span>
                   </button>
-                  <h1 className="text-lg font-bold text-white truncate">{title}</h1>
+                  <h1 className="text-lg font-bold text-white truncate">{getCurrentView()}</h1>
                 </div>
               )}
 
@@ -68,6 +131,8 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                 onClick={() => {
                   setOrderPopup(false);
                   setShowLocation(false);
+                  setShowRatings(false);
+                  setShowRateForm(false);
                 }}
               >
                 <FiX className="text-xl text-white" />
@@ -76,7 +141,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
             {/* Content */}
             <div className="overflow-y-auto max-h-[calc(95vh-80px)]">
-              {!showLocation ? (
+              {!showLocation && !showRatings && !showRateForm ? (
                 <>
                   {/* Main Content - Flex container for image and details */}
                   <div className="flex flex-col lg:flex-row">
@@ -187,31 +252,98 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                         </div>
                       </div>
 
-                      {/* Location Button */}
-                      <button
-                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                        onClick={() => setShowLocation(true)}
-                      >
-                        <FiNavigation className="text-lg" />
-                        <span>View Location & Get Directions</span>
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="space-y-3">
+                        {/* Location Button */}
+                        <button
+                          className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                          onClick={() => setShowLocation(true)}
+                        >
+                          <FiNavigation className="text-lg" />
+                          <span>View Location & Get Directions</span>
+                        </button>
 
-                      {/* Professional Rating Actions */}
-                      <div className="pt-4">
-                        <RoomRatingActions 
-                          roomId={roomDetails._id} 
-                          roomTitle={roomDetails.title}
-                          className="w-full"
-                        />
+                        {/* Rating Summary */}
+                        <div className="flex items-center gap-3 bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm border border-gray-600/50 rounded-xl px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1">
+                              {loading ? (
+                                <div className="flex gap-1">
+                                  {[1, 2, 3, 4, 5].map((i) => (
+                                    <div key={i} className="w-3 h-3 bg-gray-600 rounded animate-pulse"></div>
+                                  ))}
+                                </div>
+                              ) : (
+                                renderStars(averageRating)
+                              )}
+                            </div>
+                            {!loading && (
+                              <>
+                                <span className="text-white font-semibold text-sm">
+                                  {averageRating > 0 ? averageRating.toFixed(1) : 'No ratings'}
+                                </span>
+                                <span className="text-gray-400 text-xs">
+                                  ({totalRatings} review{totalRatings !== 1 ? 's' : ''})
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Rating Action Buttons */}
+                        <div className="flex gap-2">
+                          {/* View Ratings Button - Only show if there are reviews */}
+                          {totalRatings > 0 && (
+                            <button
+                              onClick={() => setShowRatings(true)}
+                              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600/80 to-blue-500/80 hover:from-blue-600 hover:to-blue-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform backdrop-blur-sm border border-blue-500/30"
+                            >
+                              <FiEye size={16} />
+                              <span className="hidden sm:inline">View Reviews</span>
+                              <span className="sm:hidden">Reviews</span>
+                            </button>
+                          )}
+
+                          {/* Rate Room Button */}
+                          <button
+                            onClick={() => setShowRateForm(true)}
+                            className={`${totalRatings > 0 ? 'flex-1' : 'w-full'} flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600/80 to-purple-500/80 hover:from-purple-600 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform backdrop-blur-sm border border-purple-500/30`}
+                          >
+                            <FiStar size={16} />
+                            <span className="hidden sm:inline">Rate Room</span>
+                            <span className="sm:hidden">Rate</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </>
-              ) : (
+              ) : showLocation ? (
                 <div className="h-[500px]">
                   <LocationGoogle latitudeC={coordinates.lat} longitudeC={coordinates.long} />
                 </div>
-              )}
+              ) : showRatings ? (
+                <div className="h-[500px] overflow-y-auto">
+                  <RatingViewModal
+                    isOpen={true}
+                    onClose={() => setShowRatings(false)}
+                    roomId={roomDetails._id}
+                    roomTitle={roomDetails.title}
+                    embedded={true}
+                  />
+                </div>
+              ) : showRateForm ? (
+                <div className="h-[500px] overflow-y-auto">
+                  <RatingFormModal
+                    isOpen={true}
+                    onClose={() => setShowRateForm(false)}
+                    roomId={roomDetails._id}
+                    roomTitle={roomDetails.title}
+                    onRatingUpdate={handleRatingUpdate}
+                    embedded={true}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
