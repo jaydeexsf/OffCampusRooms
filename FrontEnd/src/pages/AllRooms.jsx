@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import PlaceCard from "../components/Places/PlaceCard";
 import OrderPopup from "../components/OrderPopup/OrderPopup";
 import Img1 from "../assets/places/boat.jpg";
@@ -10,6 +11,7 @@ import { API_ENDPOINTS } from '../config/api';
 
 const AllRooms = () => {
   const { fetchAllRooms, allRooms } = useContext(GlobalContext);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedLocation, setSelectedLocation] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [orderPopup, setOrderPopup] = useState(false);
@@ -36,6 +38,25 @@ const AllRooms = () => {
     fetchAllRooms();
   }, []);
 
+  // Handle URL parameters on component mount
+  useEffect(() => {
+    const locationParam = searchParams.get('location');
+    if (locationParam) {
+      // Map location names to match the filter values
+      const locationMap = {
+        'gate 1': 'gate 1',
+        'gate 2': 'gate 2', 
+        'gate 3': 'gate 3',
+        'ga-motintane': 'motintane'
+      };
+      
+      const mappedLocation = locationMap[locationParam.toLowerCase()];
+      if (mappedLocation) {
+        setSelectedLocation([mappedLocation]);
+      }
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     if (allRooms) {
       setRooomsData(allRooms);
@@ -47,6 +68,18 @@ const AllRooms = () => {
       setLoading(false); 
     }
   }, [allRooms]);
+
+  // Auto-apply filters when location is set from URL
+  useEffect(() => {
+    if (selectedLocation.length > 0 && allRooms) {
+      const filters = {
+        location: selectedLocation,
+        amenities: selectedAmenities,
+        distance: selectedDistance
+      };
+      fetchFilteredRooms(filters);
+    }
+  }, [selectedLocation, allRooms]);
 
   // Function to fetch filtered rooms from API
   const fetchFilteredRooms = async (filters) => {

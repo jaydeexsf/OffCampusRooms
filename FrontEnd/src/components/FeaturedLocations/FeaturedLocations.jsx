@@ -39,27 +39,28 @@ const FeaturedLocations = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-950">
-      <div className="container mx-auto px-4">
+    <div className="bg-gray-950 py-16">
+      <section data-aos="fade-up" className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Popular <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                Locations
-              </span> Near UL
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Discover the best areas around University of Limpopo for student accommodation
-            </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12">
+            <div className="mb-6 sm:mb-0">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                Popular <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  Locations
+                </span> Near UL
+              </h2>
+              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
+            </div>
+         
           </div>
 
           {/* Locations Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {locations.map((location, index) => (
-              <div 
+              <div
                 key={index}
-                className="group relative overflow-hidden bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl hover:scale-105 transition-all duration-300"
+                className="group relative overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 rounded-2xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
               >
@@ -72,49 +73,56 @@ const FeaturedLocations = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                   
+                  {/* Location Badge */}
+                  <div className="absolute top-4 left-4">
+                    <div className="bg-blue-500/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                      <span className="text-white text-xs font-medium">{location.avgDistance}min to UL</span>
+                    </div>
+                  </div>
+                  
                   {/* Location Name */}
-                  <div className="absolute bottom-4 left-4">
+                  <div className="absolute bottom-4 left-4 right-4">
                     <h3 className="text-xl font-bold text-white mb-1">{location.name}</h3>
                     <p className="text-gray-300 text-sm">{location.description}</p>
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-4">
-                  {/* Stats */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <FiDollarSign className="text-green-400" />
-                      <span className="text-white font-semibold">R{location.avgPrice}</span>
-                      <span className="text-gray-400 text-sm">avg/month</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FiClock className="text-blue-400" />
-                      <span className="text-white font-semibold">{location.avgDistance}min</span>
-                      <span className="text-gray-400 text-sm">to UL</span>
-                    </div>
+                <div className="p-6">
+                  {/* Price */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <FiDollarSign className="text-green-400 w-5 h-5" />
+                    <span className="text-white font-bold text-lg">R{location.avgPrice.toLocaleString()}</span>
+                    <span className="text-gray-400 text-sm">avg/month</span>
                   </div>
 
                   {/* Features */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 mb-6">
                     {location.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <div key={featureIndex} className="flex items-center gap-3">
+                        <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
                         <span className="text-gray-300 text-sm">{feature}</span>
                       </div>
                     ))}
                   </div>
 
                   {/* View Rooms Button */}
-                  <button className="w-full mt-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 text-sm">
+                  <Link
+                    to={`/all-rooms?location=${encodeURIComponent(location.name.toLowerCase())}`}
+                    className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 text-sm group"
+                  >
                     View Rooms
-                  </button>
+                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* <div className="text-center" data-aos="fade-up" data-aos-delay="600">
+          {/* Call to Action */}
+          <div className="text-center mt-16" data-aos="fade-up" data-aos-delay="600">
             <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold text-white mb-4">
                 Can't Decide on a Location?
@@ -122,17 +130,12 @@ const FeaturedLocations = () => {
               <p className="text-gray-300 mb-6">
                 Use our advanced search filters to find the perfect room in your preferred area
               </p>
-              <Link 
-                to="/all-rooms"
-                className="inline-block bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                Explore All Areas
-              </Link>
+            
             </div>
-          </div> */}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

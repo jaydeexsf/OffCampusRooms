@@ -287,31 +287,7 @@ const StudentResources = () => {
           </div>
         </div>
 
-        {/* Moving Checklist */}
-        <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-12">
-          <div className="text-center mb-8">
-            <FiFileText className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Moving Checklist</h2>
-            <p className="text-gray-400">Everything you need when moving into student accommodation</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {movingChecklist.map((category, index) => (
-              <div key={index} className="bg-black/30 border border-white/10 rounded-xl p-6">
-                <h3 className="text-white font-semibold mb-4">{category.category}</h3>
-                <ul className="space-y-2">
-                  {category.items.map((item, itemIndex) => (
-                    <li key={itemIndex} className="flex items-center gap-2 text-gray-300 text-sm">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
+       
         {/* Safety Tips */}
         <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-12">
           <div className="text-center mb-8">

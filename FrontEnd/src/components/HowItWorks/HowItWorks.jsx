@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FiSearch, FiEye, FiPhone, FiCheck } from 'react-icons/fi';
 
 const HowItWorks = () => {
@@ -101,9 +102,12 @@ const HowItWorks = () => {
               <p className="text-gray-300 mb-6">
                 Start your search today and join the community of satisfied students
               </p>
-              <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+              <Link 
+                to="/all-rooms"
+                className="inline-block bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
                 Browse All Rooms
-              </button>
+              </Link>
             </div>
           </div>
          
