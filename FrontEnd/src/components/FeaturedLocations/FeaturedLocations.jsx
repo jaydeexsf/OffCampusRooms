@@ -76,14 +76,14 @@ const FeaturedLocations = () => {
                   {/* Location Badge */}
                   <div className="absolute top-4 left-4">
                     <div className="bg-blue-500/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                      <span className="text-white text-xs font-medium">{location.avgDistance}min to UL</span>
+                      <span className="text-white text-xs md:text-sm font-medium">{location.avgDistance}min to UL</span>
                     </div>
                   </div>
                   
                   {/* Location Name */}
                   <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-xl font-bold text-white mb-1">{location.name}</h3>
-                    <p className="text-gray-300 text-sm">{location.description}</p>
+                    <h3 className="text-lg md:text-xl font-bold text-white mb-1">{location.name}</h3>
+                    <p className="text-gray-300 text-xs md:text-sm">{location.description}</p>
                   </div>
                 </div>
 
@@ -92,8 +92,8 @@ const FeaturedLocations = () => {
                   {/* Price */}
                   <div className="flex items-center gap-2 mb-4">
                     <FiDollarSign className="text-green-400 w-5 h-5" />
-                    <span className="text-white font-bold text-lg">R{location.avgPrice.toLocaleString()}</span>
-                    <span className="text-gray-400 text-sm">avg/month</span>
+                    <span className="text-white font-bold text-base md:text-lg">R{location.avgPrice.toLocaleString()}</span>
+                    <span className="text-gray-400 text-xs md:text-sm">avg/month</span>
                   </div>
 
                   {/* Features */}
@@ -101,7 +101,7 @@ const FeaturedLocations = () => {
                     {location.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-center gap-3">
                         <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
-                        <span className="text-gray-300 text-sm">{feature}</span>
+                        <span className="text-gray-300 text-xs md:text-sm">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -109,7 +109,7 @@ const FeaturedLocations = () => {
                   {/* View Rooms Button */}
                   <Link
                     to={`/all-rooms?location=${encodeURIComponent(location.name.toLowerCase())}`}
-                    className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 text-sm group"
+                    className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 text-xs md:text-sm group"
                   >
                     View Rooms
                     <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,10 +124,10 @@ const FeaturedLocations = () => {
           {/* Call to Action */}
           <div className="text-center mt-16" data-aos="fade-up" data-aos-delay="600">
             <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
                 Can't Decide on a Location?
               </h3>
-              <p className="text-gray-300 mb-6">
+              <p className="text-gray-300 text-sm md:text-base mb-6">
                 Use our advanced search filters to find the perfect room in your preferred area
               </p>
             

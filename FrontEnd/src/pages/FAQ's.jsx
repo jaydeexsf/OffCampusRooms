@@ -14,13 +14,13 @@ const FaqPage = () => {
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="text-center mb-12" data-aos="fade-up">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-white leading-tight">
             Frequently Asked{" "}
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Questions
             </span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="md:text-sm text-xs text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Find answers to common questions about our student accommodation services. 
             Everything you need to know about booking, payments, and living arrangements.
           </p>
@@ -28,22 +28,22 @@ const FaqPage = () => {
 
         {/* FAQ Section */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 shadow-2xl" data-aos="fade-up" data-aos-delay="200">
-            <div className="space-y-6">
+          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-4 md:p-8 shadow-2xl" data-aos="fade-up" data-aos-delay="200">
+            <div className="md:space-y-6 space-y-4">
               {FAQData.map((faq, index) => (
                 <div key={index} className="border-b border-white/10 pb-6 last:border-b-0">
                   <div
                     className="flex justify-between items-center cursor-pointer group"
                     onClick={() => toggleFAQ(index)}
                   >
-                    <h2 className="text-lg md:text-xl font-semibold text-white group-hover:text-blue-400 transition-colors duration-200 pr-4">
+                    <h2 className="text-sm md:text-lg font-semibold text-white group-hover:text-blue-400 transition-colors duration-200 pr-4">
                       {faq.question}
                     </h2>
                     <div className="flex-shrink-0">
                       {activeIndex === index ? (
-                        <FaChevronUp className="text-blue-400 transform transition-transform duration-300" size={20} />
+                        <FaChevronUp className="text-blue-400 h-4 md:h-6 transform transition-transform duration-300" size={20} />
                       ) : (
-                        <FaChevronDown className="text-gray-400 group-hover:text-blue-400 transition-all duration-300" size={20} />
+                        <FaChevronDown className="text-gray-400 h-4 md:h-6 group-hover:text-blue-400 transition-all duration-300" size={20} />
                       )}
                     </div>
                   </div>
@@ -52,7 +52,7 @@ const FaqPage = () => {
                       activeIndex === index ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
                     }`}
                   >
-                    <p className="text-gray-300 leading-relaxed text-base">
+                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed text-base">
                       {faq.answer}
                     </p>
                   </div>

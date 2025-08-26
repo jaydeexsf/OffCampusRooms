@@ -193,16 +193,16 @@ const FeedbackForm = () => {
 
   return (
     <div className="min-h-screen bg-gray-950 py-16">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-0">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12" data-aos="fade-up">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h1 className="text-2xl md:text-4xl font-bold text-white mb-6">
               Share Your <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Experience
               </span>
             </h1>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-xs md:text-lg max-w-2xl mx-auto">
               Help other University of Limpopo students by sharing your accommodation experience and rating our platform.
             </p>
           </div>

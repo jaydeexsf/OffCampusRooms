@@ -130,10 +130,10 @@ const Footer = () => {
             <div className="space-y-6 lg:space-y-8">
               <div className="flex items-center gap-3">
                 <img src={FooterLogo} alt="OffCampusRooms Logo" className="h-10 sm:h-12 w-auto" />
-                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 </h1>
               </div>
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed pr-0 lg:pr-4">
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed pr-0 lg:pr-4">
                 Find the best rooms around the University of Limpopo. We provide affordable, 
                 student-friendly accommodation with easy access to campus.
               </p>
@@ -199,7 +199,7 @@ const Footer = () => {
             {/* Quick Links */}
             <div className="space-y-6 lg:space-y-8">
               <div>
-                <h3 className="text-sm sm:text-lg font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
+                <h3 className="text-xs sm:text-sm font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
                   Quick Links
                 </h3>
                 <ul className="space-y-2 sm:space-y-3">
@@ -229,7 +229,7 @@ const Footer = () => {
             {/* Student Resources */}
             <div className="space-y-6 lg:space-y-8">
               <div>
-                <h3 className="text-sm sm:text-lg font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 flex-wrap">
+                <h3 className="text-xs sm:text-sm font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 flex-wrap">
                   <span className="break-words">Student Resources</span>
                 </h3>
                 <ul className="space-y-2 sm:space-y-3">

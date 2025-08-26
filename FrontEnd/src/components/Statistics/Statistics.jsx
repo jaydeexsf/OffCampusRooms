@@ -50,7 +50,7 @@ const Statistics = () => {
 
   const statItems = [
     {
-      icon: <FiHome className="w-8 h-8" />,
+      icon: <FiHome className="w-6 h-6" />,
       value: stats.totalRooms,
       label: "Total Rooms",
       description: "Available listings",
@@ -59,7 +59,7 @@ const Statistics = () => {
       borderColor: "border-blue-500/30"
     },
     {
-      icon: <FiUsers className="w-8 h-8" />,
+      icon: <FiUsers className="w-6 h-6" />,
       value: stats.totalRatings,
       label: "Total Ratings",
       description: "Student reviews",
@@ -68,7 +68,7 @@ const Statistics = () => {
       borderColor: "border-green-500/30"
     },
     {
-      icon: <FiStar className="w-8 h-8" />,
+      icon: <FiStar className="w-6 h-6" />,
       value: stats.averageRating > 0 ? stats.averageRating.toFixed(1) : 'N/A',
       label: "Average Rating",
       description: "Student satisfaction",
@@ -77,7 +77,7 @@ const Statistics = () => {
       borderColor: "border-yellow-500/30"
     },
     {
-      icon: <FiMapPin className="w-8 h-8" />,
+      icon: <FiMapPin className="w-6 h-6" />,
       value: `${stats.averageDistance}min`,
       label: "Avg. Distance",
       description: "From campus",
@@ -93,12 +93,12 @@ const Statistics = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Trusted by <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 University of Limpopo
               </span> Students
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
               Join thousands of students who have found their perfect accommodation through our platform
             </p>
           </div>
@@ -112,21 +112,21 @@ const Statistics = () => {
                 data-aos="fade-up"
                 data-aos-delay={300 + (index * 100)}
               >
-                <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${item.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${item.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <div className="text-white">
                     {item.icon}
                   </div>
                 </div>
                 
-                <div className="text-3xl font-bold text-white mb-2">
+                <div className="text-2xl md:text-3xl font-bold text-white mb-2">
                   {item.value}
                 </div>
                 
-                <div className="text-lg font-semibold text-white mb-1">
+                <div className="text-base md:text-lg font-semibold text-white mb-1">
                   {item.label}
                 </div>
                 
-                <div className="text-sm text-gray-300">
+                <div className="text-xs md:text-sm text-gray-300">
                   {item.description}
                 </div>
               </div>

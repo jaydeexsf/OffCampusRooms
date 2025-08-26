@@ -4,7 +4,7 @@ import { FiShield, FiClock, FiDollarSign, FiUsers, FiMapPin, FiCheck } from 'rea
 const WhyChooseUs = () => {
   const features = [
     {
-      icon: <FiShield className="w-8 h-8" />,
+      icon: <FiShield className="w-6 h-6" />,
       title: "Verified Listings",
       description: "All rooms are personally verified by our team for quality, safety, and accuracy. No fake listings or scams.",
       color: "from-green-500 to-green-600",
@@ -12,7 +12,7 @@ const WhyChooseUs = () => {
       borderColor: "border-green-500/30"
     },
     {
-      icon: <FiClock className="w-8 h-8" />,
+      icon: <FiClock className="w-6 h-6" />,
       title: "24/7 Student Support",
       description: "Our dedicated student support team is available round the clock to help you with any questions or concerns.",
       color: "from-blue-500 to-blue-600",
@@ -20,7 +20,7 @@ const WhyChooseUs = () => {
       borderColor: "border-blue-500/30"
     },
     {
-      icon: <FiDollarSign className="w-8 h-8" />,
+      icon: <FiDollarSign className="w-6 h-6" />,
       title: "No Booking Fees",
       description: "We don't charge any booking fees or hidden costs. What you see is what you pay - transparent pricing.",
       color: "from-purple-500 to-purple-600",
@@ -28,7 +28,7 @@ const WhyChooseUs = () => {
       borderColor: "border-purple-500/30"
     },
     {
-      icon: <FiUsers className="w-8 h-8" />,
+      icon: <FiUsers className="w-6 h-6" />,
       title: "Student Discounts",
       description: "Exclusive discounts and special offers for University of Limpopo students. Save money on your accommodation.",
       color: "from-orange-500 to-orange-600",
@@ -36,7 +36,7 @@ const WhyChooseUs = () => {
       borderColor: "border-orange-500/30"
     },
     {
-      icon: <FiMapPin className="w-8 h-8" />,
+      icon: <FiMapPin className="w-6 h-6" />,
       title: "Campus Proximity",
       description: "All rooms are strategically located near University of Limpopo with easy access to campus facilities.",
       color: "from-red-500 to-red-600",
@@ -44,7 +44,7 @@ const WhyChooseUs = () => {
       borderColor: "border-red-500/30"
     },
          {
-       icon: <FiCheck className="w-8 h-8" />,
+       icon: <FiCheck className="w-6 h-6" />,
        title: "Quality Guarantee",
        description: "We guarantee the quality of all our listings. If you're not satisfied, we'll help you find a better option.",
        color: "from-teal-500 to-teal-600",
@@ -59,12 +59,12 @@ const WhyChooseUs = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Why Choose <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 StudentRooms
               </span>
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
               We're committed to making your student accommodation search easy, safe, and affordable
             </p>
           </div>
@@ -78,17 +78,17 @@ const WhyChooseUs = () => {
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
               >
-                <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${feature.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <div className="text-white">
                     {feature.icon}
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-base md:text-xl font-bold text-white mb-3">
                   {feature.title}
                 </h3>
                 
-                <p className="text-gray-300 text-sm leading-relaxed">
+                <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -98,31 +98,31 @@ const WhyChooseUs = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" data-aos="fade-up" data-aos-delay="600">
             <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-blue-400 mb-2">100%</div>
-              <div className="text-white font-semibold mb-1">Verified Listings</div>
-              <div className="text-gray-400 text-sm">Every room is personally checked</div>
+              <div className="text-2xl md:text-3xl font-bold text-blue-400 mb-2">100%</div>
+              <div className="text-white font-semibold text-sm md:text-base mb-1">Verified Listings</div>
+              <div className="text-gray-400 text-xs md:text-sm">Every room is personally checked</div>
             </div>
             
             <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-green-400 mb-2">24/7</div>
-              <div className="text-white font-semibold mb-1">Student Support</div>
-              <div className="text-gray-400 text-sm">Always here when you need us</div>
+              <div className="text-2xl md:text-3xl font-bold text-green-400 mb-2">24/7</div>
+              <div className="text-white font-semibold text-sm md:text-base mb-1">Student Support</div>
+              <div className="text-gray-400 text-xs md:text-sm">Always here when you need us</div>
             </div>
             
             <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-3xl font-bold text-purple-400 mb-2">0%</div>
-              <div className="text-white font-semibold mb-1">Booking Fees</div>
-              <div className="text-gray-400 text-sm">No hidden costs or charges</div>
+              <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-2">0%</div>
+              <div className="text-white font-semibold text-sm md:text-base mb-1">Booking Fees</div>
+              <div className="text-gray-400 text-xs md:text-sm">No hidden costs or charges</div>
             </div>
           </div>
 
           {/* Call to Action */}
           <div className="text-center" data-aos="fade-up" data-aos-delay="700">
             <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-3xl mx-auto">
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
                 Ready to Find Your Perfect Student Accommodation?
               </h3>
-              <p className="text-gray-300 mb-6">
+              <p className="text-gray-300 text-sm md:text-base mb-6">
                 Join thousands of University of Limpopo students who have found their ideal accommodation through our platform
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

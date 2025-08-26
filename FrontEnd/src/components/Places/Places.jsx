@@ -31,19 +31,19 @@ const Places = ({ handleOrderPopup }) => {
       <section data-aos="fade-up" className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12">
+          <div className="flex sm:flex-row items-start sm:items-center justify-between mb-12">
             <div className="mb-6 sm:mb-0">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-2">
                 Best <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                   Rooms
                 </span>
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
+              <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
             </div>
             
             <Link 
               to="/all-rooms"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl group"
+              className="inline-flex text-xs md:text-sm items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl group"
             >
               View All Rooms
               <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -87,12 +87,12 @@ const StudentTestimonials = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Students
               </span> Say
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
               Real reviews from University of Limpopo students who found their perfect accommodation
             </p>
           </div>
@@ -103,7 +103,7 @@ const StudentTestimonials = () => {
               <div className="flex justify-center items-center py-20">
                 <div className="flex flex-col items-center gap-4">
                   <FiLoader className="w-8 h-8 text-blue-400 animate-spin" />
-                  <p className="text-gray-400">Loading student testimonials...</p>
+                  <p className="text-gray-400 text-sm md:text-base">Loading student testimonials...</p>
                 </div>
               </div>
             ) : testimonials.length > 0 ? (
@@ -120,7 +120,7 @@ const StudentTestimonials = () => {
                       </div>
 
                       {/* Review Text */}
-                      <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                      <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-6">
                         "{testimonial.review}"
                       </p>
 
@@ -137,13 +137,13 @@ const StudentTestimonials = () => {
                           />
                         </div>
                         <div className="flex-1">
-                          <h4 className="text-white font-semibold text-sm">
+                          <h4 className="text-white font-semibold text-xs md:text-sm">
                             {testimonial.name}
                           </h4>
-                          <p className="text-gray-400 text-xs">
+                          <p className="text-gray-400 text-xs md:text-sm">
                             {testimonial.course}
                           </p>
-                          <p className="text-blue-400 text-xs font-medium">
+                          <p className="text-blue-400 text-xs md:text-sm font-medium">
                             {testimonial.location} • {testimonial.roomType} • {testimonial.price}
                           </p>
                         </div>
@@ -155,8 +155,8 @@ const StudentTestimonials = () => {
             ) : (
               <div className="text-center py-20">
                 <FiMessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
-                <p className="text-gray-500 mb-6">Be the first to share your experience!</p>
+                <h3 className="text-lg md:text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
+                <p className="text-gray-500 text-sm md:text-base mb-6">Be the first to share your experience!</p>
                 <a 
                   href="/feedback" 
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -172,14 +172,14 @@ const StudentTestimonials = () => {
             <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
               <div className="flex items-center justify-center gap-2 mb-4">
                 {renderStars(Math.round(averageRating))}
-                <span className="text-white font-bold text-lg ml-2">
+                <span className="text-white font-bold text-base md:text-lg ml-2">
                   {averageRating > 0 ? `${averageRating}/5` : 'No ratings yet'}
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">
+              <h3 className="text-lg md:text-xl font-bold text-white mb-2">
                 {averageRating >= 4.5 ? 'Excellent' : averageRating >= 4 ? 'Very Good' : averageRating >= 3 ? 'Good' : 'Growing'} Student Satisfaction
               </h3>
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-300 text-xs md:text-sm">
                 {totalCount > 0 ? `Based on ${totalCount} verified student review${totalCount !== 1 ? 's' : ''}` : 'Share your experience to help other students'}
               </p>
             </div>

@@ -5,7 +5,7 @@ import { FiSearch, FiEye, FiPhone, FiCheck } from 'react-icons/fi';
 const HowItWorks = () => {
   const steps = [
     {
-      icon: <FiSearch className="w-8 h-8" />,
+      icon: <FiSearch className="w-6 h-6" />,
       title: "Search & Filter",
       description: "Use our advanced search filters to find rooms by location, price, and amenities that match your preferences.",
       color: "from-blue-500 to-blue-600",
@@ -13,7 +13,7 @@ const HowItWorks = () => {
       borderColor: "border-blue-500/30"
     },
     {
-      icon: <FiEye className="w-8 h-8" />,
+      icon: <FiEye className="w-6 h-6" />,
       title: "View Details",
       description: "Browse detailed room information, photos, amenities, and location details to make an informed decision.",
       color: "from-green-500 to-green-600",
@@ -21,7 +21,7 @@ const HowItWorks = () => {
       borderColor: "border-green-500/30"
     },
     {
-      icon: <FiPhone className="w-8 h-8" />,
+      icon: <FiPhone className="w-6 h-6" />,
       title: "Contact Owner",
       description: "Get in touch with room owners directly through phone, WhatsApp, or email to arrange viewings.",
       color: "from-purple-500 to-purple-600",
@@ -29,7 +29,7 @@ const HowItWorks = () => {
       borderColor: "border-purple-500/30"
     },
     {
-      icon: <FiCheck className="w-8 h-8" />,
+      icon: <FiCheck className="w-6 h-6" />,
       title: "Book & Move In",
       description: "Complete your booking and move into your new student accommodation hassle-free.",
       color: "from-orange-500 to-orange-600",
@@ -44,12 +44,12 @@ const HowItWorks = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
               How It <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Works
               </span>
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-xs md:text-md md:text-base max-w-2xl mx-auto">
               Finding your perfect student accommodation is simple with our streamlined process
             </p>
           </div>
@@ -64,19 +64,19 @@ const HowItWorks = () => {
                 data-aos-delay={index * 100}
               >
                 {/* Step Number */}
-                <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+                <div className="absolute -top-4 -left-4 w-6 h-6 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs z-10">
                   {index + 1}
                 </div>
 
                 {/* Step Card */}
                 <div className={`bg-gradient-to-br ${step.bgColor} border ${step.borderColor} rounded-2xl p-6 h-full transition-all duration-300`}>
-                  <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${step.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${step.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <div className="text-white">
                       {step.icon}
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-bold text-white mb-3">
+                  <h3 className="text-base md:text-lg font-bold text-white mb-3">
                     {step.title}
                   </h3>
                   
@@ -96,7 +96,7 @@ const HowItWorks = () => {
            {/* Call to Action */}
            <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="600">
             <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-lg md:text-xl font-bold text-white mb-4">
                 Ready to Find Your Perfect Room?
               </h3>
               <p className="text-gray-300 mb-6">

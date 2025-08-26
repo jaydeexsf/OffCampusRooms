@@ -58,7 +58,7 @@ const Hero = ({ handleOrderPopup }) => {
             <>
               {/* Hero Header */}
               <div className="text-center mb-12" data-aos="fade-up">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight">
+                <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-6 text-white leading-tight">
                   Find Your Perfect{" "}
                   <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                     Student Room
@@ -66,7 +66,7 @@ const Hero = ({ handleOrderPopup }) => {
                   <br />
                   Near University of Limpopo
                 </h1>
-                <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-base md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
                   Discover comfortable, affordable accommodation with modern amenities. 
                   Your ideal student living experience starts here.
                 </p>
@@ -77,7 +77,7 @@ const Hero = ({ handleOrderPopup }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Location Filter */}
                   <div className="space-y-3">
-                    <label htmlFor="section" className="flex items-center gap-2 text-sm font-medium text-white">
+                    <label htmlFor="section" className="flex items-center gap-2 text-xs md:text-sm font-medium text-white">
                       <FiMapPin className="text-blue-400" />
                       Location
                     </label>
@@ -98,11 +98,11 @@ const Hero = ({ handleOrderPopup }) => {
                   {/* Price Range */}
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <label htmlFor="price" className="flex items-center gap-2 text-sm font-medium text-white">
+                      <label htmlFor="price" className="flex items-center gap-2 text-xs md:text-sm font-medium text-white">
                         <FiDollarSign className="text-green-400" />
                         Max Budget
                       </label>
-                      <span className="text-blue-400 font-mono font-semibold text-lg">
+                      <span className="text-blue-400 font-mono font-semibold text-base md:text-lg">
                         R {priceValue.toLocaleString()}
                       </span>
                     </div>
@@ -121,7 +121,7 @@ const Hero = ({ handleOrderPopup }) => {
                           background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((priceValue - 600) / (5000 - 600)) * 100}%, rgba(255,255,255,0.2) ${((priceValue - 600) / (5000 - 600)) * 100}%, rgba(255,255,255,0.2) 100%)`
                         }}
                       />
-                      <div className="flex justify-between text-xs text-gray-300 mt-2">
+                      <div className="flex justify-between text-xs md:text-sm text-gray-300 mt-2">
                         <span>R600</span>
                         <span>R5,000</span>
                       </div>
@@ -131,7 +131,7 @@ const Hero = ({ handleOrderPopup }) => {
 
                 {/* Search Button */}
                 <button
-                  className="w-full mt-8 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                  className="w-full mt-8 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-lg"
                   onClick={handleSearch}
                   disabled={isLoading}
                 >
@@ -164,8 +164,8 @@ const Hero = ({ handleOrderPopup }) => {
                         <span>Back to Search</span>
                       </button>
                       <div className="text-center">
-                        <h2 className="text-2xl font-bold text-neutral-100">Search Results</h2>
-                        <p className="text-neutral-400 text-sm">
+                        <h2 className="text-xl md:text-2xl font-bold text-neutral-100">Search Results</h2>
+                        <p className="text-neutral-400 text-xs md:text-sm">
                           {searchResults?.length || 0} rooms found
                         </p>
                       </div>
@@ -187,8 +187,8 @@ const Hero = ({ handleOrderPopup }) => {
                     ) : (
                       <div className="text-center py-16">
                         <div className="text-6xl mb-4">🔍</div>
-                        <h3 className="text-xl font-semibold text-neutral-300 mb-2">No rooms found</h3>
-                        <p className="text-neutral-500">Try adjusting your search criteria</p>
+                        <h3 className="text-lg md:text-xl font-semibold text-neutral-300 mb-2">No rooms found</h3>
+                        <p className="text-xs md:text-base text-neutral-500">Try adjusting your search criteria</p>
                       </div>
                     )}
 
