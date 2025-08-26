@@ -94,11 +94,11 @@ app.use('/api/feedback', (req, res, next) => {
   if (req.method === 'GET' && req.path === '/public') {
     return next(); // Skip auth for public feedback
   }
-  return authenticateUser(req, res, next);
+  return authMiddleware(req, res, next);
 }, feedbackRoutes);
 
 // Use saved room routes (all require authentication)
-app.use('/api/saved-rooms', authenticateUser, savedRoomRoutes);
+app.use('/api/saved-rooms', authMiddleware, savedRoomRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 5000;
