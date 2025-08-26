@@ -54,7 +54,9 @@ const PlaceCard = ({
 
   const checkIfSaved = async () => {
     try {
-      const token = await user.getToken();
+      const token = await user?.getToken?.();
+      if (!token) return;
+      
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/check/${_id}`,
         {
@@ -71,11 +73,15 @@ const PlaceCard = ({
 
   const handleSaveToggle = async (e) => {
     e.stopPropagation(); // Prevent card click
-    if (!isSignedIn) return;
+    if (!isSignedIn || !user) return;
 
     setIsLoading(true);
     try {
-      const token = await user.getToken();
+      const token = await user?.getToken?.();
+      if (!token) {
+        console.error('Unable to get authentication token');
+        return;
+      }
       
       if (isSaved) {
         // Unsave room

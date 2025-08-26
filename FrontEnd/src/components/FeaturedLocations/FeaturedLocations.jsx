@@ -45,12 +45,12 @@ const FeaturedLocations = () => {
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12">
             <div className="mb-6 sm:mb-0">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-2">
                 Popular <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                   Locations
                 </span> Near UL
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
+              <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
             </div>
          
           </div>
