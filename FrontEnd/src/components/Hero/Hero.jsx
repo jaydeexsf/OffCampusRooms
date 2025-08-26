@@ -13,6 +13,7 @@ const Hero = ({ handleOrderPopup }) => {
   const [limitations, setLimitations] = useState(6);
   const [roomsC, setRoomsC] = useState(0);
   const [roomLoading, setRoomLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const searchRooms = async () => {
     setIsLoading(true);
@@ -24,14 +25,14 @@ const Hero = ({ handleOrderPopup }) => {
           limitBy: limitations,
         },
       });
-      setRoomLoading(true);
       setSearchResults(response.data.rooms);
-      setRoomsC(response.data.roomCount); 
+      setRoomsC(response.data.roomCount);
     } catch (error) {
       console.error("Error fetching search results:", error);
     } finally {
       setIsLoading(false);
       setRoomLoading(false);
+      setLoadingMore(false);
     }
   };
 
@@ -200,11 +201,14 @@ const Hero = ({ handleOrderPopup }) => {
                           </div>
                         ) : (
                           <button
-                            onClick={() => setLimitations(limitations + 6)}
+                            onClick={() => {
+                              setLoadingMore(true);
+                              setLimitations(prev => prev + 6);
+                            }}
                             className="btn-secondary flex items-center gap-3 mx-auto"
-                            disabled={roomLoading}
+                            disabled={loadingMore}
                           >
-                            {roomLoading ? (
+                            {loadingMore ? (
                               <>
                                 <ImSpinner2 className="animate-spin" />
                                 <span>Loading...</span>

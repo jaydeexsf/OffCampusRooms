@@ -26,12 +26,12 @@ export const NavbarLinks = [
 
 const DropdownLinks = [
   {
-    name: "Student Tips",
-    link: "/tips",
-  },
-  {
     name: "Student Resources",
     link: "/resources",
+  },
+  {
+    name: "Share Feedback",
+    link: "/feedback",
   },
   {
     name: "Contact Us",
@@ -85,7 +85,6 @@ const Navbar = ({ handleBookRoomPopup }) => {
                   <div className="absolute inset-0 bg-blue-500/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent hidden sm:block">
-                  StudentRooms
                 </span>
               </Link>
             </div>
@@ -136,11 +135,11 @@ const Navbar = ({ handleBookRoomPopup }) => {
             {/* Right side actions */}
             <div className="flex items-center gap-3">
               {user ? (
-                <div className="hidden md:flex items-center gap-3">
+                <div className="flex items-center gap-3">
                   <SignedIn>
                     <Link 
                       to="/dashboard"
-                      className="text-gray-300 hover:text-white font-medium transition-colors duration-200"
+                      className="hidden md:block text-gray-300 hover:text-white font-medium transition-colors duration-200"
                     >
                       Dashboard
                     </Link>
@@ -148,7 +147,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
                       <UserButton 
                         appearance={{
                           elements: {
-                            avatarBox: "w-8 h-8",
+                            avatarBox: "w-7 h-7 md:w-8 md:h-8",
                           }
                         }}
                       />
@@ -156,15 +155,15 @@ const Navbar = ({ handleBookRoomPopup }) => {
                   </SignedIn> 
                 </div>
               ) : (
-                <div className="hidden md:block">
+                <div className="flex items-center gap-2">
                   <SignedOut>
                     {isLoaded ? (
-                      <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                      <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-medium text-sm md:text-base px-4 py-2 md:px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
                         <SignInButton />
                       </button>
                     ) : (
                       <div className="flex justify-center">
-                        <div className="w-6 h-6 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+                        <div className="w-5 h-5 md:w-6 md:h-6 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
                       </div>
                     )}
                   </SignedOut>     
@@ -177,9 +176,9 @@ const Navbar = ({ handleBookRoomPopup }) => {
                 className="md:hidden p-2 rounded-lg bg-white/10 border border-white/20 text-gray-300 hover:text-white hover:bg-white/20 transition-all duration-200"
               >
                 {showMenu ? (
-                  <FiX size={20} />
+                  <FiX size={18} />
                 ) : (
-                  <FiMenu size={20} />
+                  <FiMenu size={18} />
                 )}
               </button>
             </div>

@@ -62,18 +62,13 @@ const ResourceLinks = [
     icon: FaBook
   },
   {
-    title: "Student Tips",
-    link: "/tips",
-    icon: FaLightbulb
-  },
-  {
     title: "Support",
     link: "/contact",
     icon: FaHeadset
   },
   {
     title: "Feedback",
-    link: "/comment",
+    link: "/feedback",
     icon: FaComments
   },
 ];
@@ -145,21 +140,21 @@ const Footer = () => {
               
               {/* Contact Info */}
               <div className="space-y-4">
-                <h4 className="text-white font-semibold text-sm sm:text-base mb-3">Contact Information</h4>
+                <h4 className="text-white font-semibold text-xs sm:text-sm mb-3">Contact Information</h4>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3 text-gray-300">
-                    <FiMapPin className="text-blue-400 flex-shrink-0 mt-0.5" size={16} />
-                    <span className="text-sm sm:text-base">Mankweng, Polokwane</span>
+                    <FiMapPin className="text-blue-400 flex-shrink-0 mt-0.5" size={14} />
+                    <span className="text-xs sm:text-sm">Mankweng, Polokwane</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-300">
-                    <FiPhone className="text-green-400 flex-shrink-0" size={16} />
-                    <a href="tel:+27792192664" className="text-sm sm:text-base hover:text-green-400 transition-colors">
+                    <FiPhone className="text-green-400 flex-shrink-0" size={14} />
+                    <a href="tel:+27792192664" className="text-xs sm:text-sm hover:text-green-400 transition-colors">
                       +27 79 219 2664
                     </a>
                   </div>
                   <div className="flex items-start gap-3 text-gray-300">
-                    <FiMail className="text-purple-400 flex-shrink-0 mt-0.5" size={16} />
-                    <a href="mailto:OffCampusRooms@gmail.com" className="text-sm sm:text-base hover:text-purple-400 transition-colors break-all">
+                    <FiMail className="text-purple-400 flex-shrink-0 mt-0.5" size={14} />
+                    <a href="mailto:OffCampusRooms@gmail.com" className="text-xs sm:text-sm hover:text-purple-400 transition-colors break-all">
                       OffCampusRooms@gmail.com
                     </a>
                   </div>
@@ -168,7 +163,7 @@ const Footer = () => {
               
               {/* Social Media */}
               <div className="pt-2">
-                <h4 className="text-white font-semibold text-sm sm:text-base mb-4">Follow Us</h4>
+                <h4 className="text-white font-semibold text-xs sm:text-sm mb-4">Follow Us</h4>
                 <div className="flex gap-3 sm:gap-4">
                   <a 
                     href="https://wa.me/+27792192664" 
@@ -204,11 +199,11 @@ const Footer = () => {
             {/* Quick Links */}
             <div className="space-y-6 lg:space-y-8">
               <div>
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
+                <h3 className="text-sm sm:text-lg font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
                   Quick Links
                 </h3>
                 <ul className="space-y-2 sm:space-y-3">
-                  {FooterLinks.map((link) => {
+                  {FooterLinks.filter(link => link.title !== "Admin" || isAdmin).map((link) => {
                     const IconComponent = link.icon;
                     return (
                       <li key={link.title}>
@@ -221,8 +216,8 @@ const Footer = () => {
                           }
                           className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group py-1 px-2 rounded-lg hover:bg-white/5"
                         >
-                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" size={16} />
-                          <span className="text-sm sm:text-base font-medium">{link.title}</span>
+                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" size={14} />
+                          <span className="text-xs sm:text-sm font-medium">{link.title}</span>
                         </Link>
                       </li>
                     );
@@ -234,7 +229,7 @@ const Footer = () => {
             {/* Student Resources */}
             <div className="space-y-6 lg:space-y-8">
               <div>
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 flex-wrap">
+                <h3 className="text-sm sm:text-lg font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 flex-wrap">
                   <span className="break-words">Student Resources</span>
                 </h3>
                 <ul className="space-y-2 sm:space-y-3">
@@ -247,8 +242,8 @@ const Footer = () => {
                           onClick={() => window.scrollTo(0, 0)}
                           className="flex items-center gap-3 text-gray-300 hover:text-blue-400 transition-all duration-300 group py-1 px-2 rounded-lg hover:bg-white/5"
                         >
-                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" size={16} />
-                          <span className="text-sm sm:text-base font-medium break-words">{link.title}</span>
+                          <IconComponent className="text-blue-400 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" size={14} />
+                          <span className="text-xs sm:text-sm font-medium break-words">{link.title}</span>
                         </Link>
                       </li>
                     );

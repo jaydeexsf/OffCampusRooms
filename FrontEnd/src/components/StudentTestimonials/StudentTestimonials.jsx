@@ -1,76 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from "react-slick";
-import { FiStar, FiMessageSquare } from 'react-icons/fi';
+import { FiStar, FiMessageSquare, FiLoader } from 'react-icons/fi';
+import axios from 'axios';
 
 const StudentTestimonials = () => {
-  const testimonials = [
-    {
-      id: 1,
-      name: "Sarah Mokoena",
-      course: "Computer Science, 3rd Year",
-      location: "Gate 1",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-      review: "Found my perfect room through StudentRooms! The location is ideal - just 5 minutes walk to campus. The room is clean, well-maintained, and the landlord is very responsive. Highly recommend!",
-      roomType: "Single Room",
-      price: "R2,200/month"
-    },
-    {
-      id: 2,
-      name: "David Nkosi",
-      course: "Engineering, 2nd Year",
-      location: "Gate 2",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-      review: "The search process was so easy! I found a great room with all the amenities I needed. The platform is user-friendly and the support team helped me with everything. Great experience overall.",
-      roomType: "Shared Room",
-      price: "R1,800/month"
-    },
-    {
-      id: 3,
-      name: "Amanda Dlamini",
-      course: "Business Management, 4th Year",
-      location: "Gate 3",
-      rating: 4,
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-      review: "I've been using StudentRooms for 2 years now. The rooms are always as described and the verification process gives me peace of mind. Perfect for students!",
-      roomType: "Studio",
-      price: "R2,800/month"
-    },
-    {
-      id: 4,
-      name: "Thabo Molefe",
-      course: "Medicine, 1st Year",
-      location: "Ga-motintane",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-      review: "As a first-year student, I was worried about finding accommodation. StudentRooms made it so simple! Found an affordable room close to campus with great facilities.",
-      roomType: "Single Room",
-      price: "R1,600/month"
-    },
-    {
-      id: 5,
-      name: "Zinhle Khumalo",
-      course: "Law, 3rd Year",
-      location: "Gate 1",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-      review: "The best student accommodation platform! I love how easy it is to filter by location and price. My room is perfect and the community is great. Thank you StudentRooms!",
-      roomType: "Shared Room",
-      price: "R2,000/month"
-    },
-    {
-      id: 6,
-      name: "Lungile Zulu",
-      course: "Education, 2nd Year",
-      location: "Gate 2",
-      rating: 4,
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-      review: "Found my accommodation quickly and easily. The room is clean, safe, and affordable. The landlord is very helpful and the location is perfect for my studies.",
-      roomType: "Single Room",
-      price: "R2,100/month"
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/feedback/public?limit=12`);
+      const { feedback, averageRating, total } = response.data;
+      
+      // Transform feedback data to match testimonial format
+      const transformedTestimonials = feedback.map(item => ({
+        id: item._id,
+        name: item.userName,
+        course: `${item.course}, ${item.studyYear}`,
+        location: item.location,
+        rating: item.websiteRating,
+        image: item.userImage || `https://images.unsplash.com/photo-${Math.random() > 0.5 ? '1494790108755-2616b612b786' : '1507003211169-0a1dd7228f2d'}?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`,
+        review: item.review,
+        roomType: item.roomType,
+        price: `R${item.monthlyRent}/month`
+      }));
+      
+      setTestimonials(transformedTestimonials);
+      setAverageRating(averageRating);
+      setTotalCount(total);
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+      // Fallback to empty array if API fails
+      setTestimonials([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const settings = {
     dots: true,
@@ -128,62 +99,88 @@ const StudentTestimonials = () => {
 
           {/* Testimonials Slider */}
           <div className="max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-            <Slider {...settings}>
-              {testimonials.map((testimonial) => (
-                <div key={testimonial.id} className="px-4">
-                  <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 h-full">
-                    {/* Quote Icon */}
-                                         <div className="flex justify-between items-start mb-4">
-                       <FiMessageSquare className="text-blue-400 w-6 h-6" />
-                       <div className="flex gap-1">
-                         {renderStars(testimonial.rating)}
-                       </div>
-                     </div>
-
-                    {/* Review Text */}
-                    <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                      "{testimonial.review}"
-                    </p>
-
-                    {/* Student Info */}
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500">
-                        <img 
-                          src={testimonial.image} 
-                          alt={testimonial.name}
-                          className="w-full h-full object-cover" 
-                        />
+            {loading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="flex flex-col items-center gap-4">
+                  <FiLoader className="w-8 h-8 text-blue-400 animate-spin" />
+                  <p className="text-gray-400">Loading student testimonials...</p>
+                </div>
+              </div>
+            ) : testimonials.length > 0 ? (
+              <Slider {...settings}>
+                {testimonials.map((testimonial) => (
+                  <div key={testimonial.id} className="px-4">
+                    <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 h-full">
+                      {/* Quote Icon */}
+                      <div className="flex justify-between items-start mb-4">
+                        <FiMessageSquare className="text-blue-400 w-6 h-6" />
+                        <div className="flex gap-1">
+                          {renderStars(testimonial.rating)}
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <h4 className="text-white font-semibold text-sm">
-                          {testimonial.name}
-                        </h4>
-                        <p className="text-gray-400 text-xs">
-                          {testimonial.course}
-                        </p>
-                        <p className="text-blue-400 text-xs font-medium">
-                          {testimonial.location} • {testimonial.roomType} • {testimonial.price}
-                        </p>
+
+                      {/* Review Text */}
+                      <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                        "{testimonial.review}"
+                      </p>
+
+                      {/* Student Info */}
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500">
+                          <img 
+                            src={testimonial.image} 
+                            alt={testimonial.name}
+                            className="w-full h-full object-cover" 
+                            onError={(e) => {
+                              e.target.src = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-white font-semibold text-sm">
+                            {testimonial.name}
+                          </h4>
+                          <p className="text-gray-400 text-xs">
+                            {testimonial.course}
+                          </p>
+                          <p className="text-blue-400 text-xs font-medium">
+                            {testimonial.location} • {testimonial.roomType} • {testimonial.price}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </Slider>
+                ))}
+              </Slider>
+            ) : (
+              <div className="text-center py-20">
+                <FiMessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
+                <p className="text-gray-500 mb-6">Be the first to share your experience!</p>
+                <a 
+                  href="/feedback" 
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Share Your Experience
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Overall Rating */}
           <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="400">
             <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
               <div className="flex items-center justify-center gap-2 mb-4">
-                {renderStars(5)}
-                <span className="text-white font-bold text-lg ml-2">4.9/5</span>
+                {renderStars(Math.round(averageRating))}
+                <span className="text-white font-bold text-lg ml-2">
+                  {averageRating > 0 ? `${averageRating}/5` : 'No ratings yet'}
+                </span>
               </div>
               <h3 className="text-xl font-bold text-white mb-2">
-                Excellent Student Satisfaction
+                {averageRating >= 4.5 ? 'Excellent' : averageRating >= 4 ? 'Very Good' : averageRating >= 3 ? 'Good' : 'Growing'} Student Satisfaction
               </h3>
               <p className="text-gray-300 text-sm">
-                Based on {testimonials.length}+ verified student reviews
+                {totalCount > 0 ? `Based on ${totalCount} verified student review${totalCount !== 1 ? 's' : ''}` : 'Share your experience to help other students'}
               </p>
             </div>
           </div>

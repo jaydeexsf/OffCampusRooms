@@ -1,6 +1,8 @@
-import React from "react";
-import { FiWifi, FiMapPin, FiClock, FiEye, FiStar, FiMessageCircle } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { FiWifi, FiMapPin, FiClock, FiEye, FiStar, FiMessageCircle, FiHeart } from "react-icons/fi";
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
+import { useUser } from '@clerk/clerk-react';
+import axios from 'axios';
 
 const amenitiesIcons = {
   wifi: <FiWifi className="text-blue-400" title="Free WiFi" />,
@@ -39,6 +41,72 @@ const PlaceCard = ({
   onRateClick,
   onCommentClick
 }) => {
+  const { user, isSignedIn } = useUser();
+  const [isSaved, setIsSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Check if room is saved when component mounts
+  useEffect(() => {
+    if (isSignedIn && _id) {
+      checkIfSaved();
+    }
+  }, [isSignedIn, _id]);
+
+  const checkIfSaved = async () => {
+    try {
+      const token = await user.getToken();
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/check/${_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsSaved(response.data.isSaved);
+    } catch (error) {
+      console.error('Error checking saved status:', error);
+    }
+  };
+
+  const handleSaveToggle = async (e) => {
+    e.stopPropagation(); // Prevent card click
+    if (!isSignedIn) return;
+
+    setIsLoading(true);
+    try {
+      const token = await user.getToken();
+      
+      if (isSaved) {
+        // Unsave room
+        await axios.delete(
+          `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/unsave/${_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setIsSaved(false);
+      } else {
+        // Save room
+        await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/save`,
+          { roomId: _id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setIsSaved(true);
+      }
+    } catch (error) {
+      console.error('Error toggling save status:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div
       className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 group cursor-pointer overflow-hidden h-full flex flex-col hover:bg-white/15 transition-all duration-300 shadow-xl hover:shadow-2xl"
@@ -60,6 +128,23 @@ const PlaceCard = ({
             <span className="text-gray-300 text-xs">/mo</span>
           </div>
         </div>
+
+        {/* Save Button - Only show if user is signed in */}
+        {isSignedIn && (
+          <div className="absolute top-3 left-3">
+            <button
+              onClick={handleSaveToggle}
+              disabled={isLoading}
+              className={`p-2 rounded-full backdrop-blur-sm border transition-all duration-200 ${
+                isSaved
+                  ? 'bg-red-500/80 border-red-400/50 text-white hover:bg-red-400/80'
+                  : 'bg-black/60 border-white/20 text-white hover:bg-white/20'
+              } ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
+            >
+              <FiHeart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Content */}

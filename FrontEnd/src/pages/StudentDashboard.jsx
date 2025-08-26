@@ -1,54 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const StudentDashboard = () => {
   const { user, isSignedIn } = useUser();
   const [activeTab, setActiveTab] = useState('overview');
   const [savedRooms, setSavedRooms] = useState([]);
-  const [recentViews, setRecentViews] = useState([]);
+  const [userFeedback, setUserFeedback] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Mock data - you can replace with real data from your backend
+  // Fetch real data from backend
   useEffect(() => {
     if (isSignedIn) {
-      // Mock saved rooms
-      setSavedRooms([
-        {
-          id: 1,
-          title: "Modern Single Room near Gate 1",
-          price: 2500,
-          location: "Gate 1",
-          image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-          savedDate: "2024-01-15"
-        },
-        {
-          id: 2,
-          title: "Affordable Shared Room",
-          price: 1800,
-          location: "Gate 2",
-          image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-          savedDate: "2024-01-12"
-        }
-      ]);
-
-      // Mock recent views
-      setRecentViews([
-        {
-          id: 3,
-          title: "Studio Apartment near Campus",
-          price: 3200,
-          location: "Gate 3",
-          image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-          viewedDate: "2024-01-14"
-        }
-      ]);
+      fetchSavedRooms();
+      fetchUserFeedback();
     }
   }, [isSignedIn]);
 
+  const fetchSavedRooms = async () => {
+    try {
+      setLoading(true);
+      const token = await user.getToken();
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/my-saved`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSavedRooms(response.data);
+    } catch (error) {
+      console.error('Error fetching saved rooms:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUserFeedback = async () => {
+    try {
+      const token = await user.getToken();
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedback/my-feedback`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUserFeedback(response.data);
+    } catch (error) {
+      console.error('Error fetching user feedback:', error);
+    }
+  };
+
   const dashboardStats = {
     savedRooms: savedRooms.length,
-    viewedRooms: recentViews.length,
+    feedbackSubmitted: userFeedback ? 1 : 0,
     averagePrice: savedRooms.length > 0 
       ? Math.round(savedRooms.reduce((sum, room) => sum + room.price, 0) / savedRooms.length)
       : 0
@@ -57,7 +67,7 @@ const StudentDashboard = () => {
   const tabs = [
     { id: 'overview', name: 'Overview', icon: <FiHome /> },
     { id: 'saved', name: 'Saved Rooms', icon: <FiHeart /> },
-    { id: 'recent', name: 'Recent Views', icon: <FiEye /> },
+    { id: 'feedback', name: 'My Feedback', icon: <FiMessageSquare /> },
     { id: 'profile', name: 'Profile', icon: <FiUser /> }
   ];
 
@@ -93,48 +103,54 @@ const StudentDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+          <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-blue-400">{dashboardStats.savedRooms}</p>
-                <p className="text-gray-400 text-sm">Saved Rooms</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{dashboardStats.savedRooms}</p>
+                <p className="text-gray-300 text-sm font-medium">Saved Rooms</p>
               </div>
-              <FiHeart className="w-8 h-8 text-blue-400" />
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl">
+                <FiHeart className="w-6 h-6 text-white" />
+              </div>
             </div>
           </div>
 
-          <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+          <div className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-green-400">{dashboardStats.viewedRooms}</p>
-                <p className="text-gray-400 text-sm">Recently Viewed</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">{dashboardStats.feedbackSubmitted}</p>
+                <p className="text-gray-300 text-sm font-medium">Feedback Submitted</p>
               </div>
-              <FiEye className="w-8 h-8 text-green-400" />
+              <div className="bg-gradient-to-r from-green-500 to-blue-500 p-3 rounded-xl">
+                <FiMessageSquare className="w-6 h-6 text-white" />
+              </div>
             </div>
           </div>
 
-          <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+          <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-2xl p-6 hover:border-purple-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-purple-400">R{dashboardStats.averagePrice}</p>
-                <p className="text-gray-400 text-sm">Avg. Price</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">R{dashboardStats.averagePrice}</p>
+                <p className="text-gray-300 text-sm font-medium">Avg. Price</p>
               </div>
-              <FiDollarSign className="w-8 h-8 text-purple-400" />
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-xl">
+                <FiDollarSign className="w-6 h-6 text-white" />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-8">
+        <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 mb-8">
           <div className="flex flex-wrap gap-2 mb-6">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-purple-600/20 hover:border hover:border-blue-500/30'
                 }`}
               >
                 {tab.icon}
@@ -151,20 +167,24 @@ const StudentDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link 
                     to="/all-rooms"
-                    className="bg-gradient-to-r from-blue-600/20 to-blue-500/20 border border-blue-500/30 rounded-xl p-6 hover:scale-105 transition-all duration-200"
+                    className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:scale-105 hover:border-blue-400/50 transition-all duration-300 group"
                   >
-                    <FiHome className="w-8 h-8 text-blue-400 mb-3" />
-                    <h4 className="text-white font-semibold mb-2">Browse All Rooms</h4>
-                    <p className="text-gray-400 text-sm">Find your perfect accommodation</p>
+                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                      <FiHome className="w-6 h-6 text-white" />
+                    </div>
+                    <h4 className="text-white font-bold mb-2 text-lg">Browse All Rooms</h4>
+                    <p className="text-gray-300 text-sm">Find your perfect accommodation</p>
                   </Link>
 
                   <Link 
-                    to="/tips"
-                    className="bg-gradient-to-r from-green-600/20 to-green-500/20 border border-green-500/30 rounded-xl p-6 hover:scale-105 transition-all duration-200"
+                    to="/resources"
+                    className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:scale-105 hover:border-green-400/50 transition-all duration-300 group"
                   >
-                    <FiMapPin className="w-8 h-8 text-green-400 mb-3" />
-                    <h4 className="text-white font-semibold mb-2">Safety Tips</h4>
-                    <p className="text-gray-400 text-sm">Learn about student safety</p>
+                    <div className="bg-gradient-to-r from-green-500 to-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                      <FiMapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <h4 className="text-white font-bold mb-2 text-lg">Student Resources</h4>
+                    <p className="text-gray-300 text-sm">Safety tips and helpful guides</p>
                   </Link>
                 </div>
               </div>
@@ -173,18 +193,23 @@ const StudentDashboard = () => {
             {activeTab === 'saved' && (
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">Saved Rooms</h3>
-                {savedRooms.length > 0 ? (
+                {loading ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
+                    <p className="text-gray-400">Loading saved rooms...</p>
+                  </div>
+                ) : savedRooms.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {savedRooms.map((room) => (
-                      <div key={room.id} className="bg-black/30 border border-white/10 rounded-xl overflow-hidden hover:scale-105 transition-all duration-200">
-                        <img src={room.image} alt={room.title} className="w-full h-48 object-cover" />
+                      <div key={room.id} className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl overflow-hidden hover:scale-105 hover:border-blue-500/30 transition-all duration-300 group">
+                        <img src={room.images?.[0] || '/placeholder-room.jpg'} alt={room.title} className="w-full h-48 object-cover" />
                         <div className="p-4">
                           <h4 className="text-white font-semibold mb-2">{room.title}</h4>
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-blue-400">{room.location}</span>
-                            <span className="text-green-400 font-semibold">R{room.price}/month</span>
+                            <span className="text-blue-400 font-medium">{room.location}</span>
+                            <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent font-bold">R{room.price}/month</span>
                           </div>
-                          <p className="text-gray-400 text-xs mt-2">Saved on {room.savedDate}</p>
+                          <p className="text-gray-400 text-xs mt-2">Saved on {new Date(room.savedDate).toLocaleDateString()}</p>
                         </div>
                       </div>
                     ))}
@@ -204,34 +229,62 @@ const StudentDashboard = () => {
               </div>
             )}
 
-            {activeTab === 'recent' && (
+            {activeTab === 'feedback' && (
               <div>
-                <h3 className="text-xl font-bold text-white mb-4">Recently Viewed</h3>
-                {recentViews.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {recentViews.map((room) => (
-                      <div key={room.id} className="bg-black/30 border border-white/10 rounded-xl overflow-hidden hover:scale-105 transition-all duration-200">
-                        <img src={room.image} alt={room.title} className="w-full h-48 object-cover" />
-                        <div className="p-4">
-                          <h4 className="text-white font-semibold mb-2">{room.title}</h4>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-blue-400">{room.location}</span>
-                            <span className="text-green-400 font-semibold">R{room.price}/month</span>
-                          </div>
-                          <p className="text-gray-400 text-xs mt-2">Viewed on {room.viewedDate}</p>
-                        </div>
+                <h3 className="text-xl font-bold text-white mb-4">My Feedback</h3>
+                {userFeedback ? (
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-white font-semibold text-lg">Your Website Review</h4>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <FiStar
+                            key={star}
+                            className={`${
+                              star <= userFeedback.websiteRating
+                                ? 'text-yellow-400 fill-current'
+                                : 'text-gray-400'
+                            } text-lg`}
+                          />
+                        ))}
+                        <span className="text-white ml-2 font-medium">{userFeedback.websiteRating}/5</span>
                       </div>
-                    ))}
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-gray-300 mb-2"><strong>Review:</strong></p>
+                        <p className="text-white bg-black/30 p-4 rounded-xl">{userFeedback.review}</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div><span className="text-gray-400">Location:</span> <span className="text-white">{userFeedback.location}</span></div>
+                        <div><span className="text-gray-400">Monthly Rent:</span> <span className="text-green-400 font-semibold">R{userFeedback.monthlyRent}</span></div>
+                        <div><span className="text-gray-400">Study Year:</span> <span className="text-white">{userFeedback.studyYear}</span></div>
+                        <div><span className="text-gray-400">Course:</span> <span className="text-white">{userFeedback.course}</span></div>
+                        <div><span className="text-gray-400">Room Type:</span> <span className="text-white">{userFeedback.roomType}</span></div>
+                        <div><span className="text-gray-400">Submitted:</span> <span className="text-white">{new Date(userFeedback.createdAt).toLocaleDateString()}</span></div>
+                      </div>
+                      
+                      <div className="flex gap-4 mt-6">
+                        <Link 
+                          to="/feedback"
+                          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200"
+                        >
+                          Edit Feedback
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <div className="text-center py-12">
-                    <FiEye className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400">No recently viewed rooms</p>
+                    <FiMessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                    <p className="text-gray-400 mb-4">You haven't submitted any feedback yet</p>
                     <Link 
-                      to="/all-rooms"
-                      className="text-blue-400 hover:text-blue-300 mt-2 inline-block"
+                      to="/feedback"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 inline-block"
                     >
-                      Start browsing rooms
+                      Share Your Experience
                     </Link>
                   </div>
                 )}
@@ -241,9 +294,9 @@ const StudentDashboard = () => {
             {activeTab === 'profile' && (
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">Profile Settings</h3>
-                <div className="bg-black/30 border border-white/10 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl p-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
                       <FiUser className="w-8 h-8 text-white" />
                     </div>
                     <div>
@@ -253,13 +306,13 @@ const StudentDashboard = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200">
+                    <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
                       Edit Profile
                     </button>
-                    <button className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 border border-white/20">
+                    <button className="w-full bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 border border-white/20 hover:border-white/30">
                       Change Password
                     </button>
-                    <button className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 border border-white/20">
+                    <button className="w-full bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 border border-white/20 hover:border-white/30">
                       Notification Settings
                     </button>
                   </div>

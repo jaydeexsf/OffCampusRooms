@@ -11,6 +11,8 @@ const distanceRoute = require('./routes/distanceRoute')
 const commentRoutes = require('./routes/CommentRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
 const statisticsRoutes = require('./routes/statisticsRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
+const savedRoomRoutes = require('./routes/savedRoomRoutes');
 
 dotenv.config();
 
@@ -86,6 +88,17 @@ app.use('/api/comments', authMiddleware, commentRoutes);
 // Rating routes with selective auth middleware
 app.use('/api/ratings', ratingRoutes);
 app.use('/api/statistics', statisticsRoutes);
+// Use feedback routes with selective authentication
+app.use('/api/feedback', (req, res, next) => {
+  // Only apply auth middleware for protected routes
+  if (req.method === 'GET' && req.path === '/public') {
+    return next(); // Skip auth for public feedback
+  }
+  return authenticateUser(req, res, next);
+}, feedbackRoutes);
+
+// Use saved room routes (all require authentication)
+app.use('/api/saved-rooms', authenticateUser, savedRoomRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 5000;

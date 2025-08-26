@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FiGrid, FiMapPin, FiFileText, FiPhone, FiMail, FiClock, FiShield, FiHome, FiUsers, FiDollarSign } from 'react-icons/fi';
+import { AiOutlineLock, AiOutlineClockCircle, AiOutlineEye, AiOutlinePhone, AiOutlineWarning } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 
 const StudentResources = () => {
@@ -94,19 +95,29 @@ const StudentResources = () => {
 
   const safetyTips = [
     {
-      icon: <FiShield className="w-6 h-6" />,
-      title: "Always Lock Your Room",
-      description: "Keep your room locked even when you're just stepping out briefly. This prevents theft and unauthorized access."
+      icon: <AiOutlineLock className="w-6 h-6" />,
+      title: "Lock Your Room",
+      description: "Always lock your door when leaving your room, even if it's just for a short while. This prevents theft and unauthorized access to your belongings."
     },
     {
-      icon: <FiClock className="w-6 h-6" />,
-      title: "Avoid Late Night Travel",
-      description: "Try to avoid walking alone late at night, especially after 11 PM. Travel in groups or use trusted transportation."
+      icon: <AiOutlineClockCircle className="w-6 h-6" />,
+      title: "Avoid Going to or coming from Campus After 11 PM",
+      description: "Try to avoid walking to campus or any isolated areas late at night, especially after 11 PM. If you must go out, travel in groups or use a trusted transportation service."
     },
     {
-      icon: <FiPhone className="w-6 h-6" />,
+      icon: <AiOutlineEye className="w-6 h-6" />,
+      title: "Be Aware of Your Surroundings",
+      description: "Stay alert and be mindful of who and what is around you at all times. Avoid distractions like looking at your phone while walking."
+    },
+    {
+      icon: <AiOutlinePhone className="w-6 h-6" />,
       title: "Keep Emergency Contacts Ready",
-      description: "Save important numbers on your phone and keep a written list in your room for easy access."
+      description: "Save emergency contacts on your phone, including campus security, local police, and trusted friends or family members."
+    },
+    {
+      icon: <AiOutlineWarning className="w-6 h-6" />,
+      title: "Report Suspicious Activity",
+      description: "If you see any suspicious activity or feel unsafe, report it immediately to campus security or local authorities. It's always better to be safe than sorry."
     },
     {
       icon: <FiUsers className="w-6 h-6" />,
@@ -114,6 +125,7 @@ const StudentResources = () => {
       description: "Build relationships with your neighbors and roommates. They can be your first line of support in emergencies."
     }
   ];
+
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
@@ -129,6 +141,7 @@ const StudentResources = () => {
             Essential tools, guides, and information to help you succeed at University of Limpopo
           </p>
         </div>
+
 
         {/* Budget Calculator */}
         <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-12">
@@ -289,23 +302,29 @@ const StudentResources = () => {
 
        
         {/* Safety Tips */}
-        <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 mb-12">
-          <div className="text-center mb-8">
+        <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 mb-12" data-aos="fade-up">
+          <div className="text-center mb-12">
             <FiShield className="w-12 h-12 text-green-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Safety Tips</h2>
-            <p className="text-gray-400">Stay safe while living in student accommodation</p>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Student Safety <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+                Tips
+              </span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Your safety is our priority! Follow these essential tips to stay safe while on and off campus.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {safetyTips.map((tip, index) => (
-              <div key={index} className="bg-black/30 border border-white/10 rounded-xl p-6">
+              <div key={index} className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-500/30 transition-all duration-300 group">
                 <div className="flex items-start gap-4">
-                  <div className="text-blue-400 mt-1">
+                  <div className="text-blue-400 mt-1 group-hover:text-blue-300 transition-colors duration-300">
                     {tip.icon}
                   </div>
-                  <div>
-                    <h3 className="text-white font-semibold mb-2">{tip.title}</h3>
-                    <p className="text-gray-300 text-sm">{tip.description}</p>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold mb-3 group-hover:text-blue-100 transition-colors duration-300 text-base md:text-lg">{tip.title}</h3>
+                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed">{tip.description}</p>
                   </div>
                 </div>
               </div>
@@ -330,10 +349,10 @@ const StudentResources = () => {
                 Contact Support
               </Link>
               <Link 
-                to="/tips"
+                to="/feedback"
                 className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 border border-white/20"
               >
-                Safety Tips
+                Share Feedback
               </Link>
             </div>
           </div>

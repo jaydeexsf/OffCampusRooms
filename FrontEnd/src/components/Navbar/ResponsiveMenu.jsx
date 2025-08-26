@@ -82,20 +82,20 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
               {/* Additional Links */}
               <li className="pt-4 border-t border-white/20 mt-4">
                 <Link 
-                  to="/tips" 
-                  onClick={() => setShowMenu(false)} 
-                  className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
-                >
-                  Student Tips
-                </Link>
-              </li>
-              <li>
-                <Link 
                   to="/resources" 
                   onClick={() => setShowMenu(false)} 
                   className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
                 >
                   Student Resources
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/feedback" 
+                  onClick={() => setShowMenu(false)} 
+                  className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"
+                >
+                  Share Feedback
                 </Link>
               </li>
               <li>
@@ -122,7 +122,7 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
           </nav>
 
           {/* Footer */}
-          <div className="p-6 border-t border-white/20">
+          <div className="p-4 border-t border-white/20">
             <div className="text-center">
               <p className="text-xs text-gray-400 flex items-center justify-center gap-1">
                 Made with <FiHeart className="text-red-400 text-xs" /> by{" "}

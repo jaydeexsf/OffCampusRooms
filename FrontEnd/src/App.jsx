@@ -14,7 +14,6 @@ import Loader from "./pages/Loader";
 import AddRoomForm from "./components/admin/AddRoom";
 import BookingInfo from "./pages/BookingInfo";
 import AdminPanel from "./pages/admin/AdminPanel";
-import Tips from "./pages/Tips";
 import Contact from "./pages/Contact";
 // import ProtectedRoute from "./components/Authentication/ProtectedRoute"; 
 import LoginPage from "./pages/LoginPage";
@@ -22,6 +21,7 @@ import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import Comments from "./pages/Comments";
 import StudentDashboard from "./pages/StudentDashboard";
 import StudentResources from "./pages/StudentResources";
+import FeedbackForm from "./components/Feedback/FeedbackForm";
 
 const App = () => {
   const { globalLoader } = useContext(GlobalContext);
@@ -48,12 +48,11 @@ const App = () => {
             <Route path="all-rooms" element={<AllRooms />} />
             <Route path="frequetly-asked-questions" element={<FaqPage />} />
             <Route path="bookinginfo" element={<BookingInfo />} />
-            <Route path="tips" element={<Tips />} />
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<LoginPage />} />
-            <Route path="comment" element={<Comments />} />
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="resources" element={<StudentResources />} />
+            <Route path="feedback" element={<FeedbackForm />} />
             
             <Route path="admin" element={
               <ProtectedRoute adminOnly={true}>
