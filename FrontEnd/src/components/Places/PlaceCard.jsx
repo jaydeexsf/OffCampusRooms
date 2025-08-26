@@ -48,14 +48,21 @@ const PlaceCard = ({
 
   // Check if room is saved when component mounts
   useEffect(() => {
-    if (isSignedIn && _id) {
+    if (isSignedIn && _id && user) {
       checkIfSaved();
     }
-  }, [isSignedIn, _id]);
+  }, [isSignedIn, _id, user]);
 
   const checkIfSaved = async () => {
     try {
-      if (!user) return;
+      if (!user || !isSignedIn) return;
+      
+      // Wait a bit for user to be fully loaded
+      if (!user.getToken) {
+        setTimeout(checkIfSaved, 100);
+        return;
+      }
+      
       const token = await user.getToken();
       if (!token) return;
       
@@ -79,9 +86,16 @@ const PlaceCard = ({
 
     setIsLoading(true);
     try {
+      // Wait for user to be fully loaded
+      if (!user.getToken) {
+        setIsLoading(false);
+        return;
+      }
+      
       const token = await user.getToken();
       if (!token) {
         console.error('Unable to get authentication token');
+        setIsLoading(false);
         return;
       }
       

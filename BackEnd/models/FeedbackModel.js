@@ -49,7 +49,7 @@ const feedbackSchema = new mongoose.Schema({
   },
   isApproved: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   isPublic: {
     type: Boolean,
