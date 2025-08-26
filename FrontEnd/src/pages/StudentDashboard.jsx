@@ -23,6 +23,7 @@ const StudentDashboard = () => {
   const fetchSavedRooms = async () => {
     try {
       setLoading(true);
+      if (!user) return;
       const token = await user.getToken();
       const response = await axios.get(
         API_ENDPOINTS.GET_SAVED_ROOMS,
@@ -42,6 +43,7 @@ const StudentDashboard = () => {
 
   const fetchUserFeedback = async () => {
     try {
+      if (!user) return;
       const token = await user.getToken();
       const response = await axios.get(
         API_ENDPOINTS.GET_USER_FEEDBACK,

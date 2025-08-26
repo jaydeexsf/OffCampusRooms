@@ -250,7 +250,7 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, e
 
                 {/* Submit Button */}
                 <button
-                  onClick={handleSubmit}
+                  onClick={handleSubmitRating}
                   disabled={rating === 0 || isSubmitting}
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none disabled:cursor-not-allowed text-sm"
                 >

@@ -55,7 +55,8 @@ const PlaceCard = ({
 
   const checkIfSaved = async () => {
     try {
-      const token = await user?.getToken?.();
+      if (!user) return;
+      const token = await user.getToken();
       if (!token) return;
       
       const response = await axios.get(
@@ -78,7 +79,7 @@ const PlaceCard = ({
 
     setIsLoading(true);
     try {
-      const token = await user?.getToken?.();
+      const token = await user.getToken();
       if (!token) {
         console.error('Unable to get authentication token');
         return;
