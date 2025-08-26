@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiStar, FiSend, FiEdit3, FiTrash2, FiCheck, FiAlertCircle } from 'react-icons/fi';
+import { FiStar, FiEdit3, FiTrash2, FiCheck, FiAlertCircle, FiSend } from 'react-icons/fi';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 

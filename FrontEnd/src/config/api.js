@@ -4,7 +4,7 @@ const isDevelopment = false;
 
 export const API_BASE_URL = isDevelopment 
   ? 'http://localhost:5000' 
-  : 'https://offcampusrooms.onrender.com';
+  : 'https://offcampusrooms-backend.onrender.com';
 
 export const API_ENDPOINTS = {
   // Rooms
