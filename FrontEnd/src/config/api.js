@@ -4,7 +4,7 @@ const isDevelopment = false;
 
 export const API_BASE_URL = isDevelopment 
   ? 'http://localhost:5000' 
-  : 'https://offcampusrooms-backend.onrender.com';
+  : 'https://offcampusrooms.onrender.com';
 
 export const API_ENDPOINTS = {
   // Rooms
@@ -37,8 +37,19 @@ export const API_ENDPOINTS = {
   GET_STATISTICS: `${API_BASE_URL}/api/statistics`,
   GET_ROOM_STATISTICS: `${API_BASE_URL}/api/statistics/room`,
 
-  // Distance
-  CALCULATE_DISTANCE: `${API_BASE_URL}/api/distance/calculate`,
+  // Distance/Google
+  CALCULATE_DISTANCE: `${API_BASE_URL}/api/google/distance`,
+
+  // Feedback
+  GET_PUBLIC_FEEDBACK: `${API_BASE_URL}/api/feedback/public`,
+  GET_USER_FEEDBACK: `${API_BASE_URL}/api/feedback/my-feedback`,
+  FEEDBACK: `${API_BASE_URL}/api/feedback`,
+
+  // Saved Rooms
+  GET_SAVED_ROOMS: `${API_BASE_URL}/api/saved-rooms/my-saved`,
+  SAVE_ROOM: `${API_BASE_URL}/api/saved-rooms/save`,
+  UNSAVE_ROOM: `${API_BASE_URL}/api/saved-rooms/unsave`,
+  CHECK_SAVED_ROOM: `${API_BASE_URL}/api/saved-rooms/check`,
 };
 
 // Helper function to get full URL for room operations

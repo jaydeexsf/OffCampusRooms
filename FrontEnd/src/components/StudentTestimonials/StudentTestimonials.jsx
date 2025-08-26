@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Slider from "react-slick";
 import { FiStar, FiMessageSquare, FiLoader } from 'react-icons/fi';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
 
 const StudentTestimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -15,7 +16,7 @@ const StudentTestimonials = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/feedback/public?limit=12`);
+      const response = await axios.get(`${API_ENDPOINTS.GET_PUBLIC_FEEDBACK}?limit=12`);
       const { feedback, averageRating, total } = response.data;
       
       // Transform feedback data to match testimonial format

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiStar, FiEdit3, FiTrash2, FiCheck, FiAlertCircle, FiSend } from 'react-icons/fi';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
 
 const FeedbackForm = () => {
   const { getToken, isSignedIn } = useAuth();
@@ -32,7 +33,7 @@ const FeedbackForm = () => {
   const fetchUserFeedback = async () => {
     try {
       const token = await getToken();
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/feedback/my-feedback`, {
+      const response = await axios.get(API_ENDPOINTS.GET_USER_FEEDBACK, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -89,7 +90,7 @@ const FeedbackForm = () => {
       const endpoint = existingFeedback ? '/api/feedback' : '/api/feedback';
       const method = existingFeedback ? 'put' : 'post';
       
-      const response = await axios[method](`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, formData, {
+      const response = await axios[method](API_ENDPOINTS.FEEDBACK, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -120,7 +121,7 @@ const FeedbackForm = () => {
     setIsSubmitting(true);
     try {
       const token = await getToken();
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/feedback`, {
+      await axios.delete(API_ENDPOINTS.FEEDBACK, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

@@ -3,6 +3,7 @@ import { useUser } from '@clerk/clerk-react';
 import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 const StudentDashboard = () => {
   const { user, isSignedIn } = useUser();
@@ -24,7 +25,7 @@ const StudentDashboard = () => {
       setLoading(true);
       const token = await user.getToken();
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/my-saved`,
+        API_ENDPOINTS.GET_SAVED_ROOMS,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,7 +44,7 @@ const StudentDashboard = () => {
     try {
       const token = await user.getToken();
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/feedback/my-feedback`,
+        API_ENDPOINTS.GET_USER_FEEDBACK,
         {
           headers: {
             Authorization: `Bearer ${token}`,

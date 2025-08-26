@@ -3,6 +3,7 @@ import { FiWifi, FiMapPin, FiClock, FiEye, FiStar, FiMessageCircle, FiHeart } fr
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
 import { useUser } from '@clerk/clerk-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../../config/api';
 
 const amenitiesIcons = {
   wifi: <FiWifi className="text-blue-400" title="Free WiFi" />,
@@ -58,7 +59,7 @@ const PlaceCard = ({
       if (!token) return;
       
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/check/${_id}`,
+        `${API_ENDPOINTS.CHECK_SAVED_ROOM}/${_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -86,7 +87,7 @@ const PlaceCard = ({
       if (isSaved) {
         // Unsave room
         await axios.delete(
-          `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/unsave/${_id}`,
+          `${API_ENDPOINTS.UNSAVE_ROOM}/${_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -97,7 +98,7 @@ const PlaceCard = ({
       } else {
         // Save room
         await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/saved-rooms/save`,
+          API_ENDPOINTS.SAVE_ROOM,
           { roomId: _id },
           {
             headers: {
