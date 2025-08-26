@@ -170,7 +170,7 @@ const AdminPanel = () => {
             </div>
 
             {/* Content */}
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <div className="backdrop-blur-sm border border-white/10 rounded-2xl">
               {activeTab === 'rooms' ? (
                 <RoomsSection />
               ) : (
