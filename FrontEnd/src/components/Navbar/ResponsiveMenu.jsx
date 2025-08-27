@@ -100,6 +100,15 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
               </li>
               <li>
                 <Link 
+                  to="/ride-booking" 
+                  onClick={() => setShowMenu(false)} 
+                  className="flex items-center px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600/20 to-blue-500/20 border border-blue-500/30 text-blue-400 hover:text-blue-300 hover:bg-gradient-to-r hover:from-blue-600/30 hover:to-blue-500/30 transition-all duration-200 font-medium"
+                >
+                  🚗 Book a Ride
+                </Link>
+              </li>
+              <li>
+                <Link 
                   to="/contact" 
                   onClick={() => setShowMenu(false)} 
                   className="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200 font-medium"

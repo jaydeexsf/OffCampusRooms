@@ -9,6 +9,8 @@ const roomRoutes = require("./routes/roomRoutes");
 const faqRoutes = require("./routes/faqRoutes")
 const distanceRoute = require('./routes/distanceRoute')
 const commentRoutes = require('./routes/CommentRoutes');
+const driverRoutes = require('./routes/driverRoutes');
+const rideRoutes = require('./routes/rideRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
 const statisticsRoutes = require('./routes/statisticsRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
@@ -108,8 +110,15 @@ app.use('/api/faq', faqRoutes);
 app.use('/api/google', distanceRoute);
 // Apply auth middleware to comment routes
 app.use('/api/comments', authMiddleware, commentRoutes);
-// Rating routes with auth middleware
-app.use('/api/ratings', authMiddleware, ratingRoutes);
+// Rating routes with selective authentication
+app.use('/api/ratings', (req, res, next) => {
+  // Skip auth for public routes (getting room ratings)
+  if (req.method === 'GET' && req.path.startsWith('/room/')) {
+    return next();
+  }
+  // Apply auth middleware for all other rating routes
+  return authMiddleware(req, res, next);
+}, ratingRoutes);
 app.use('/api/statistics', statisticsRoutes);
 // Use feedback routes with selective authentication
 app.use('/api/feedback', (req, res, next) => {
@@ -122,6 +131,12 @@ app.use('/api/feedback', (req, res, next) => {
 
 // Use saved room routes (all require authentication)
 app.use('/api/saved-rooms', authMiddleware, savedRoomRoutes);
+
+// Driver routes (admin routes require auth)
+app.use('/api/drivers', driverRoutes);
+
+// Ride routes (require authentication for booking)
+app.use('/api/rides', rideRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 5000;

@@ -9,6 +9,7 @@ import Banner from "../components/Banner/Banner";
 import WhyChooseUs from "../components/WhyChooseUs/WhyChooseUs";
 import StudentTestimonials from "../components/StudentTestimonials/StudentTestimonials";
 import LatestNews from "../components/LatestNews/LatestNews";
+import DriversShowcase from "../components/DriversShowcase/DriversShowcase";
 import OrderPopup from "../components/OrderPopup/OrderPopup";
 // import roomsData from "../assets/RoomsData"; 
 
@@ -57,6 +58,9 @@ const Home = () => {
 
         {/* Featured Locations Section */}
         <FeaturedLocations />
+
+        {/* Drivers Showcase Section */}
+        <DriversShowcase />
 
         {/* Student Testimonials Section */}
         <StudentTestimonials />

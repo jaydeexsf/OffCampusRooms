@@ -41,7 +41,8 @@ const ProfessionalRatingSystem = ({ roomId, roomTitle, showFullInterface = true,
     if (!isSignedIn) return;
     
     try {
-      const token = await useAuth().getToken();
+      const { getToken } = useAuth();
+      const token = await getToken();
       const response = await axios.get(`${API_ENDPOINTS.GET_USER_RATING}/${roomId}`, {
         headers: {
           Authorization: `Bearer ${token}`,

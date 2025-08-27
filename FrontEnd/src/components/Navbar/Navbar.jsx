@@ -30,6 +30,10 @@ const DropdownLinks = [
     link: "/resources",
   },
   {
+    name: "Book a Ride",
+    link: "/ride-booking",
+  },
+  {
     name: "Share Feedback",
     link: "/feedback",
   },

@@ -49,6 +49,25 @@ export const API_ENDPOINTS = {
   SAVE_ROOM: `${API_BASE_URL}/api/saved-rooms/save`,
   UNSAVE_ROOM: `${API_BASE_URL}/api/saved-rooms/unsave`,
   CHECK_SAVED_ROOM: `${API_BASE_URL}/api/saved-rooms/check`,
+
+  // Drivers
+  GET_ALL_DRIVERS: `${API_BASE_URL}/api/drivers/all`,
+  GET_AVAILABLE_DRIVERS: `${API_BASE_URL}/api/drivers/available`,
+  ADD_DRIVER: `${API_BASE_URL}/api/drivers/add`,
+  UPDATE_DRIVER: `${API_BASE_URL}/api/drivers/update`,
+  DELETE_DRIVER: `${API_BASE_URL}/api/drivers/delete`,
+  TOGGLE_DRIVER_AVAILABILITY: `${API_BASE_URL}/api/drivers/toggle-availability`,
+
+  // Rides
+  CALCULATE_RIDE: `${API_BASE_URL}/api/rides/calculate`,
+  BOOK_RIDE: `${API_BASE_URL}/api/rides/book`,
+  GET_STUDENT_RIDES: `${API_BASE_URL}/api/rides/student`,
+  GET_DRIVER_RIDES: `${API_BASE_URL}/api/rides/driver`,
+  UPDATE_RIDE_STATUS: `${API_BASE_URL}/api/rides/status`,
+  RATE_RIDE: `${API_BASE_URL}/api/rides/rate`,
+  GET_ALL_RIDES: `${API_BASE_URL}/api/rides/all`,
+  GET_ADVANCED_BOOKINGS: `${API_BASE_URL}/api/rides/advanced-bookings`,
+  CONFIRM_ADVANCED_BOOKING: `${API_BASE_URL}/api/rides/confirm`,
 };
 
 // Helper function to get full URL for room operations

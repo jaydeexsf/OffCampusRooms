@@ -219,7 +219,7 @@ const StudentDashboard = () => {
                 className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${
                   activeTab === tab.id
                     ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-purple-600/20 hover:border hover:border-blue-500/30'
+                    : 'text-gray-400 hover:text-white hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-purple-600/20'
                 }`}
               >
                 {tab.icon}
@@ -236,7 +236,7 @@ const StudentDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link 
                     to="/all-rooms"
-                    className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:scale-105 hover:border-blue-400/50 transition-all duration-300 group"
+                    className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300 group"
                   >
                     <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
                       <FiHome className="w-6 h-6 text-white" />
@@ -247,7 +247,7 @@ const StudentDashboard = () => {
 
                   <Link 
                     to="/resources"
-                    className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:scale-105 hover:border-green-400/50 transition-all duration-300 group"
+                    className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition-all duration-300 group"
                   >
                     <div className="bg-gradient-to-r from-green-500 to-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
                       <FiMapPin className="w-6 h-6 text-white" />
@@ -270,7 +270,7 @@ const StudentDashboard = () => {
                 ) : savedRooms.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {savedRooms.map((room) => (
-                      <div key={room.id} className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl overflow-hidden hover:scale-105 hover:border-blue-500/30 transition-all duration-300 group">
+                      <div key={room.id} className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/30 transition-all duration-300 group">
                         <img src={room.images?.[0] || '/placeholder-room.jpg'} alt={room.title} className="w-full h-48 object-cover" />
                         <div className="p-4">
                           <h4 className="text-white font-semibold mb-2">{room.title}</h4>
