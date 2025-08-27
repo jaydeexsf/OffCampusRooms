@@ -82,8 +82,21 @@ const authMiddleware = async (req, res, next) => {
     console.error('Authentication error:', error);
     console.error('Error details:', error.message);
     console.error('Error stack:', error.stack);
+    
+    // Provide more specific error messages
+    let errorMessage = 'Authentication failed';
+    if (error.message.includes('Failed to resolve JWK')) {
+      errorMessage = 'Token verification service temporarily unavailable. Please try again.';
+    } else if (error.message.includes('jwt expired')) {
+      errorMessage = 'Your session has expired. Please sign in again.';
+    } else if (error.message.includes('jwt malformed')) {
+      errorMessage = 'Invalid authentication token. Please sign in again.';
+    } else if (error.message.includes('network') || error.message.includes('timeout')) {
+      errorMessage = 'Network error. Please check your connection and try again.';
+    }
+    
     return res.status(401).json({ 
-      message: 'Authentication failed',
+      message: errorMessage,
       error: error.message 
     });
   }
@@ -95,8 +108,8 @@ app.use('/api/faq', faqRoutes);
 app.use('/api/google', distanceRoute);
 // Apply auth middleware to comment routes
 app.use('/api/comments', authMiddleware, commentRoutes);
-// Rating routes with selective auth middleware
-app.use('/api/ratings', ratingRoutes);
+// Rating routes with auth middleware
+app.use('/api/ratings', authMiddleware, ratingRoutes);
 app.use('/api/statistics', statisticsRoutes);
 // Use feedback routes with selective authentication
 app.use('/api/feedback', (req, res, next) => {
