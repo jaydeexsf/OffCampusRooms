@@ -34,8 +34,19 @@ const StudentTestimonials = () => {
         roomType: item.roomType,
         price: `R${item.monthlyRent}/month`
       }));
+
+      // Remove duplicates based on multiple criteria to ensure uniqueness
+      const uniqueTestimonials = transformedTestimonials.filter((testimonial, index, self) => 
+        index === self.findIndex(t => 
+          t.id === testimonial.id || 
+          (t.name === testimonial.name && 
+           t.review === testimonial.review && 
+           t.location === testimonial.location &&
+           t.course === testimonial.course)
+        )
+      );
       
-      setTestimonials(transformedTestimonials);
+      setTestimonials(uniqueTestimonials);
       setAverageRating(averageRating);
       setTotalCount(total);
     } catch (error) {
@@ -51,11 +62,11 @@ const StudentTestimonials = () => {
   const settings = {
     dots: true,
     arrows: false,
-    infinite: true,
+    infinite: testimonials.length > 3,
     speed: 600,
-    slidesToShow: 3,
+    slidesToShow: Math.min(3, testimonials.length),
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: testimonials.length > 3,
     autoplaySpeed: 5000,
     responsive: [
       {
