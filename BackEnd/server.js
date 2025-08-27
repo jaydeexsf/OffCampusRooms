@@ -56,8 +56,9 @@ const authMiddleware = async (req, res, next) => {
     }
     
     console.log('Verifying token with Clerk...');
-    // Verify the token with Clerk using the correct v5 API
-    const payload = await clerkClient.verifyToken(token);
+    // Prefer verifying with a static JWT key if provided to avoid JWKS fetch issues
+    const verifyOptions = process.env.CLERK_JWT_KEY ? { jwtKey: process.env.CLERK_JWT_KEY } : undefined;
+    const payload = await clerkClient.verifyToken(token, verifyOptions);
     if (!payload || !payload.sub) {
       console.log('Invalid session token');
       return res.status(401).json({ message: 'Invalid token' });

@@ -27,7 +27,8 @@ const authMiddleware = async (req, res, next) => {
     }
     
     console.log('[RatingsAuth] Verifying token with Clerk...');
-    const payload = await clerkClient.verifyToken(token);
+    const verifyOptions = process.env.CLERK_JWT_KEY ? { jwtKey: process.env.CLERK_JWT_KEY } : undefined;
+    const payload = await clerkClient.verifyToken(token, verifyOptions);
     console.log('[RatingsAuth] Verify result has sub:', Boolean(payload && payload.sub));
     if (!payload || !payload.sub) {
       return res.status(401).json({ message: 'Invalid token' });

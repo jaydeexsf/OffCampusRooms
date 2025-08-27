@@ -6,6 +6,7 @@ const saveRoom = async (req, res) => {
   try {
     const { roomId } = req.body;
     const userId = req.user.userId;
+    console.log('[SavedRooms] Save request:', { userId, roomId });
 
     // Check if room exists
     const room = await Room.findById(roomId);
@@ -26,6 +27,7 @@ const saveRoom = async (req, res) => {
     });
 
     await savedRoom.save();
+    console.log('[SavedRooms] Room saved');
     res.status(201).json({ message: 'Room saved successfully', savedRoom });
   } catch (error) {
     console.error('Error saving room:', error);
@@ -38,6 +40,7 @@ const unsaveRoom = async (req, res) => {
   try {
     const { roomId } = req.params;
     const userId = req.user.userId;
+    console.log('[SavedRooms] Unsave request:', { userId, roomId });
 
     const savedRoom = await SavedRoom.findOneAndDelete({ userId, roomId });
     if (!savedRoom) {
@@ -55,6 +58,7 @@ const unsaveRoom = async (req, res) => {
 const getSavedRooms = async (req, res) => {
   try {
     const userId = req.user.userId;
+    console.log('[SavedRooms] Fetch saved rooms for:', userId);
 
     const savedRooms = await SavedRoom.find({ userId })
       .populate('roomId')
@@ -69,6 +73,7 @@ const getSavedRooms = async (req, res) => {
       savedDate: saved.createdAt,
     }));
 
+    console.log('[SavedRooms] Returning saved rooms count:', roomsData.length);
     res.json(roomsData);
   } catch (error) {
     console.error('Error fetching saved rooms:', error);
@@ -81,6 +86,7 @@ const checkRoomSaved = async (req, res) => {
   try {
     const { roomId } = req.params;
     const userId = req.user.userId;
+    console.log('[SavedRooms] Check saved:', { userId, roomId });
 
     const savedRoom = await SavedRoom.findOne({ userId, roomId });
     res.json({ isSaved: !!savedRoom });
