@@ -7,8 +7,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ClerkProvider } from '@clerk/clerk-react'
 
-// Import your publishable key
-const PUBLISHABLE_KEY = "pk_test_bGliZXJhbC1mb3gtNDEuY2xlcmsuYWNjb3VudHMuZGV2JA";
+// Import your publishable key from environment variables
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_bGliZXJhbC1mb3gtNDEuY2xlcmsuYWNjb3VudHMuZGV2JA";
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
@@ -16,7 +16,12 @@ if (!PUBLISHABLE_KEY) {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+      <ClerkProvider 
+        publishableKey={PUBLISHABLE_KEY} 
+        afterSignOutUrl="/"
+        signInUrl="/login"
+        signUpUrl="/login"
+      >
        <GlobalProvider> 
           <App />
         </GlobalProvider>
