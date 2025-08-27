@@ -1,10 +1,8 @@
 // API Configuration
-// Change this to switch between development and production
-const isDevelopment = false;
+// Prefer .env override; fall back to production. Set VITE_API_BASE_URL to switch.
+const ENV_BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || '';
 
-export const API_BASE_URL = isDevelopment 
-  ? 'http://localhost:5000' 
-  : 'https://offcampusrooms.onrender.com';
+export const API_BASE_URL = ENV_BASE || 'https://offcampusrooms.onrender.com';
 
 export const API_ENDPOINTS = {
   // Rooms
@@ -18,7 +16,7 @@ export const API_ENDPOINTS = {
   // FAQ
   GET_FAQS: `${API_BASE_URL}/api/faq/questions`,
   ADD_FAQ: `${API_BASE_URL}/api/faq/add-qanda`,
-  DELETE_FAQ: `${API_BASE_URL}/api/rooms/del-faq`,
+  DELETE_FAQ: `${API_BASE_URL}/api/faq`,
 
   // Comments
   GET_COMMENTS: `${API_BASE_URL}/api/comments`,
@@ -26,6 +24,7 @@ export const API_ENDPOINTS = {
   GET_ROOM_COMMENTS: `${API_BASE_URL}/api/comments/room`,
   UPDATE_COMMENT: `${API_BASE_URL}/api/comments`,
   DELETE_COMMENT: `${API_BASE_URL}/api/comments`,
+  GET_MY_COMMENTS: `${API_BASE_URL}/api/comments/my-comments`,
 
   // Ratings
   GET_ROOM_RATINGS: `${API_BASE_URL}/api/ratings/room`,

@@ -3,6 +3,8 @@ const Feedback = require('../models/FeedbackModel');
 // Create new feedback
 const createFeedback = async (req, res) => {
   try {
+    console.log('[API] POST /api/feedback body:', req.body);
+    console.log('[API] Auth user:', req.user);
     const {
       websiteRating,
       review,
@@ -15,6 +17,7 @@ const createFeedback = async (req, res) => {
 
     // Check if user already submitted feedback
     const existingFeedback = await Feedback.findOne({ userId: req.user.userId });
+    console.log('[API] Existing feedback found:', Boolean(existingFeedback));
     if (existingFeedback) {
       return res.status(400).json({ 
         message: 'You have already submitted feedback. You can update your existing feedback instead.' 
@@ -35,12 +38,13 @@ const createFeedback = async (req, res) => {
     });
 
     const savedFeedback = await feedback.save();
+    console.log('[API] Feedback saved with id:', savedFeedback?._id?.toString());
     res.status(201).json({
       message: 'Feedback submitted successfully!',
       feedback: savedFeedback
     });
   } catch (error) {
-    console.error('Error creating feedback:', error);
+    console.error('[API] Error creating feedback:', error);
     if (error.code === 11000) {
       return res.status(400).json({ 
         message: 'You have already submitted feedback.' 
@@ -56,6 +60,8 @@ const createFeedback = async (req, res) => {
 // Update existing feedback
 const updateFeedback = async (req, res) => {
   try {
+    console.log('[API] PUT /api/feedback body:', req.body);
+    console.log('[API] Auth user:', req.user);
     const {
       websiteRating,
       review,
@@ -91,7 +97,7 @@ const updateFeedback = async (req, res) => {
       feedback
     });
   } catch (error) {
-    console.error('Error updating feedback:', error);
+    console.error('[API] Error updating feedback:', error);
     res.status(500).json({ 
       message: 'Error updating feedback', 
       error: error.message 
@@ -102,10 +108,12 @@ const updateFeedback = async (req, res) => {
 // Get user's own feedback
 const getUserFeedback = async (req, res) => {
   try {
+    console.log('[API] GET /api/feedback/my-feedback for user:', req.user);
     const feedback = await Feedback.findOne({ userId: req.user.userId });
+    console.log('[API] User feedback found:', Boolean(feedback));
     res.json({ feedback });
   } catch (error) {
-    console.error('Error getting user feedback:', error);
+    console.error('[API] Error getting user feedback:', error);
     res.status(500).json({ 
       message: 'Error retrieving feedback', 
       error: error.message 
@@ -116,6 +124,7 @@ const getUserFeedback = async (req, res) => {
 // Get all approved public feedback (for testimonials)
 const getPublicFeedback = async (req, res) => {
   try {
+    console.log('[API] GET /api/feedback/public query:', req.query);
     const { limit = 10, skip = 0 } = req.query;
     
     const feedback = await Feedback.find({ 
@@ -142,6 +151,7 @@ const getPublicFeedback = async (req, res) => {
       ? Math.round(avgRatingResult[0].avgRating * 10) / 10 
       : 0;
 
+    console.log('[API] Public feedback count:', feedback.length, 'total:', total, 'avg:', averageRating);
     res.json({
       feedback,
       total,
@@ -149,7 +159,7 @@ const getPublicFeedback = async (req, res) => {
       hasMore: skip + feedback.length < total
     });
   } catch (error) {
-    console.error('Error getting public feedback:', error);
+    console.error('[API] Error getting public feedback:', error);
     res.status(500).json({ 
       message: 'Error retrieving feedback', 
       error: error.message 
@@ -220,6 +230,7 @@ const moderateFeedback = async (req, res) => {
 // Delete feedback
 const deleteFeedback = async (req, res) => {
   try {
+    console.log('[API] DELETE /api/feedback for user:', req.user);
     const feedback = await Feedback.findOneAndDelete({ userId: req.user.userId });
     
     if (!feedback) {
@@ -228,7 +239,7 @@ const deleteFeedback = async (req, res) => {
 
     res.json({ message: 'Feedback deleted successfully' });
   } catch (error) {
-    console.error('Error deleting feedback:', error);
+    console.error('[API] Error deleting feedback:', error);
     res.status(500).json({ 
       message: 'Error deleting feedback', 
       error: error.message 

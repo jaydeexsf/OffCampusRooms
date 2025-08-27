@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useUser } from '@clerk/clerk-react';
-import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar } from 'react-icons/fi';
+import { useUser, useAuth } from '@clerk/clerk-react';
+import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 
 const StudentDashboard = () => {
   const { user, isSignedIn } = useUser();
+  const { getToken, isSignedIn: authSignedIn } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [savedRooms, setSavedRooms] = useState([]);
   const [userFeedback, setUserFeedback] = useState(null);
+  const [myComments, setMyComments] = useState([]);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingCommentText, setEditingCommentText] = useState('');
   const [loading, setLoading] = useState(false);
 
   // Fetch real data from backend
@@ -17,6 +21,7 @@ const StudentDashboard = () => {
     if (isSignedIn) {
       fetchSavedRooms();
       fetchUserFeedback();
+      fetchMyComments();
     }
   }, [isSignedIn]);
 
@@ -24,7 +29,9 @@ const StudentDashboard = () => {
     try {
       setLoading(true);
       if (!user) return;
-      const token = await user.getToken();
+      const token = await getToken();
+      console.log('[Dashboard] GET_SAVED_ROOMS URL:', API_ENDPOINTS.GET_SAVED_ROOMS);
+      console.log('[Dashboard] Auth token present:', Boolean(token));
       const response = await axios.get(
         API_ENDPOINTS.GET_SAVED_ROOMS,
         {
@@ -33,6 +40,7 @@ const StudentDashboard = () => {
           },
         }
       );
+      console.log('[Dashboard] Saved rooms response:', response.status, response.data);
       setSavedRooms(response.data);
     } catch (error) {
       console.error('Error fetching saved rooms:', error);
@@ -44,7 +52,9 @@ const StudentDashboard = () => {
   const fetchUserFeedback = async () => {
     try {
       if (!user) return;
-      const token = await user.getToken();
+      const token = await getToken();
+      console.log('[Dashboard] GET_USER_FEEDBACK URL:', API_ENDPOINTS.GET_USER_FEEDBACK);
+      console.log('[Dashboard] Auth token present:', Boolean(token));
       const response = await axios.get(
         API_ENDPOINTS.GET_USER_FEEDBACK,
         {
@@ -53,9 +63,66 @@ const StudentDashboard = () => {
           },
         }
       );
-      setUserFeedback(response.data);
+      console.log('[Dashboard] Feedback response:', response.status, response.data);
+      setUserFeedback(response.data?.feedback || null);
     } catch (error) {
-      console.error('Error fetching user feedback:', error);
+      console.error('[Dashboard] Error fetching user feedback:', error);
+      console.error('[Dashboard] Error details:', error?.response?.status, error?.response?.data);
+    }
+  };
+
+  const fetchMyComments = async () => {
+    try {
+      if (!user) return;
+      const token = await getToken();
+      console.log('[Dashboard] GET_MY_COMMENTS URL:', API_ENDPOINTS.GET_MY_COMMENTS);
+      const response = await axios.get(API_ENDPOINTS.GET_MY_COMMENTS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('[Dashboard] My comments response:', response.status, response.data);
+      setMyComments(response.data?.comments || []);
+    } catch (error) {
+      console.error('[Dashboard] Error fetching my comments:', error);
+      console.error('[Dashboard] Error details:', error?.response?.status, error?.response?.data);
+    }
+  };
+
+  const startEditingComment = (comment) => {
+    setEditingCommentId(comment._id);
+    setEditingCommentText(comment.content);
+  };
+
+  const cancelEditingComment = () => {
+    setEditingCommentId(null);
+    setEditingCommentText('');
+  };
+
+  const saveEditedComment = async (commentId) => {
+    if (!editingCommentText.trim()) return;
+    try {
+      if (!user) return;
+      const token = await getToken();
+      await axios.put(`${API_ENDPOINTS.UPDATE_COMMENT}/${commentId}`, { content: editingCommentText.trim() }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      cancelEditingComment();
+      fetchMyComments();
+    } catch (error) {
+      console.error('[Dashboard] Error saving comment:', error);
+    }
+  };
+
+  const deleteMyComment = async (commentId) => {
+    if (!window.confirm('Delete this comment?')) return;
+    try {
+      if (!user) return;
+      const token = await getToken();
+      await axios.delete(`${API_ENDPOINTS.DELETE_COMMENT}/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchMyComments();
+    } catch (error) {
+      console.error('[Dashboard] Error deleting comment:', error);
     }
   };
 
@@ -70,8 +137,7 @@ const StudentDashboard = () => {
   const tabs = [
     { id: 'overview', name: 'Overview', icon: <FiHome /> },
     { id: 'saved', name: 'Saved Rooms', icon: <FiHeart /> },
-    { id: 'feedback', name: 'My Feedback', icon: <FiMessageSquare /> },
-    { id: 'profile', name: 'Profile', icon: <FiUser /> }
+    { id: 'feedback', name: 'My Feedback', icon: <FiMessageSquare /> }
   ];
 
   if (!isSignedIn) {
@@ -236,7 +302,7 @@ const StudentDashboard = () => {
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">My Feedback</h3>
                 {userFeedback ? (
-                  <div className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl p-6">
+                  <div className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="text-white font-semibold text-lg">Your Website Review</h4>
                       <div className="flex items-center gap-1">
@@ -291,6 +357,68 @@ const StudentDashboard = () => {
                     </Link>
                   </div>
                 )}
+
+                {/* My Room Comments */}
+                <div className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-white font-semibold text-lg">My Room Comments</h4>
+                    <span className="text-gray-400 text-sm">{myComments.length} comment{myComments.length !== 1 ? 's' : ''}</span>
+                  </div>
+
+                  {myComments.length === 0 ? (
+                    <p className="text-gray-400">You haven't commented on any rooms yet.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {myComments.map((comment) => (
+                        <div key={comment._id} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-xs text-gray-400">Room:</span>
+                                <span className="text-blue-300 text-xs font-mono">{String(comment.roomId)}</span>
+                                <span className="text-gray-500 text-xs">•</span>
+                                <span className="text-gray-400 text-xs">{new Date(comment.createdAt).toLocaleString()}</span>
+                              </div>
+
+                              {editingCommentId === comment._id ? (
+                                <div className="space-y-2">
+                                  <textarea
+                                    value={editingCommentText}
+                                    onChange={(e) => setEditingCommentText(e.target.value)}
+                                    className="w-full bg-white/10 border border-white/20 rounded-lg p-3 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 resize-none"
+                                    rows="3"
+                                    maxLength="300"
+                                  />
+                                  <div className="flex gap-2">
+                                    <button onClick={() => saveEditedComment(comment._id)} className="px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded flex items-center gap-2 text-sm">
+                                      <FiSave /> Save
+                                    </button>
+                                    <button onClick={cancelEditingComment} className="px-3 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded flex items-center gap-2 text-sm">
+                                      <FiX /> Cancel
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="text-gray-200 whitespace-pre-wrap">{comment.content}</p>
+                              )}
+                            </div>
+
+                            {editingCommentId !== comment._id && (
+                              <div className="flex flex-col gap-2">
+                                <button onClick={() => startEditingComment(comment)} className="text-blue-400 hover:text-blue-300 p-2" title="Edit">
+                                  <FiEdit3 />
+                                </button>
+                                <button onClick={() => deleteMyComment(comment._id)} className="text-red-400 hover:text-red-300 p-2" title="Delete">
+                                  <FiTrash2 />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 

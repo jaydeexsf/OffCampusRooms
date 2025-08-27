@@ -114,6 +114,7 @@ export const GlobalProvider = ({ children }) => {
         setIsPostingFaq(true);
         try {
             const response = await axios.post(API_ENDPOINTS.ADD_FAQ, newFaq);
+            // Append the newly created FAQ to the end (under existing ones)
             setFaqs((prevFaqs) => [...prevFaqs, response.data]);
         } catch (error) {
             console.error('Error adding FAQ:', error);
@@ -124,7 +125,7 @@ export const GlobalProvider = ({ children }) => {
 
     const deleteFaq = async (faqId) => {
         try {
-            await axios.delete(getFaqUrl(faqId, 'delete'));
+            await axios.delete(`${API_ENDPOINTS.DELETE_FAQ}/${faqId}`);
             setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== faqId));
         } catch (error) {
             console.error('Error deleting FAQ:', error);

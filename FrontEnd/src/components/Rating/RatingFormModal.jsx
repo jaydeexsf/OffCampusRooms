@@ -31,6 +31,8 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, e
   const fetchUserRating = async () => {
     try {
       const token = await getToken();
+      console.log('[Rating] GET_USER_RATING URL:', `${API_ENDPOINTS.GET_USER_RATING}/${roomId}`);
+      console.log('[Rating] Auth token present:', Boolean(token));
       const response = await axios.get(`${API_ENDPOINTS.GET_USER_RATING}/${roomId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,6 +52,7 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, e
       }
     } catch (error) {
       console.error('Error fetching user rating:', error);
+      console.error('[Rating] Error details:', error?.response?.status, error?.response?.data);
       setUserRating(null);
       setIsEditing(true);
     }
@@ -69,6 +72,8 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, e
     setIsSubmitting(true);
     try {
       const token = await getToken();
+      console.log('[Rating] ADD_RATING URL:', API_ENDPOINTS.ADD_RATING);
+      console.log('[Rating] Auth token present:', Boolean(token));
       const ratingData = {
         roomId,
         rating,
@@ -90,6 +95,7 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, e
       }
     } catch (error) {
       console.error('Error submitting rating:', error);
+      console.error('[Rating] Submit error details:', error?.response?.status, error?.response?.data);
       alert('Failed to submit rating. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -103,6 +109,7 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, e
 
     try {
       const token = await getToken();
+      console.log('[Rating] DELETE_RATING URL:', `${API_ENDPOINTS.DELETE_RATING}/${roomId}`);
       await axios.delete(`${API_ENDPOINTS.DELETE_RATING}/${roomId}`, {
         headers: {
           Authorization: `Bearer ${token}`

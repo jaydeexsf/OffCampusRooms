@@ -15,20 +15,25 @@ const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY 
 const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
+    console.log('[RatingsAuth] Authorization header present:', Boolean(authHeader));
     if (!authHeader) {
       return res.status(401).json({ message: 'No authorization header' });
     }
     
     const token = authHeader.replace('Bearer ', '');
+    console.log('[RatingsAuth] Token length:', token ? token.length : 0);
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
     
+    console.log('[RatingsAuth] Verifying token with Clerk...');
     const payload = await clerkClient.verifyToken(token);
+    console.log('[RatingsAuth] Verify result has sub:', Boolean(payload && payload.sub));
     if (!payload || !payload.sub) {
       return res.status(401).json({ message: 'Invalid token' });
     }
     
+    console.log('[RatingsAuth] Fetching user profile for sub:', payload.sub);
     const user = await clerkClient.users.getUser(payload.sub);
     
     req.user = {
@@ -38,9 +43,10 @@ const authMiddleware = async (req, res, next) => {
       imageUrl: user.imageUrl || ''
     };
     
+    console.log('[RatingsAuth] User resolved, proceeding');
     next();
   } catch (error) {
-    console.error('Authentication error:', error);
+    console.error('[RatingsAuth] Authentication error:', error);
     return res.status(401).json({ 
       message: 'Authentication failed',
       error: error.message 

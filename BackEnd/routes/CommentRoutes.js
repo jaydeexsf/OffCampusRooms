@@ -3,12 +3,16 @@ const {
   getRoomComments, 
   addComment, 
   updateComment, 
-  deleteComment 
+  deleteComment,
+  getMyComments
 } = require('../controllers/commentController');
 const router = express.Router();
 
 // Get comments for a specific room
 router.get('/room/:roomId', getRoomComments);
+
+// Get comments created by the current user
+router.get('/my-comments', getMyComments);
 
 // Add a comment to a room
 router.post('/', addComment);

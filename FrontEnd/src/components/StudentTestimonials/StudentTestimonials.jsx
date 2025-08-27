@@ -16,7 +16,10 @@ const StudentTestimonials = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await axios.get(`${API_ENDPOINTS.GET_PUBLIC_FEEDBACK}?limit=12`);
+      const url = `${API_ENDPOINTS.GET_PUBLIC_FEEDBACK}?limit=12`;
+      console.log('[Testimonials] Fetch URL:', url);
+      const response = await axios.get(url);
+      console.log('[Testimonials] Response:', response.status, response.data);
       const { feedback, averageRating, total } = response.data;
       
       // Transform feedback data to match testimonial format
@@ -36,7 +39,8 @@ const StudentTestimonials = () => {
       setAverageRating(averageRating);
       setTotalCount(total);
     } catch (error) {
-      console.error('Error fetching testimonials:', error);
+      console.error('[Testimonials] Error fetching testimonials:', error);
+      console.error('[Testimonials] Error details:', error?.response?.status, error?.response?.data);
       // Fallback to empty array if API fails
       setTestimonials([]);
     } finally {

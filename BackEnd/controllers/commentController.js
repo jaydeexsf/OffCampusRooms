@@ -17,6 +17,20 @@ const getRoomComments = async (req, res) => {
   }
 };
 
+// Get comments created by the authenticated user
+const getMyComments = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const comments = await Comment.find({ userId })
+      .sort({ createdAt: -1 })
+      .limit(100);
+    res.status(200).json({ comments });
+  } catch (error) {
+    console.error('Error getting user comments:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 // Add a comment to a room
 const addComment = async (req, res) => {
   try {
@@ -105,5 +119,6 @@ module.exports = {
   getRoomComments,
   addComment,
   updateComment,
-  deleteComment
+  deleteComment,
+  getMyComments
 };

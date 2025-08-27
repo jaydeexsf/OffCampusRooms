@@ -12,10 +12,11 @@ const getAnswer = async (req, res) => {
 
 const getQuestions = async (req, res)=> {
     try {
-        const question = await FAQ.find({}, 'question');
-        res.status(200).json(question);
+        const faqs = await FAQ.find({}, 'question answer createdAt');
+        res.status(200).json(faqs);
     } catch (error) {
-        res.status(500).send('érror fetching wuestions');
+        console.error('Error fetching FAQs:', error);
+        res.status(500).json({ message: 'Error fetching FAQs' });
     }
 }
 
@@ -23,8 +24,8 @@ const addQandA = async (req, res) => {
     const { question, answer } = req.body; 
     try {
         const newFAQ = new FAQ({ question, answer });
-        await newFAQ.save(); 
-        res.status(201).json({ message: 'Question and answer added successfully' });
+        const saved = await newFAQ.save(); 
+        res.status(201).json(saved);
     } catch (error) {
         console.error('Error adding question:', error);
         res.status(500).json({ message: 'Error adding question' });
@@ -37,7 +38,7 @@ const deleteFaq = async (req, res)=> {
         const dQandA = await FAQ.findByIdAndDelete(qandAId)
         res.status(200).json({message: "qanda deleted sucsessfully"})
     } catch (err) {
-        consle.log('error deleting qanda')
+        console.log('error deleting qanda')
         res.status(400).json({message: `eror deleting qanda ${err}`})
     }
 }

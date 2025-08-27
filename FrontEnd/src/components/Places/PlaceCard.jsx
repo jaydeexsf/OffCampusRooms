@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FiWifi, FiMapPin, FiClock, FiEye, FiStar, FiMessageCircle, FiHeart } from "react-icons/fi";
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
@@ -43,6 +43,7 @@ const PlaceCard = ({
   onCommentClick
 }) => {
   const { user, isSignedIn } = useUser();
+  const { getToken } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -58,12 +59,12 @@ const PlaceCard = ({
       if (!user || !isSignedIn) return;
       
       // Wait a bit for user to be fully loaded
-      if (!user.getToken) {
+      if (!getToken) {
         setTimeout(checkIfSaved, 100);
         return;
       }
       
-      const token = await user.getToken();
+      const token = await getToken();
       if (!token) return;
       
       const response = await axios.get(
@@ -87,12 +88,12 @@ const PlaceCard = ({
     setIsLoading(true);
     try {
       // Wait for user to be fully loaded
-      if (!user.getToken) {
+      if (!getToken) {
         setIsLoading(false);
         return;
       }
       
-      const token = await user.getToken();
+      const token = await getToken();
       if (!token) {
         console.error('Unable to get authentication token');
         setIsLoading(false);
@@ -101,6 +102,7 @@ const PlaceCard = ({
       
       if (isSaved) {
         // Unsave room
+        console.log('[SaveRoom] Unsave URL:', `${API_ENDPOINTS.UNSAVE_ROOM}/${_id}`);
         await axios.delete(
           `${API_ENDPOINTS.UNSAVE_ROOM}/${_id}`,
           {
@@ -112,6 +114,7 @@ const PlaceCard = ({
         setIsSaved(false);
       } else {
         // Save room
+        console.log('[SaveRoom] Save URL:', API_ENDPOINTS.SAVE_ROOM, 'payload:', { roomId: _id });
         await axios.post(
           API_ENDPOINTS.SAVE_ROOM,
           { roomId: _id },
@@ -125,6 +128,7 @@ const PlaceCard = ({
       }
     } catch (error) {
       console.error('Error toggling save status:', error);
+      console.error('[SaveRoom] Error details:', error?.response?.status, error?.response?.data);
     } finally {
       setIsLoading(false);
     }

@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; 
 import FAQData from "../assets/FAQ'sData"; 
+import { GlobalContext } from "../components/GlobalContext";
 
 const FaqPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const { faqs, isFaqLoading, fetchAllRooms } = useContext(GlobalContext) || {};
+  const [combinedFaqs, setCombinedFaqs] = useState(FAQData);
+
+  useEffect(() => {
+    // Combine static FAQs with server FAQs appended under them
+    if (faqs && Array.isArray(faqs)) {
+      setCombinedFaqs([...FAQData, ...faqs]);
+    }
+  }, [faqs]);
 
   const toggleFAQ = (index) => {
     setActiveIndex(index === activeIndex ? null : index); // Open if closed, close if open
@@ -30,7 +40,7 @@ const FaqPage = () => {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-4 md:p-8 shadow-2xl" data-aos="fade-up" data-aos-delay="200">
             <div className="md:space-y-6 space-y-4">
-              {FAQData.map((faq, index) => (
+              {combinedFaqs.map((faq, index) => (
                 <div key={index} className="border-b border-white/10 pb-6 last:border-b-0">
                   <div
                     className="flex justify-between items-center cursor-pointer group"

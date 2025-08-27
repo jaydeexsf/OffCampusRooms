@@ -5,6 +5,8 @@ const router = express.Router()
 // endpoints for getting QandQ from mongo db
 router.get('/questions', getQuestions);
 router.get('/answer/:id', getAnswer);
+router.post('/add-qanda', addQandA);
+router.delete('/:id', deleteFaq);
 
 //endpoint for adding QandA
 router.post('/add-qanda', addQandA);
