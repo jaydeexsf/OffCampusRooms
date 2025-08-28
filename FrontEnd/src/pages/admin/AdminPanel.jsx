@@ -24,13 +24,13 @@ const AdminPanel = () => {
     try {
       const [roomsRes, driversRes, faqsRes] = await Promise.all([
         apiClient.get(API_ENDPOINTS.ALL_ROOMS),
-        apiClient.get(API_ENDPOINTS.GET_ALL_DRIVERS),
+        apiClient.get(API_ENDPOINTS.GET_DRIVERS_COUNT),
         apiClient.get(API_ENDPOINTS.GET_FAQS)
       ]);
       
       setStats({
         totalRooms: roomsRes.data.rooms?.length || 0,
-        totalDrivers: driversRes.data.drivers?.length || 0,
+        totalDrivers: driversRes.data.totalDrivers || 0,
         totalFAQs: faqsRes.data.faqs?.length || 0,
         totalBookings: 0
       });
@@ -177,33 +177,8 @@ const AdminPanel = () => {
         </div>
 
         {/* Enhanced Navigation - Mobile Optimized */}
-        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl lg:rounded-3xl p-1 sm:p-2 mb-4 sm:mb-6 lg:mb-8">
-          {/* Mobile: Horizontal scroll with better visibility */}
-          <div className="block sm:hidden">
-            <div className="flex gap-1 overflow-x-auto pb-2">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300 font-medium text-xs whitespace-nowrap min-w-[70px] ${
-                    activeTab === tab.id
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-105'
-                      : 'text-gray-400 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  <span className={`text-base transition-transform duration-200 ${
-                    activeTab === tab.id ? 'scale-110' : ''
-                  }`}>
-                    {tab.icon}
-                  </span>
-                  <span className="text-xs">{tab.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          {/* Tablet and Desktop: Original layout */}
-          <div className="hidden sm:flex gap-1">
+        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl lg:rounded-3xl p-1 sm:p-2 mb-4 sm:mb-6 lg:mb-8 overflow-x-auto">
+          <div className="flex gap-1 min-w-max">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
