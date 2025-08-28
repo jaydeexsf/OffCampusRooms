@@ -663,6 +663,25 @@ const AddRoomForm = () => {
                             </div>
                         )}
 
+                        <div className="space-y-4">
+                            <label className="text-white font-medium">Room Features</label>
+                            <div className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-200 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    name="bestRoom"
+                                    checked={newRoom.bestRooms}
+                                    onChange={(e) =>
+                                        setNewRoom({
+                                            ...newRoom,
+                                            bestRooms: e.target.checked
+                                        })
+                                    }
+                                    className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+                                />
+                                <span className="text-white text-sm">Mark as Best Room (Featured on homepage)</span>
+                            </div>
+                        </div>
+
                         <div className="space-y-2">
                             <label className="text-white font-medium">Available Rooms *</label>
                             <input

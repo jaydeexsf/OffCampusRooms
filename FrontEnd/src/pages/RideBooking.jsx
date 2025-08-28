@@ -33,7 +33,7 @@ const RideBooking = () => {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY'
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyDOCD7z5FLoGqOgm-hqt_n1VmEZ-lHNtws'
   });
 
   const onLoad = useCallback(function callback(map) {
@@ -200,7 +200,7 @@ const RideBooking = () => {
                 Select Locations
               </h3>
               
-              {isLoaded && (
+              {isLoaded ? (
                 <GoogleMap
                   mapContainerStyle={containerStyle}
                   center={center}
@@ -249,6 +249,28 @@ const RideBooking = () => {
                   )}
                   {directions && <DirectionsRenderer directions={directions} />}
                 </GoogleMap>
+              ) : (
+                <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Map Loading...</h3>
+                  <p className="text-gray-400 mb-4">
+                    {import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 
+                      'Loading Google Maps...' : 
+                      'Google Maps API key not configured'
+                    }
+                  </p>
+                  {!import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
+                    <div className="text-sm text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                      <p>To enable maps, add your Google Maps API key to the .env file:</p>
+                      <code className="text-blue-400">VITE_GOOGLE_MAPS_API_KEY=your_key_here</code>
+                    </p>
+                  </div>
+                )}
+              </div>
               )}
 
               <div className="mt-4 space-y-3">
