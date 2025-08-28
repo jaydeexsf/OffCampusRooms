@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import { FiMessageCircle, FiSend, FiTrash2, FiEdit3 } from 'react-icons/fi';
 import LoginPopup from '../LoginPopup/LoginPopup';
-import axios from 'axios';
+import { apiClient } from '../../config/api';
 import { API_ENDPOINTS } from '../../config/api';
 
 const CommentComponent = ({ roomId }) => {
@@ -23,7 +23,7 @@ const CommentComponent = ({ roomId }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`${API_ENDPOINTS.GET_ROOM_COMMENTS}/${roomId}`);
+              const response = await apiClient.get(`${API_ENDPOINTS.GET_ROOM_COMMENTS}/${roomId}`);
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -48,7 +48,7 @@ const CommentComponent = ({ roomId }) => {
         content: newComment.trim()
       };
 
-      await axios.post(API_ENDPOINTS.ADD_COMMENT, commentData);
+              await apiClient.post(API_ENDPOINTS.ADD_COMMENT, commentData);
       setNewComment('');
       fetchComments(); // Refresh comments
     } catch (error) {
@@ -66,7 +66,7 @@ const CommentComponent = ({ roomId }) => {
     }
 
     try {
-      await axios.put(`${API_ENDPOINTS.UPDATE_COMMENT}/${commentId}`, {
+              await apiClient.put(`${API_ENDPOINTS.UPDATE_COMMENT}/${commentId}`, {
         content: editText.trim()
       });
       setEditingComment(null);
@@ -81,7 +81,7 @@ const CommentComponent = ({ roomId }) => {
   const handleDeleteComment = async (commentId) => {
     if (window.confirm('Are you sure you want to delete this comment?')) {
       try {
-        await axios.delete(`${API_ENDPOINTS.DELETE_COMMENT}/${commentId}`);
+        await apiClient.delete(`${API_ENDPOINTS.DELETE_COMMENT}/${commentId}`);
         fetchComments(); // Refresh comments
       } catch (error) {
         console.error('Error deleting comment:', error);

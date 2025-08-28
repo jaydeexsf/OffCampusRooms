@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit3, FiTrash2, FiToggleLeft, FiToggleRight, FiUser, FiPhone, FiMail, FiStar, FiTruck } from 'react-icons/fi';
-import { useAuth } from '@clerk/clerk-react';
+import { FiPlus, FiEdit3, FiTrash2, FiToggleLeft, FiToggleRight, FiUser, FiPhone, FiMail, FiStar, FiTruck, FiCheck, FiAlertCircle } from 'react-icons/fi';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
 
 const DriverManagement = () => {
-  const { getToken } = useAuth();
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -22,16 +20,28 @@ const DriverManagement = () => {
     profileImage: null,
     carImage: null
   });
+  const [message, setMessage] = useState({ type: '', text: '' });
 
   useEffect(() => {
     fetchDrivers();
   }, []);
+
+  // Auto-hide messages after 5 seconds
+  useEffect(() => {
+    if (message.text) {
+      const timeout = setTimeout(() => {
+        setMessage({ type: '', text: '' });
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [message.text]);
 
   const fetchDrivers = async () => {
     try {
       const response = await apiClient.get(API_ENDPOINTS.GET_ALL_DRIVERS);
       if (response.data.success) {
         setDrivers(response.data.drivers || []);
+        console.log('✅ Drivers fetched successfully:', response.data.drivers?.length || 0);
       } else {
         setDrivers([]);
       }
@@ -44,6 +54,10 @@ const DriverManagement = () => {
         { _id: '3', fullName: 'Mike Wilson', contactNumber: '+27 84 345 6789', email: 'mike@example.com', carMake: 'Ford', carModel: 'Focus', isAvailable: false, rating: 4.7 }
       ];
       setDrivers(dummyDrivers);
+      setMessage({ 
+        type: 'error', 
+        text: 'Failed to load drivers from server. Showing demo data.' 
+      });
     } finally {
       setLoading(false);
     }
@@ -67,9 +81,9 @@ const DriverManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessage({ type: '', text: '' });
 
     try {
-      const token = await getToken();
       const formDataToSend = new FormData();
       
       Object.keys(formData).forEach(key => {
@@ -84,14 +98,17 @@ const DriverManagement = () => {
       
       const method = editingDriver ? 'put' : 'post';
       
-      const response = await axios[method](url, formDataToSend, {
+      const response = await apiClient[method](url, formDataToSend, {
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
 
       if (response.data.success) {
+        setMessage({ 
+          type: 'success', 
+          text: editingDriver ? 'Driver updated successfully!' : 'Driver added successfully!' 
+        });
         fetchDrivers();
         resetForm();
         setShowAddModal(false);
@@ -99,6 +116,10 @@ const DriverManagement = () => {
       }
     } catch (error) {
       console.error('Error saving driver:', error);
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Failed to save driver. Please try again.' 
+      });
     } finally {
       setLoading(false);
     }
@@ -108,25 +129,29 @@ const DriverManagement = () => {
     if (!window.confirm('Are you sure you want to delete this driver?')) return;
 
     try {
-      const token = await getToken();
-      await axios.delete(`${API_ENDPOINTS.API_BASE_URL}/api/drivers/delete/${driverId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiClient.delete(`${API_ENDPOINTS.DELETE_DRIVER}/${driverId}`);
+      setMessage({ type: 'success', text: 'Driver deleted successfully!' });
       fetchDrivers();
     } catch (error) {
       console.error('Error deleting driver:', error);
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Failed to delete driver. Please try again.' 
+      });
     }
   };
 
   const toggleAvailability = async (driverId) => {
     try {
-      const token = await getToken();
-      await axios.patch(`${API_ENDPOINTS.API_BASE_URL}/api/drivers/toggle-availability/${driverId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiClient.patch(`${API_ENDPOINTS.TOGGLE_DRIVER_AVAILABILITY}/${driverId}`, {});
+      setMessage({ type: 'success', text: 'Driver availability updated successfully!' });
       fetchDrivers();
     } catch (error) {
       console.error('Error toggling availability:', error);
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Failed to update driver availability. Please try again.' 
+      });
     }
   };
 
@@ -144,6 +169,7 @@ const DriverManagement = () => {
       profileImage: null,
       carImage: null
     });
+    setMessage({ type: '', text: '' });
   };
 
   const openEditModal = (driver) => {
@@ -183,6 +209,18 @@ const DriverManagement = () => {
           Add Driver
         </button>
       </div>
+
+      {/* Message Display */}
+      {message.text && (
+        <div className={`p-4 rounded-xl border mb-6 ${
+          message.type === 'success'
+            ? 'bg-green-500/20 border-green-500/30 text-green-400'
+            : 'bg-red-500/20 border-red-500/30 text-red-400'
+        } flex items-center gap-3`}>
+          {message.type === 'success' ? <FiCheck className="w-5 h-5" /> : <FiAlertCircle className="w-5 h-5" />}
+          <span className="font-medium">{message.text}</span>
+        </div>
+      )}
 
       {/* Drivers Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiCalendar, FiUsers, FiPackage, FiMapPin, FiClock, FiDollarSign, FiCheck, FiX, FiFilter, FiEye } from 'react-icons/fi';
 import { useAuth } from '@clerk/clerk-react';
-import axios from 'axios';
-import { API_ENDPOINTS } from '../../config/api';
+import { apiClient, API_ENDPOINTS } from '../../config/api';
 
 const AdvancedBookings = () => {
   const { getToken } = useAuth();
@@ -33,7 +32,7 @@ const AdvancedBookings = () => {
         }
       });
 
-      const response = await axios.get(`${API_ENDPOINTS.GET_ADVANCED_BOOKINGS}?${queryParams}`, {
+      const response = await apiClient.get(`${API_ENDPOINTS.GET_ADVANCED_BOOKINGS}?${queryParams}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -50,7 +49,7 @@ const AdvancedBookings = () => {
   const confirmBooking = async (bookingId) => {
     try {
       const token = await getToken();
-      const response = await axios.patch(`${API_ENDPOINTS.CONFIRM_ADVANCED_BOOKING}/${bookingId}`, {
+      const response = await apiClient.patch(`${API_ENDPOINTS.CONFIRM_ADVANCED_BOOKING}/${bookingId}`, {
         adminNotes: 'Booking confirmed by admin'
       }, {
         headers: { Authorization: `Bearer ${token}` }

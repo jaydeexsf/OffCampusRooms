@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { useUser, useSignIn } from "@clerk/clerk-react";
-import axios from 'axios';
+import { apiClient } from '../config/api';
 import { useNavigate } from 'react-router-dom';
 
 const Comments = () => {
@@ -19,7 +19,7 @@ const Comments = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axios.get('/api/comments');
+        const response = await apiClient.get('/api/comments');
         const sortedComments = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setComments(Array.isArray(response.data) ? sortedComments : []);
       } catch {
@@ -60,7 +60,7 @@ const Comments = () => {
       setIsAddingComment(true);
       setMessage('Adding your comment...');
 
-      const response = await axios.post('/api/comments', newCommentData);
+              const response = await apiClient.post('/api/comments', newCommentData);
       setMessage('Comment Added');
       const updatedComments = [response.data, ...comments];
       const sortedComments = updatedComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

@@ -55,7 +55,7 @@ const HowItWorks = () => {
           </div>
 
           {/* Steps Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
             {steps.map((step, index) => (
               <div 
                 key={index}
@@ -69,18 +69,18 @@ const HowItWorks = () => {
                 </div>
 
                 {/* Step Card */}
-                <div className={`bg-gradient-to-br ${step.bgColor} border ${step.borderColor} rounded-2xl p-6 h-full transition-all duration-300`}>
+                <div className={`bg-gradient-to-br ${step.bgColor} border ${step.borderColor} rounded-2xl p-4 md:p-6 h-full transition-all duration-300`}>
                   <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${step.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <div className="text-white">
                       {step.icon}
                     </div>
                   </div>
                   
-                  <h3 className="text-base md:text-lg font-bold text-white mb-3">
+                  <h3 className="text-sm md:text-lg font-bold text-white mb-2 md:mb-3">
                     {step.title}
                   </h3>
                   
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
                     {step.description}
                   </p>
                 </div>

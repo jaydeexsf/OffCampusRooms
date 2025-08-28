@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone } from 'react-icons/fi';
 import { useAuth } from '@clerk/clerk-react';
-import axios from 'axios';
+import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 import { getGoogleMapsApiKey } from '../config/env';
 
@@ -86,7 +86,7 @@ const RideBooking = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_ENDPOINTS.CALCULATE_RIDE}`, {
+              const response = await apiClient.post(`${API_ENDPOINTS.CALCULATE_RIDE}`, {
         pickupLat: pickupLocation.lat,
         pickupLng: pickupLocation.lng,
         dropoffLat: dropoffLocation.lat,
@@ -124,7 +124,7 @@ const RideBooking = () => {
     setLoading(true);
     try {
       const token = await getToken();
-      const response = await axios.post(`${API_ENDPOINTS.API_BASE_URL}/api/rides/book`, {
+              const response = await apiClient.post(`${API_ENDPOINTS.API_BASE_URL}/api/rides/book`, {
         studentId: user.id,
         studentName: user.fullName || user.firstName + ' ' + user.lastName,
         studentContact: user.primaryPhoneNumber?.phoneNumber || '',

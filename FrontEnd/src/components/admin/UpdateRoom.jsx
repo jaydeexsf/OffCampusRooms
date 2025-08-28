@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { GlobalContext } from '../GlobalContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../config/api';
 import { FiX, FiTrash2, FiUpload, FiEye } from 'react-icons/fi';
 
 const UpdateRoom = ({ room, onCancel }) => {
@@ -53,7 +53,7 @@ const UpdateRoom = ({ room, onCancel }) => {
             formData.append('cloud_name', 'daqzt4zy1');
 
             try {
-                const response = await axios.post(
+                const response = await apiClient.post(
                     'https://api.cloudinary.com/v1_1/daqzt4zy1/image/upload',
                     formData
                 );

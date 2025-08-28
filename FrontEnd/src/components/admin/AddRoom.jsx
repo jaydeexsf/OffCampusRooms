@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import { apiClient, API_ENDPOINTS } from '../../config/api';
 import { GlobalContext } from '../GlobalContext';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBack } from 'react-icons/io5';
-import { API_ENDPOINTS } from '../../config/api';
 
 const AddRoomForm = () => {
     const { addRoom, isAddingRoom } = useContext(GlobalContext);
@@ -168,7 +167,7 @@ const AddRoomForm = () => {
                 const baseUrl = BURL.split('/api/')[0];
                 console.log('🔍 Testing base URL:', baseUrl);
                 
-                const testResponse = await axios.get(`${baseUrl}/api/rooms/all`, { timeout: 5000 });
+                const testResponse = await apiClient.get(`${baseUrl}/api/rooms/all`, { timeout: 5000 });
                 console.log('✅ Backend connectivity test passed:', testResponse.status);
             } catch (testErr) {
                 console.log('⚠️ Backend connectivity test failed:', testErr.message);
@@ -178,7 +177,7 @@ const AddRoomForm = () => {
             console.log('📡 Making API request to:', BURL);
             console.log('📤 Request payload:', JSON.stringify(everything, null, 2));
             
-            const response = await axios.post(BURL, everything, {
+            const response = await apiClient.post(BURL, everything, {
                 timeout: 10000, // 10 second timeout
                 headers: {
                     'Content-Type': 'application/json'
@@ -343,7 +342,7 @@ const AddRoomForm = () => {
         formData.append('cloud_name', 'daqzt4zy1');
 
         try {
-            const response = await axios.post(
+            const response = await apiClient.post(
                 `https://api.cloudinary.com/v1_1/daqzt4zy1/image/upload`,
                 formData
             );

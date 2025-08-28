@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiClock, FiMapPin, FiPhone, FiStar, FiUser, FiTruck } from 'react-icons/fi';
 import { useAuth, useUser } from '@clerk/clerk-react';
-import axios from 'axios';
+import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 
 const MyRides = () => {
@@ -19,7 +19,7 @@ const MyRides = () => {
 
   const fetchMyRides = async () => {
     try {
-      const response = await axios.get(`${API_ENDPOINTS.API_BASE_URL}/api/rides/student/${user.id}`);
+              const response = await apiClient.get(`${API_ENDPOINTS.API_BASE_URL}/api/rides/student/${user.id}`);
       if (response.data.success) {
         setRides(response.data.rides);
       }

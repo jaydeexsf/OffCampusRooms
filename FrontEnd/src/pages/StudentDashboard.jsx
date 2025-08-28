@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser, useAuth } from '@clerk/clerk-react';
 import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX, FiMap } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 
 const StudentDashboard = () => {
@@ -33,7 +33,7 @@ const StudentDashboard = () => {
       const token = await getToken();
       console.log('[Dashboard] GET_SAVED_ROOMS URL:', API_ENDPOINTS.GET_SAVED_ROOMS);
       console.log('[Dashboard] Auth token present:', Boolean(token));
-      const response = await axios.get(
+      const response = await apiClient.get(
         API_ENDPOINTS.GET_SAVED_ROOMS,
         {
           headers: {
@@ -56,7 +56,7 @@ const StudentDashboard = () => {
       const token = await getToken();
       console.log('[Dashboard] GET_USER_FEEDBACK URL:', API_ENDPOINTS.GET_USER_FEEDBACK);
       console.log('[Dashboard] Auth token present:', Boolean(token));
-      const response = await axios.get(
+      const response = await apiClient.get(
         API_ENDPOINTS.GET_USER_FEEDBACK,
         {
           headers: {
@@ -77,7 +77,7 @@ const StudentDashboard = () => {
       if (!user) return;
       const token = await getToken();
       console.log('[Dashboard] GET_MY_COMMENTS URL:', API_ENDPOINTS.GET_MY_COMMENTS);
-      const response = await axios.get(API_ENDPOINTS.GET_MY_COMMENTS, {
+      const response = await apiClient.get(API_ENDPOINTS.GET_MY_COMMENTS, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('[Dashboard] My comments response:', response.status, response.data);
@@ -103,7 +103,7 @@ const StudentDashboard = () => {
     try {
       if (!user) return;
       const token = await getToken();
-      await axios.put(`${API_ENDPOINTS.UPDATE_COMMENT}/${commentId}`, { content: editingCommentText.trim() }, {
+      await apiClient.put(`${API_ENDPOINTS.UPDATE_COMMENT}/${commentId}`, { content: editingCommentText.trim() }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       cancelEditingComment();
@@ -118,7 +118,7 @@ const StudentDashboard = () => {
     try {
       if (!user) return;
       const token = await getToken();
-      await axios.delete(`${API_ENDPOINTS.DELETE_COMMENT}/${commentId}`, {
+      await apiClient.delete(`${API_ENDPOINTS.DELETE_COMMENT}/${commentId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchMyComments();
