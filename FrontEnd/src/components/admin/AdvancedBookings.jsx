@@ -133,32 +133,32 @@ const AdvancedBookings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-950 py-4 sm:py-8">
+      <div className="container mx-auto px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-4">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
               Advanced <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Bookings
               </span>
             </h1>
-            <p className="text-gray-400">Manage semester moves, holiday transport, and group bookings</p>
+            <p className="text-gray-400 text-sm sm:text-base">Manage semester moves, holiday transport, and group bookings</p>
           </div>
 
           {/* Filters */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-8">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center gap-2">
               <FiFilter className="text-blue-400" />
               Filters
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <div>
-                <label className="block text-white font-semibold mb-2">Booking Type</label>
+                <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Booking Type</label>
                 <select
                   value={filters.bookingType}
                   onChange={(e) => setFilters({ ...filters, bookingType: e.target.value })}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
                 >
                   <option value="">All Types</option>
                   <option value="semester_move_in">Semester Move-In</option>
@@ -169,11 +169,11 @@ const AdvancedBookings = () => {
               </div>
               
               <div>
-                <label className="block text-white font-semibold mb-2">Semester</label>
+                <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Semester</label>
                 <select
                   value={filters.semester}
                   onChange={(e) => setFilters({ ...filters, semester: e.target.value })}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
                 >
                   <option value="">All Semesters</option>
                   <option value="spring">Spring</option>
@@ -184,11 +184,11 @@ const AdvancedBookings = () => {
               </div>
               
               <div>
-                <label className="block text-white font-semibold mb-2">Holiday Type</label>
+                <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Holiday Type</label>
                 <select
                   value={filters.holidayType}
                   onChange={(e) => setFilters({ ...filters, holidayType: e.target.value })}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
                 >
                   <option value="">All Holidays</option>
                   <option value="christmas">Christmas</option>
@@ -199,11 +199,11 @@ const AdvancedBookings = () => {
               </div>
               
               <div>
-                <label className="block text-white font-semibold mb-2">Status</label>
+                <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Status</label>
                 <select
                   value={filters.status}
                   onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
                 >
                   <option value="">All Status</option>
                   <option value="pending">Pending</option>
@@ -217,60 +217,60 @@ const AdvancedBookings = () => {
           </div>
 
           {/* Bookings Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {bookings.map((booking) => (
-              <div key={booking._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300">
+              <div key={booking._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 hover:border-white/20 transition-all duration-300">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     {getBookingTypeIcon(booking.bookingType)}
-                    <div>
-                      <h3 className="text-white font-semibold">{getBookingTypeLabel(booking.bookingType)}</h3>
-                      <p className="text-gray-400 text-sm">{booking.studentName}</p>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-white font-semibold text-sm sm:text-base truncate">{getBookingTypeLabel(booking.bookingType)}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm truncate">{booking.studentName}</p>
                     </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}>
+                  <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)} flex-shrink-0`}>
                     {booking.status}
                   </span>
                 </div>
 
                 {/* Details */}
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center gap-2 text-sm">
-                    <FiMapPin className="text-blue-400" />
-                    <span className="text-gray-300">From: {booking.pickupLocation.address}</span>
+                <div className="space-y-2 sm:space-y-3 mb-4">
+                  <div className="flex items-start gap-2 text-xs sm:text-sm">
+                    <FiMapPin className="text-blue-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-300 break-words">From: {booking.pickupLocation.address}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <FiMapPin className="text-red-400" />
-                    <span className="text-gray-300">To: {booking.dropoffLocation.address}</span>
+                  <div className="flex items-start gap-2 text-xs sm:text-sm">
+                    <FiMapPin className="text-red-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-300 break-words">To: {booking.dropoffLocation.address}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <FiClock className="text-green-400" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <FiClock className="text-green-400 flex-shrink-0" />
                     <span className="text-gray-300">{formatDate(booking.scheduledTime)}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <FiDollarSign className="text-yellow-400" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <FiDollarSign className="text-yellow-400 flex-shrink-0" />
                     <span className="text-gray-300">R{booking.estimatedPrice}</span>
                   </div>
                   
                   {/* Advanced booking details */}
                   {booking.groupSize > 1 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FiUsers className="text-purple-400" />
+                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                      <FiUsers className="text-purple-400 flex-shrink-0" />
                       <span className="text-gray-300">{booking.groupSize} students</span>
                     </div>
                   )}
                   
                   {booking.luggageCount > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FiPackage className="text-orange-400" />
+                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                      <FiPackage className="text-orange-400 flex-shrink-0" />
                       <span className="text-gray-300">{booking.luggageCount} luggage items</span>
                     </div>
                   )}
                   
                   {booking.furnitureItems && booking.furnitureItems.length > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <FiPackage className="text-indigo-400" />
+                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                      <FiPackage className="text-indigo-400 flex-shrink-0" />
                       <span className="text-gray-300">{booking.furnitureItems.length} furniture items</span>
                     </div>
                   )}
@@ -278,32 +278,32 @@ const AdvancedBookings = () => {
 
                 {/* Driver Info */}
                 {booking.driverId && (
-                  <div className="bg-white/5 rounded-xl p-3 mb-4">
-                    <p className="text-white font-semibold text-sm mb-1">Assigned Driver</p>
-                    <p className="text-gray-300 text-sm">{booking.driverId.fullName}</p>
+                  <div className="bg-white/5 rounded-xl p-2 sm:p-3 mb-4">
+                    <p className="text-white font-semibold text-xs sm:text-sm mb-1">Assigned Driver</p>
+                    <p className="text-gray-300 text-xs sm:text-sm truncate">{booking.driverId.fullName}</p>
                   </div>
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     onClick={() => {
                       setSelectedBooking(booking);
                       setShowDetails(true);
                     }}
-                    className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
+                    className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 rounded-xl px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
                   >
-                    <FiEye />
-                    View Details
+                    <FiEye className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span>View Details</span>
                   </button>
                   
                   {!booking.isConfirmed && booking.status === 'pending' && (
                     <button
                       onClick={() => confirmBooking(booking._id)}
-                      className="bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 flex items-center gap-2"
+                      className="bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 rounded-xl px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
                     >
-                      <FiCheck />
-                      Confirm
+                      <FiCheck className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span>Confirm</span>
                     </button>
                   )}
                 </div>
@@ -322,23 +322,23 @@ const AdvancedBookings = () => {
 
         {/* Booking Details Modal */}
         {showDetails && selectedBooking && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-gray-900 border border-white/10 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">Booking Details</h2>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+            <div className="bg-gray-900 border border-white/10 rounded-2xl p-4 sm:p-6 max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-2xl font-bold text-white">Booking Details</h2>
                 <button
                   onClick={() => setShowDetails(false)}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <FiX size={24} />
+                  <FiX size={20} className="sm:w-6 sm:h-6" />
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Basic Info */}
                 <div>
-                  <h3 className="text-white font-semibold mb-3">Basic Information</h3>
-                  <div className="bg-white/5 rounded-xl p-4 space-y-2">
+                  <h3 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Basic Information</h3>
+                  <div className="bg-white/5 rounded-xl p-3 sm:p-4 space-y-2 text-sm sm:text-base">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Student:</span>
                       <span className="text-white">{selectedBooking.studentName}</span>
@@ -362,8 +362,8 @@ const AdvancedBookings = () => {
 
                 {/* Route Info */}
                 <div>
-                  <h3 className="text-white font-semibold mb-3">Route Information</h3>
-                  <div className="bg-white/5 rounded-xl p-4 space-y-2">
+                  <h3 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Route Information</h3>
+                  <div className="bg-white/5 rounded-xl p-3 sm:p-4 space-y-2 text-sm sm:text-base">
                     <div>
                       <span className="text-gray-400">Pickup:</span>
                       <p className="text-white">{selectedBooking.pickupLocation.address}</p>
@@ -386,8 +386,8 @@ const AdvancedBookings = () => {
                 {/* Advanced Details */}
                 {(selectedBooking.groupSize > 1 || selectedBooking.luggageCount > 0 || selectedBooking.furnitureItems?.length > 0) && (
                   <div>
-                    <h3 className="text-white font-semibold mb-3">Additional Details</h3>
-                    <div className="bg-white/5 rounded-xl p-4 space-y-3">
+                    <h3 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Additional Details</h3>
+                    <div className="bg-white/5 rounded-xl p-3 sm:p-4 space-y-3 text-sm sm:text-base">
                       {selectedBooking.groupSize > 1 && (
                         <div>
                           <span className="text-gray-400">Group Size:</span>
@@ -421,8 +421,8 @@ const AdvancedBookings = () => {
                 {/* Notes */}
                 {(selectedBooking.notes || selectedBooking.specialRequirements) && (
                   <div>
-                    <h3 className="text-white font-semibold mb-3">Notes & Requirements</h3>
-                    <div className="bg-white/5 rounded-xl p-4 space-y-3">
+                    <h3 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Notes & Requirements</h3>
+                    <div className="bg-white/5 rounded-xl p-3 sm:p-4 space-y-3 text-sm sm:text-base">
                       {selectedBooking.notes && (
                         <div>
                           <span className="text-gray-400">Notes:</span>
@@ -443,8 +443,8 @@ const AdvancedBookings = () => {
                 {/* Driver Info */}
                 {selectedBooking.driverId && (
                   <div>
-                    <h3 className="text-white font-semibold mb-3">Assigned Driver</h3>
-                    <div className="bg-white/5 rounded-xl p-4">
+                    <h3 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Assigned Driver</h3>
+                    <div className="bg-white/5 rounded-xl p-3 sm:p-4 text-sm sm:text-base">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Driver:</span>
                         <span className="text-white">{selectedBooking.driverId.fullName}</span>
