@@ -1,14 +1,19 @@
 // API Configuration
-// Prefer .env override; fall back to production. Set VITE_API_BASE_URL to switch.
-const ENV_BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || '';
+import { API_BASE_URL as ENV_API_BASE_URL } from './env.js';
 
-// Ensure we always have a valid base URL - fallback to production URL
-let baseUrl = ENV_BASE || 'https://offcampusrooms.onrender.com';
+// Force production API for Vercel deployment, with fallback
+let baseUrl = ENV_API_BASE_URL || 'https://offcampusrooms.onrender.com';
 
-// Force production API for Vercel deployment
+// Check if we're on Vercel and force production API
 if (typeof window !== 'undefined' && window.location.hostname === 'off-campus-rooms.vercel.app') {
   baseUrl = 'https://offcampusrooms.onrender.com';
   console.log('Running on Vercel, using production API');
+}
+
+// Allow environment override for development
+if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) {
+  baseUrl = import.meta.env.VITE_API_BASE_URL;
+  console.log('Using environment API base URL:', baseUrl);
 }
 
 export const API_BASE_URL = baseUrl;
@@ -20,7 +25,6 @@ if (!API_BASE_URL) {
 
 // Debug logging to help troubleshoot API issues
 console.log('API Configuration:', {
-  ENV_BASE,
   API_BASE_URL,
   VITE_API_BASE_URL: typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL,
   hostname: typeof window !== 'undefined' ? window.location.hostname : 'server'

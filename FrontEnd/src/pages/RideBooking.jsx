@@ -33,7 +33,7 @@ const RideBooking = () => {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_MAPS_API_KEY_HERE',
     // Only load if we have an API key
     ...(import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? {} : { disable: true })
   });

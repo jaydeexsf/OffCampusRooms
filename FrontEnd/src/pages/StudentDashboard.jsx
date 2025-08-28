@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser, useAuth } from '@clerk/clerk-react';
-import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX, FiNavigation, FiMap } from 'react-icons/fi';
+import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX, FiMap } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
