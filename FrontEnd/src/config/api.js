@@ -131,6 +131,7 @@ export const API_ENDPOINTS = {
   // Drivers
   GET_ALL_DRIVERS: `${API_BASE_URL}/api/drivers/all`,
   GET_AVAILABLE_DRIVERS: `${API_BASE_URL}/api/drivers/available`,
+  GET_DRIVERS_COUNT: `${API_BASE_URL}/api/drivers/count`,
   ADD_DRIVER: `${API_BASE_URL}/api/drivers/add`,
   UPDATE_DRIVER: `${API_BASE_URL}/api/drivers/update`,
   DELETE_DRIVER: `${API_BASE_URL}/api/drivers/delete`,

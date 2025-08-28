@@ -145,8 +145,8 @@ app.use('/api/saved-rooms', authMiddleware, savedRoomRoutes);
 
 // Driver routes (admin routes require auth)
 app.use('/api/drivers', (req, res, next) => {
-  // Skip auth for public routes (getting available drivers)
-  if (req.method === 'GET' && req.path === '/available') {
+  // Skip auth for public routes (getting available drivers and statistics)
+  if (req.method === 'GET' && (req.path === '/available' || req.path === '/count')) {
     return next();
   }
   // Apply auth middleware for admin routes (POST, PUT, DELETE, PATCH)

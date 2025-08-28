@@ -3,6 +3,7 @@ const router = express.Router();
 const { 
   getAllDrivers, 
   getAvailableDrivers, 
+  getDriversCount,
   addDriver, 
   updateDriver, 
   deleteDriver, 
@@ -12,6 +13,7 @@ const {
 
 // Public routes
 router.get('/available', getAvailableDrivers);
+router.get('/count', getDriversCount);
 
 // Admin routes (should be protected with admin middleware)
 router.get('/all', getAllDrivers);

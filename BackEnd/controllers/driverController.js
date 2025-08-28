@@ -66,6 +66,29 @@ const getAvailableDrivers = async (req, res) => {
   }
 };
 
+// Get drivers count for public statistics (no authentication required)
+const getDriversCount = async (req, res) => {
+  try {
+    const totalDrivers = await Driver.countDocuments({ status: { $ne: 'suspended' } });
+    const availableDrivers = await Driver.countDocuments({ 
+      isAvailable: true, 
+      status: 'active' 
+    });
+    
+    res.status(200).json({
+      success: true,
+      totalDrivers,
+      availableDrivers
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching driver statistics',
+      error: error.message
+    });
+  }
+};
+
 // Add new driver (Admin only)
 const addDriver = async (req, res) => {
   try {
@@ -247,6 +270,7 @@ const toggleAvailability = async (req, res) => {
 module.exports = {
   getAllDrivers,
   getAvailableDrivers,
+  getDriversCount,
   addDriver,
   updateDriver,
   deleteDriver,
