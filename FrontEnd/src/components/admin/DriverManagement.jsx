@@ -30,7 +30,7 @@ const DriverManagement = () => {
 
   const fetchDrivers = async () => {
     try {
-      const response = await axios.get(`${API_ENDPOINTS.API_BASE_URL}/api/drivers/all`);
+      const response = await axios.get(API_ENDPOINTS.GET_ALL_DRIVERS);
       if (response.data.success) {
         setDrivers(response.data.drivers);
       }
@@ -71,8 +71,8 @@ const DriverManagement = () => {
       });
 
       const url = editingDriver 
-        ? `${API_ENDPOINTS.API_BASE_URL}/api/drivers/update/${editingDriver._id}`
-        : `${API_ENDPOINTS.API_BASE_URL}/api/drivers/add`;
+        ? `${API_ENDPOINTS.UPDATE_DRIVER}/${editingDriver._id}`
+        : API_ENDPOINTS.ADD_DRIVER;
       
       const method = editingDriver ? 'put' : 'post';
       

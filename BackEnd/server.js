@@ -40,6 +40,9 @@ app.use(cors({
 }));
 app.use(express.json()); // Allows the server to accept JSON requests
 
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
+
 // Authentication middleware
 const authMiddleware = async (req, res, next) => {
   try {
@@ -141,7 +144,14 @@ app.use('/api/feedback', (req, res, next) => {
 app.use('/api/saved-rooms', authMiddleware, savedRoomRoutes);
 
 // Driver routes (admin routes require auth)
-app.use('/api/drivers', driverRoutes);
+app.use('/api/drivers', (req, res, next) => {
+  // Skip auth for public routes (getting available drivers)
+  if (req.method === 'GET' && req.path === '/available') {
+    return next();
+  }
+  // Apply auth middleware for admin routes (POST, PUT, DELETE, PATCH)
+  return authMiddleware(req, res, next);
+}, driverRoutes);
 
 // Ride routes (require authentication for booking)
 app.use('/api/rides', rideRoutes);

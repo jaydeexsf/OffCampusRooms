@@ -2,8 +2,16 @@
 // Prefer .env override; fall back to production. Set VITE_API_BASE_URL to switch.
 const ENV_BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || '';
 
-// Ensure we always have a valid base URL
-export const API_BASE_URL = ENV_BASE || 'https://offcampusrooms.onrender.com';
+// Ensure we always have a valid base URL - fallback to production URL
+let baseUrl = ENV_BASE || 'https://offcampusrooms.onrender.com';
+
+// Force production API for Vercel deployment
+if (typeof window !== 'undefined' && window.location.hostname === 'off-campus-rooms.vercel.app') {
+  baseUrl = 'https://offcampusrooms.onrender.com';
+  console.log('Running on Vercel, using production API');
+}
+
+export const API_BASE_URL = baseUrl;
 
 // Validate API_BASE_URL
 if (!API_BASE_URL) {
@@ -14,7 +22,8 @@ if (!API_BASE_URL) {
 console.log('API Configuration:', {
   ENV_BASE,
   API_BASE_URL,
-  VITE_API_BASE_URL: typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL
+  VITE_API_BASE_URL: typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL,
+  hostname: typeof window !== 'undefined' ? window.location.hostname : 'server'
 });
 
 export const API_ENDPOINTS = {
