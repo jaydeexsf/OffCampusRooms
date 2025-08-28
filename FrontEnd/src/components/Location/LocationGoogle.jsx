@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import { getGoogleMapsApiKey } from '../../config/env';
 
 const LocationGoogle = ({ latitudeC, longitudeC }) => {
+  // Get Google Maps API key with debugging
+  const googleMapsApiKey = getGoogleMapsApiKey();
+  console.log('🔑 LocationGoogle - Google Maps API Key Status:', {
+    hasKey: !!googleMapsApiKey,
+    keyLength: googleMapsApiKey ? googleMapsApiKey.length : 0,
+    keyPreview: googleMapsApiKey ? `${googleMapsApiKey.substring(0, 10)}...` : 'NONE'
+  });
+
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_MAPS_API_KEY_HERE',
+    googleMapsApiKey: googleMapsApiKey || '',
   });
 
   const [coordinates, setCoordinates] = useState(null);
@@ -66,7 +75,7 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
     }
   };
 
-  if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
+  if (!googleMapsApiKey) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center max-w-md mx-auto p-6">
@@ -75,13 +84,30 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
             <p className="text-gray-300 text-sm mb-4">
               To display the location map, you need to set up a Google Maps API key.
             </p>
+            
+            {/* Debug Information */}
+            <div className="bg-gray-800 rounded-lg p-3 text-left mb-4">
+              <h4 className="text-gray-300 font-semibold mb-2">🔍 Debug Information:</h4>
+              <div className="space-y-1 text-xs">
+                <p><span className="text-gray-400">Environment Variable:</span> <span className={import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'text-green-400' : 'text-red-400'}>{import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'SET' : 'NOT SET'}</span></p>
+                <p><span className="text-gray-400">Config File:</span> <span className={googleMapsApiKey && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY_HERE' ? 'text-green-400' : 'text-red-400'}>{googleMapsApiKey && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY_HERE' ? 'SET' : 'NOT SET'}</span></p>
+                <p><span className="text-gray-400">Final API Key:</span> <span className={googleMapsApiKey ? 'text-green-400' : 'text-red-400'}>{googleMapsApiKey ? 'VALID' : 'INVALID'}</span></p>
+                <p><span className="text-gray-400">Hostname:</span> <span className="text-blue-400">{typeof window !== 'undefined' ? window.location.hostname : 'server'}</span></p>
+              </div>
+            </div>
+            
             <div className="bg-gray-800 rounded-lg p-3 text-left">
-              <p className="text-gray-400 text-xs mb-2">Add this to your .env file:</p>
-              <code className="text-blue-400 text-sm">VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key_here</code>
+              <p className="text-gray-400 text-xs mb-2">To fix this issue:</p>
+              <div className="space-y-1 text-xs">
+                <p>1. Create a <code className="text-blue-400">.env</code> file in your FrontEnd directory</p>
+                <p>2. Add: <code className="text-blue-400">VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key</code></p>
+                <p>3. Or update <code className="text-blue-400">FrontEnd/src/config/env.js</code></p>
+                <p>4. Restart your development server</p>
+              </div>
             </div>
           </div>
           <p className="text-gray-400 text-sm">
-            See GOOGLE_MAPS_SETUP.md for detailed instructions.
+            See SETUP_INSTRUCTIONS.md for detailed instructions.
           </p>
         </div>
       </div>

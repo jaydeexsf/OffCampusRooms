@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { useUser, useAuth } from "@clerk/clerk-react";
-import { API_ENDPOINTS, getRoomUrl, getFaqUrl } from '../config/api';
+import { apiClient, API_ENDPOINTS, getRoomUrl, getFaqUrl } from '../config/api';
 
 export const GlobalContext = createContext();
 
@@ -48,7 +47,7 @@ export const GlobalProvider = ({ children }) => {
      const fetchAllRooms = async () => {
         setGolbalLoader(true);
             try {
-                const response = await axios.get(API_ENDPOINTS.ALL_ROOMS);
+                const response = await apiClient.get(API_ENDPOINTS.ALL_ROOMS);
                 setAllRooms(response.data.rooms);
             } catch (error) {
                 console.error('Error fetching all rooms:', error);
@@ -60,7 +59,7 @@ export const GlobalProvider = ({ children }) => {
         const fetchFAQs = async () => {
             setIsFaqLoading(true);
             try {
-                const response = await axios.get(API_ENDPOINTS.GET_FAQS);
+                const response = await apiClient.get(API_ENDPOINTS.GET_FAQS);
                 setFaqs(response.data);
             } catch (error) {
                 console.error('Error fetching FAQs:', error);
@@ -72,7 +71,7 @@ export const GlobalProvider = ({ children }) => {
     const addRoom = async (newRoom) => {
         setIsAddingRoom(true);
         try {
-            const response = await axios.post(API_ENDPOINTS.ADD_ROOM, newRoom);
+            const response = await apiClient.post(API_ENDPOINTS.ADD_ROOM, newRoom);
             console.log(newRoom)
             console.log('ss')
             setAllRooms((prevRooms) => [...prevRooms, response.data]);
@@ -86,7 +85,7 @@ export const GlobalProvider = ({ children }) => {
     const updateRoom = async (roomId, updatedRoom) => {
         setIsUpdatingRoom(true);
         try {
-            const response = await axios.put(getRoomUrl(roomId, 'update'), updatedRoom);
+            const response = await apiClient.put(getRoomUrl(roomId, 'update'), updatedRoom);
             setAllRooms((prevRooms) =>
                 prevRooms.map((room) => (room._id === roomId ? response.data : room))
             );
@@ -100,7 +99,7 @@ export const GlobalProvider = ({ children }) => {
     const deleteRoom = async (roomId) => {
         setIsDeletingRoom(true);
         try {
-            await axios.delete(getRoomUrl(roomId, 'delete'));
+            await apiClient.delete(getRoomUrl(roomId, 'delete'));
             setAllRooms((prevRooms) => prevRooms.filter((room) => room._id !== roomId));
         } catch (error) {
             console.error('Error deleting room:', error);
@@ -115,7 +114,7 @@ export const GlobalProvider = ({ children }) => {
         try {
             console.log('Adding FAQ with endpoint:', API_ENDPOINTS.ADD_FAQ);
             console.log('API_BASE_URL from config:', API_ENDPOINTS.ADD_FAQ);
-            const response = await axios.post(API_ENDPOINTS.ADD_FAQ, newFaq);
+            const response = await apiClient.post(API_ENDPOINTS.ADD_FAQ, newFaq);
             // Append the newly created FAQ to the end (under existing ones)
             setFaqs((prevFaqs) => [...prevFaqs, response.data]);
         } catch (error) {
@@ -128,7 +127,7 @@ export const GlobalProvider = ({ children }) => {
 
     const deleteFaq = async (faqId) => {
         try {
-            await axios.delete(`${API_ENDPOINTS.DELETE_FAQ}/${faqId}`);
+            await apiClient.delete(`${API_ENDPOINTS.DELETE_FAQ}/${faqId}`);
             setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== faqId));
         } catch (error) {
             console.error('Error deleting FAQ:', error);
@@ -138,7 +137,7 @@ export const GlobalProvider = ({ children }) => {
     // Rating functions
     const addRating = async (ratingData) => {
         try {
-            const response = await axios.post(API_ENDPOINTS.ADD_RATING, ratingData);
+            const response = await apiClient.post(API_ENDPOINTS.ADD_RATING, ratingData);
             return response.data;
         } catch (error) {
             console.error('Error adding rating:', error);
@@ -148,7 +147,7 @@ export const GlobalProvider = ({ children }) => {
 
     const getRoomRatings = async (roomId) => {
         try {
-            const response = await axios.get(`${API_ENDPOINTS.GET_ROOM_RATINGS}/${roomId}`);
+            const response = await apiClient.get(`${API_ENDPOINTS.GET_ROOM_RATINGS}/${roomId}`);
             return response.data;
         } catch (error) {
             console.error('Error fetching room ratings:', error);
@@ -159,7 +158,7 @@ export const GlobalProvider = ({ children }) => {
     // Comment functions
     const addComment = async (commentData) => {
         try {
-            const response = await axios.post(API_ENDPOINTS.ADD_COMMENT, commentData);
+            const response = await apiClient.post(API_ENDPOINTS.ADD_COMMENT, commentData);
             return response.data;
         } catch (error) {
             console.error('Error adding comment:', error);
@@ -169,7 +168,7 @@ export const GlobalProvider = ({ children }) => {
 
     const getRoomComments = async (roomId) => {
         try {
-            const response = await axios.get(`${API_ENDPOINTS.GET_ROOM_COMMENTS}/${roomId}`);
+            const response = await apiClient.get(`${API_ENDPOINTS.GET_ROOM_COMMENTS}/${roomId}`);
             return response.data;
         } catch (error) {
             console.error('Error fetching room comments:', error);
@@ -180,7 +179,7 @@ export const GlobalProvider = ({ children }) => {
     // Statistics function
     const getStatistics = async () => {
         try {
-            const response = await axios.get(API_ENDPOINTS.GET_STATISTICS);
+            const response = await apiClient.get(API_ENDPOINTS.GET_STATISTICS);
             return response.data;
         } catch (error) {
             console.error('Error fetching statistics:', error);

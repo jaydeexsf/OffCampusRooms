@@ -1,5 +1,6 @@
 // API Configuration
 import { API_BASE_URL as ENV_API_BASE_URL } from './env.js';
+import axios from 'axios';
 
 // Force production API for Vercel deployment, with fallback
 let baseUrl = ENV_API_BASE_URL || 'https://offcampusrooms.onrender.com';
@@ -23,12 +24,62 @@ if (!API_BASE_URL) {
   console.error('API_BASE_URL is not set! This will cause API calls to fail.');
 }
 
-// Debug logging to help troubleshoot API issues
-console.log('API Configuration:', {
+// Enhanced debug logging to help troubleshoot API issues
+console.log('🚀 API Configuration Loaded:', {
   API_BASE_URL,
+  ENV_API_BASE_URL: ENV_API_BASE_URL,
   VITE_API_BASE_URL: typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL,
-  hostname: typeof window !== 'undefined' ? window.location.hostname : 'server'
+  hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+  isVercel: typeof window !== 'undefined' && window.location.hostname === 'off-campus-rooms.vercel.app'
 });
+
+// Validate the configuration
+if (!API_BASE_URL) {
+  console.error('❌ CRITICAL ERROR: API_BASE_URL is not set! This will cause API calls to fail.');
+} else {
+  console.log('✅ API_BASE_URL is properly configured:', API_BASE_URL);
+}
+
+// Create axios instance with interceptors
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+});
+
+// Request interceptor to add auth headers
+apiClient.interceptors.request.use(
+  async (config) => {
+    // Check if we're in a browser environment and Clerk is available
+    if (typeof window !== 'undefined' && window.Clerk) {
+      try {
+        const token = await window.Clerk.session?.getToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      } catch (error) {
+        console.warn('Failed to get auth token:', error);
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor for error handling
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.error('Authentication error:', error.response.data);
+      // You can redirect to login or show a message here
+    }
+    return Promise.reject(error);
+  }
+);
+
+export { apiClient };
 
 export const API_ENDPOINTS = {
   // Rooms

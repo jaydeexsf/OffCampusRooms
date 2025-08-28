@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { FiHome, FiMapPin, FiDollarSign, FiSearch, FiZap, FiShield, FiMessageCircle } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import PlaceCard from "../Places/PlaceCard";
 import { FaAngleDown } from "react-icons/fa";
+import { apiClient, API_ENDPOINTS } from "../../config/api";
 
 const Hero = ({ handleOrderPopup }) => {
   const [priceValue, setPriceValue] = useState(2000);
@@ -18,7 +18,7 @@ const Hero = ({ handleOrderPopup }) => {
   const searchRooms = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("/api/rooms/search", {
+      const response = await apiClient.get(API_ENDPOINTS.SEARCH_ROOMS, {
         params: {
           location,
           maxPrice: priceValue,
