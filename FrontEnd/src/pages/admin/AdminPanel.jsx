@@ -24,9 +24,9 @@ const AdminPanel = () => {
   const fetchStats = async () => {
     try {
       const [roomsRes, driversRes, faqsRes] = await Promise.all([
-        axios.get(`${API_ENDPOINTS.API_BASE_URL}/api/rooms`),
-        axios.get(`${API_ENDPOINTS.API_BASE_URL}/api/drivers`),
-        axios.get(`${API_ENDPOINTS.API_BASE_URL}/api/faqs`)
+        axios.get(API_ENDPOINTS.ALL_ROOMS),
+        axios.get(API_ENDPOINTS.GET_ALL_DRIVERS),
+        axios.get(API_ENDPOINTS.GET_FAQS)
       ]);
       
       setStats({

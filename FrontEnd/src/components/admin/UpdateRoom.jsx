@@ -106,10 +106,20 @@ const UpdateRoom = ({ room, onCancel }) => {
     
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-8 pb-16">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-20 pb-16">
             <div className="container mx-auto px-4">
+                <div className="flex items-center gap-4 mb-8">
+                    <button 
+                        onClick={onCancel} 
+                        className="bg-white/10 backdrop-blur-lg border border-white/20 text-white p-3 rounded-xl hover:bg-white/20 transition-all duration-200"
+                    >
+                        <FiX size={20} />
+                    </button>
+                    <h1 className="text-3xl font-bold text-white">Update Room</h1>
+                </div>
+
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 max-w-2xl mx-auto shadow-2xl">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6" aria-labelledby="update-room-form">
                         <div className="space-y-2">
                             <label className="text-white font-medium">Room Title *</label>
                             <input

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { GlobalContext } from '../GlobalContext';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBack } from 'react-icons/io5';
+import { API_ENDPOINTS } from '../../config/api';
 
 const AddRoomForm = () => {
     const { addRoom, isAddingRoom } = useContext(GlobalContext);
@@ -131,7 +132,7 @@ const AddRoomForm = () => {
     const [distance, setDistance] = useState([])
     const [timeToCampus, setTimeToCampus] = useState()
     
-    const BURL = `/api/google/distance`;
+    const BURL = API_ENDPOINTS.CALCULATE_DISTANCE || `${import.meta.env.VITE_API_BASE_URL || 'https://offcampusrooms.onrender.com'}/api/google/distance`;
     
     // Calculate straight-line distance using Haversine formula
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -150,10 +151,41 @@ const AddRoomForm = () => {
     const getDistance = async () => {
         console.log('🚗 Starting distance calculation...');
         console.log('📍 Request data:', everything);
+        console.log('🌐 API URL:', BURL);
+        console.log('📍 Coordinates:', { myLocationLat, myLocationLong });
+        console.log('🎯 Destinations:', destinations);
+        
+        // Check network connectivity
+        console.log('🌐 Network status:', navigator.onLine ? 'Online' : 'Offline');
+        console.log('🔗 Current origin:', window.location.origin);
+        console.log('🔗 Current protocol:', window.location.protocol);
         
         try {
-            const response = await axios.post(BURL, everything);
-            console.log('✅ Distance API response:', response.data);
+            // First, test if the endpoint is reachable
+            console.log('🔍 Testing endpoint connectivity...');
+            try {
+                // Test basic backend connectivity
+                const baseUrl = BURL.split('/api/')[0];
+                console.log('🔍 Testing base URL:', baseUrl);
+                
+                const testResponse = await axios.get(`${baseUrl}/api/rooms/all`, { timeout: 5000 });
+                console.log('✅ Backend connectivity test passed:', testResponse.status);
+            } catch (testErr) {
+                console.log('⚠️ Backend connectivity test failed:', testErr.message);
+                console.log('⚠️ This suggests the backend is not reachable');
+            }
+            
+            console.log('📡 Making API request to:', BURL);
+            console.log('📤 Request payload:', JSON.stringify(everything, null, 2));
+            
+            const response = await axios.post(BURL, everything, {
+                timeout: 10000, // 10 second timeout
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log('✅ Distance API response status:', response.status);
+            console.log('✅ Distance API response data:', response.data);
             
             // Check if Google API is working
             if (response.data && response.data.status === 'REQUEST_DENIED') {
@@ -202,11 +234,19 @@ const AddRoomForm = () => {
                 throw new Error('Invalid API response');
             }
         } catch (err) {
-            console.error('❌ Distance calculation error, using fallback:', {
-                message: err.message,
-                response: err.response?.data,
-                status: err.response?.status
+            console.error('❌ Distance calculation error, using fallback:');
+            console.error('❌ Error message:', err.message);
+            console.error('❌ Error name:', err.name);
+            console.error('❌ Error code:', err.code);
+            console.error('❌ Response status:', err.response?.status);
+            console.error('❌ Response data:', err.response?.data);
+            console.error('❌ Request config:', {
+                url: err.config?.url,
+                method: err.config?.method,
+                baseURL: err.config?.baseURL,
+                timeout: err.config?.timeout
             });
+            console.error('❌ Full error object:', err);
             
             // Fallback calculation when API fails
             console.log('🔄 Using manual distance calculation...');
@@ -272,9 +312,12 @@ const AddRoomForm = () => {
     useEffect(() => {
         const fetchData = async () => {
             console.log('🔄 Location coordinates changed:', { myLocationLat, myLocationLong });
+            console.log('🔄 Destinations available:', destinations);
+            console.log('🔄 Everything object:', everything);
             
             if (myLocationLat && myLocationLong) {
                 console.log('✅ Both coordinates available, fetching distance...');
+                console.log('✅ Coordinates:', { lat: myLocationLat, lng: myLocationLong });
                 await getDistance(); 
             } else {
                 console.log('⏳ Waiting for coordinates...', { 

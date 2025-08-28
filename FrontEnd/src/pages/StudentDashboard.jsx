@@ -234,27 +234,49 @@ const StudentDashboard = () => {
             {activeTab === 'overview' && (
               <div className="space-y-6">
                 <h3 className="text-xl font-bold text-white mb-4">Quick Actions</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Link 
-                    to="/all-rooms"
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <button
+                    onClick={() => setActiveTab('saved')}
                     className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300 group"
                   >
                     <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
                       <FiHome className="w-6 h-6 text-white" />
                     </div>
-                    <h4 className="text-white font-bold mb-2 text-lg">Browse All Rooms</h4>
-                    <p className="text-gray-300 text-sm">Find your perfect accommodation</p>
-                  </Link>
+                    <h4 className="text-white font-bold mb-2 text-lg">View Bookings</h4>
+                    <p className="text-gray-300 text-sm">Check your saved rooms</p>
+                  </button>
 
-                  <Link 
-                    to="/resources"
+                  <button
+                    onClick={() => setActiveTab('feedback')}
                     className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition-all duration-300 group"
                   >
                     <div className="bg-gradient-to-r from-green-500 to-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
-                      <FiMapPin className="w-6 h-6 text-white" />
+                      <FiMessageSquare className="w-6 h-6 text-white" />
                     </div>
-                    <h4 className="text-white font-bold mb-2 text-lg">Student Resources</h4>
-                    <p className="text-gray-300 text-sm">Safety tips and helpful guides</p>
+                    <h4 className="text-white font-bold mb-2 text-lg">My Feedback</h4>
+                    <p className="text-gray-300 text-sm">View your feedback</p>
+                  </button>
+
+                  <Link 
+                    to="/all-rooms"
+                    className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-2xl p-6 hover:border-purple-400/50 transition-all duration-300 group"
+                  >
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                      <FiEye className="w-6 h-6 text-white" />
+                    </div>
+                    <h4 className="text-white font-bold mb-2 text-lg">Browse Rooms</h4>
+                    <p className="text-gray-300 text-sm">Find accommodation</p>
+                  </Link>
+
+                  <Link 
+                    to="/ride-booking"
+                    className="bg-gradient-to-br from-orange-600/20 to-red-600/20 border border-orange-500/30 rounded-2xl p-6 hover:border-orange-400/50 transition-all duration-300 group"
+                  >
+                    <div className="bg-gradient-to-r from-orange-500 to-red-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                      <FiNavigation className="w-6 h-6 text-white" />
+                    </div>
+                    <h4 className="text-white font-bold mb-2 text-lg">Book Ride</h4>
+                    <p className="text-gray-300 text-sm">Get transportation</p>
                   </Link>
                 </div>
               </div>
