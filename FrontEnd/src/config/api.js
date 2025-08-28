@@ -73,7 +73,19 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.error('Authentication error:', error.response.data);
-      // You can redirect to login or show a message here
+      // For admin routes, try without authentication for public endpoints
+      if (error.config.url.includes('/api/drivers/count') || 
+          error.config.url.includes('/api/rooms/all') ||
+          error.config.url.includes('/api/faq/questions')) {
+        console.log('Retrying public endpoint without auth...');
+        // Create a new request without auth headers
+        const publicRequest = {
+          ...error.config,
+          headers: { ...error.config.headers }
+        };
+        delete publicRequest.headers.Authorization;
+        return axios(publicRequest);
+      }
     }
     return Promise.reject(error);
   }

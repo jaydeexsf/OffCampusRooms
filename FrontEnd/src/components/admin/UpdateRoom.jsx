@@ -220,7 +220,6 @@ const UpdateRoom = ({ room, onCancel }) => {
                         )}
 
                         {selectedImage && (
-                            <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex justify-center items-center z-50" onClick={() => setSelectedImage(null)}>
                                 <div className="relative max-w-4xl max-h-[90vh] p-4">
                                     <img src={selectedImage} alt="Full-size preview" className="max-w-full max-h-full object-contain rounded-xl" />
                                     <button
@@ -235,7 +234,6 @@ const UpdateRoom = ({ room, onCancel }) => {
                                     >
                                         <FiTrash2 className="w-6 h-6" />
                                     </button>
-                                </div>
                             </div>
                         )}
 

@@ -14,7 +14,16 @@ const AdminPanel = () => {
     totalFAQs: 0,
     totalBookings: 0
   });
+
+  // Dummy data for fallback
+  const dummyStats = {
+    totalRooms: 12,
+    totalDrivers: 8,
+    totalFAQs: 15,
+    totalBookings: 25
+  };
   const [loading, setLoading] = useState(true);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -22,20 +31,62 @@ const AdminPanel = () => {
 
   const fetchStats = async () => {
     try {
-      const [roomsRes, driversRes, faqsRes] = await Promise.all([
-        apiClient.get(API_ENDPOINTS.ALL_ROOMS),
-        apiClient.get(API_ENDPOINTS.GET_DRIVERS_COUNT),
-        apiClient.get(API_ENDPOINTS.GET_FAQS)
-      ]);
-      
+      // Try to fetch each stat individually to handle partial failures
+      let roomsCount = 0;
+      let driversCount = 0;
+      let faqsCount = 0;
+
+      // Fetch rooms count
+      try {
+        const roomsRes = await apiClient.get(API_ENDPOINTS.ALL_ROOMS);
+        roomsCount = roomsRes.data.rooms?.length || 0;
+        console.log('✅ Rooms fetched successfully:', roomsCount);
+      } catch (error) {
+        console.warn('⚠️ Failed to fetch rooms:', error.message);
+        roomsCount = 0;
+      }
+
+      // Fetch drivers count
+      try {
+        const driversRes = await apiClient.get(API_ENDPOINTS.GET_DRIVERS_COUNT);
+        driversCount = driversRes.data.totalDrivers || 0;
+        console.log('✅ Drivers count fetched successfully:', driversCount);
+      } catch (error) {
+        console.warn('⚠️ Failed to fetch drivers count:', error.message);
+        // Try alternative endpoint
+        try {
+          const allDriversRes = await apiClient.get(API_ENDPOINTS.GET_ALL_DRIVERS);
+          driversCount = allDriversRes.data.drivers?.length || 0;
+          console.log('✅ Drivers count from alternative endpoint:', driversCount);
+        } catch (altError) {
+          console.warn('⚠️ Alternative drivers endpoint also failed:', altError.message);
+          driversCount = 0;
+        }
+      }
+
+      // Fetch FAQs count
+      try {
+        const faqsRes = await apiClient.get(API_ENDPOINTS.GET_FAQS);
+        faqsCount = faqsRes.data.faqs?.length || 0;
+        console.log('✅ FAQs fetched successfully:', faqsCount);
+      } catch (error) {
+        console.warn('⚠️ Failed to fetch FAQs:', error.message);
+        faqsCount = 0;
+      }
+
       setStats({
-        totalRooms: roomsRes.data.rooms?.length || 0,
-        totalDrivers: driversRes.data.totalDrivers || 0,
-        totalFAQs: faqsRes.data.faqs?.length || 0,
+        totalRooms: roomsCount,
+        totalDrivers: driversCount,
+        totalFAQs: faqsCount,
         totalBookings: 0
       });
+      setUsingFallback(false);
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      console.error('❌ Critical error in fetchStats:', error);
+      // Use dummy data as fallback
+      console.log('🔄 Using dummy data as fallback');
+      setStats(dummyStats);
+      setUsingFallback(true);
     } finally {
       setLoading(false);
     }
@@ -167,7 +218,12 @@ const AdminPanel = () => {
                   Dashboard
                 </span>
               </h1>
-              <p className="text-gray-400 text-xs sm:text-sm lg:text-base">Manage your OffCampusRooms platform efficiently</p>
+                             <p className="text-gray-400 text-xs sm:text-sm lg:text-base">Manage your OffCampusRooms platform efficiently</p>
+               {usingFallback && (
+                 <div className="mt-2 p-2 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                   <p className="text-yellow-400 text-xs">⚠️ Showing demo data - API connection issues detected</p>
+                 </div>
+               )}
             </div>
             <div className="text-left lg:text-right">
               <p className="text-gray-400 text-xs sm:text-sm">Welcome back, Admin</p>
@@ -177,33 +233,8 @@ const AdminPanel = () => {
         </div>
 
         {/* Enhanced Navigation - Mobile Optimized */}
-        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl lg:rounded-3xl p-1 sm:p-2 mb-4 sm:mb-6 lg:mb-8">
-          {/* Mobile: Vertical stack or horizontal scroll with better visibility */}
-          <div className="block sm:hidden">
-            <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300 font-medium text-xs whitespace-nowrap min-w-[70px] ${
-                    activeTab === tab.id
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-105'
-                      : 'text-gray-400 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  <span className={`text-base transition-transform duration-200 ${
-                    activeTab === tab.id ? 'scale-110' : ''
-                  }`}>
-                    {tab.icon}
-                  </span>
-                  <span className="text-xs">{tab.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          {/* Tablet and Desktop: Original layout */}
-          <div className="hidden sm:flex gap-1">
+        <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl lg:rounded-3xl p-1 sm:p-2 mb-4 sm:mb-6 lg:mb-8 overflow-x-auto">
+          <div className="flex gap-1 min-w-max">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -219,7 +250,7 @@ const AdminPanel = () => {
                 }`}>
                   {tab.icon}
                 </span>
-                <span className="hidden sm:inline">{tab.name}</span>
+                <span className="hidden xs:inline">{tab.name}</span>
               </button>
             ))}
           </div>

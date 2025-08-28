@@ -1,107 +1,121 @@
 # Google Maps API Setup Guide
 
-## Overview
-The OffCampusRooms project uses Google Maps API for:
-- Ride booking with distance calculation
-- Location-based services
-- Interactive maps for room locations
+## 🚨 Current Issue: Invalid API Key
 
-## Prerequisites
-1. Google Cloud Console account
-2. Billing enabled on your Google Cloud project
-3. Google Maps JavaScript API and Distance Matrix API enabled
+Your Google Maps API key is being detected but is invalid. Here's how to fix it:
 
-## Step 1: Create Google Cloud Project
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable billing for the project
+## Step 1: Get a Valid Google Maps API Key
 
-## Step 2: Enable Required APIs
-Enable these APIs in your Google Cloud project:
-1. **Google Maps JavaScript API** - For interactive maps
-2. **Distance Matrix API** - For calculating ride distances and prices
-3. **Geocoding API** - For converting coordinates to addresses
-
-## Step 3: Create API Key
-1. Go to "APIs & Services" > "Credentials"
-2. Click "Create Credentials" > "API Key"
-3. Copy the generated API key
-4. **Important**: Restrict the API key to only the required APIs
-
-## Step 4: Configure Environment Variables
-
-### Frontend (.env file in FrontEnd directory)
-```bash
-VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key_here
-```
-
-### Backend (.env file in BackEnd directory)
-```bash
-GOOGLE_API_KEY=your_actual_api_key_here
-```
-
-## Step 5: API Key Restrictions (Security)
-1. Go to "APIs & Services" > "Credentials"
-2. Click on your API key
-3. Under "Application restrictions", select "HTTP referrers (websites)"
-4. Add your domain(s):
-   - `http://localhost:3000/*` (for development)
-   - `http://localhost:5173/*` (for Vite dev server)
-   - `https://off-campus-rooms.vercel.app/*` (for production)
-5. Under "API restrictions", select "Restrict key"
-6. Select only these APIs:
-   - Google Maps JavaScript API
-   - Distance Matrix API
+1. **Go to Google Cloud Console**: https://console.cloud.google.com/
+2. **Create a new project** or select an existing one
+3. **Enable the required APIs**:
+   - Maps JavaScript API
    - Geocoding API
+   - Directions API
+   - Places API (if needed)
+4. **Create credentials**:
+   - Go to "APIs & Services" > "Credentials"
+   - Click "Create Credentials" > "API Key"
+   - Copy the generated API key
 
-## Step 6: Billing and Quotas
-1. Monitor your API usage in Google Cloud Console
-2. Set up billing alerts
-3. Default quotas are usually sufficient for development
-4. For production, consider increasing quotas if needed
+## Step 2: Configure API Key Restrictions
+
+1. **Set up HTTP referrers** (recommended for security):
+   - Click on your API key
+   - Under "Application restrictions" select "HTTP referrers"
+   - Add your domains:
+     ```
+     localhost:*
+     *.vercel.app
+     *.netlify.app
+     yourdomain.com/*
+     ```
+
+2. **Enable billing** (required for Google Maps API):
+   - Go to "Billing" in Google Cloud Console
+   - Link a billing account to your project
+   - Google Maps API requires billing to be enabled
+
+## Step 3: Update Your Environment Variables
+
+### Option A: Using .env file (Recommended)
+
+Create a `.env` file in your `FrontEnd` directory:
+
+```env
+VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key_here
+VITE_API_BASE_URL=https://offcampusrooms.onrender.com
+```
+
+### Option B: Update env.js file
+
+Update `FrontEnd/src/config/env.js`:
+
+```javascript
+export const GOOGLE_MAPS_API_KEY = 'your_actual_api_key_here';
+```
+
+## Step 4: Verify Setup
+
+1. **Restart your development server**
+2. **Check the console** for these messages:
+   ```
+   ✅ Using VITE_GOOGLE_MAPS_API_KEY from environment
+   🔑 RideBooking - Google Maps API Key Status: {hasKey: true, keyLength: 39, keyPreview: 'AIzaSy...'}
+   ```
+
+## Step 5: Deploy to Production
+
+### For Vercel:
+1. Go to your Vercel project settings
+2. Add environment variable:
+   - Name: `VITE_GOOGLE_MAPS_API_KEY`
+   - Value: Your actual API key
+3. Redeploy
+
+### For Netlify:
+1. Go to Site settings > Environment variables
+2. Add:
+   - Key: `VITE_GOOGLE_MAPS_API_KEY`
+   - Value: Your actual API key
+3. Redeploy
 
 ## Troubleshooting
 
-### Common Errors
+### Common Issues:
 
-#### 1. "InvalidKeyMapError"
-- **Cause**: API key is missing, invalid, or restricted
-- **Solution**: Check environment variables and API key restrictions
+1. **"InvalidKeyMapError"**:
+   - Check if billing is enabled
+   - Verify API key is correct
+   - Ensure required APIs are enabled
 
-#### 2. "Quota Exceeded"
-- **Cause**: API usage limit reached
-- **Solution**: Check billing status and increase quotas if needed
+2. **"ReferrerNotAllowedError"**:
+   - Add your domain to HTTP referrers
+   - Include both `www` and non-`www` versions
 
-#### 3. "RefererNotAllowedMapError"
-- **Cause**: Domain not in API key restrictions
-- **Solution**: Add your domain to HTTP referrer restrictions
+3. **"QuotaExceededError"**:
+   - Check your billing account
+   - Monitor usage in Google Cloud Console
 
-### Testing
-1. Check if environment variables are loaded:
-   ```javascript
-   console.log('Frontend API Key:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
-   console.log('Backend API Key:', process.env.GOOGLE_API_KEY);
-   ```
+### Testing Your API Key:
 
-2. Test API endpoints:
-   - Frontend: Check browser console for Google Maps loading
-   - Backend: Test distance calculation endpoint
+You can test your API key by visiting:
+```
+https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap
+```
 
-## Cost Considerations
-- **Google Maps JavaScript API**: $7 per 1000 map loads
-- **Distance Matrix API**: $5 per 1000 elements
-- **Geocoding API**: $5 per 1000 requests
+If it loads without errors, your key is working.
 
-## Security Best Practices
-1. Never commit API keys to version control
-2. Use environment variables
-3. Restrict API keys to specific domains and APIs
-4. Monitor API usage regularly
-5. Set up billing alerts
+## Security Notes
 
-## Support
-If you encounter issues:
-1. Check Google Cloud Console for error details
-2. Verify API key restrictions
-3. Check billing status
-4. Review API quotas and usage
+- Never commit your API key to version control
+- Use environment variables for production
+- Set up proper HTTP referrer restrictions
+- Monitor your API usage regularly
+
+## Cost Information
+
+Google Maps API has a generous free tier:
+- $200 monthly credit
+- Typically covers thousands of map loads
+- Monitor usage in Google Cloud Console
