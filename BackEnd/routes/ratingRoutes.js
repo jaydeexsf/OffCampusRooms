@@ -3,6 +3,7 @@ const {
   addRating, 
   getRoomRatings, 
   getUserRating, 
+  getUserRatings,
   deleteRating 
 } = require('../controllers/ratingController');
 const router = express.Router();
@@ -14,6 +15,9 @@ router.get('/room/:roomId', getRoomRatings);
 // PROTECTED ROUTES (auth required)
 // Get user's rating for a specific room
 router.get('/user/:roomId', getUserRating);
+
+// Get all ratings by the current user
+router.get('/my-ratings', getUserRatings);
 
 // Add or update a rating
 router.post('/', addRating);

@@ -3,7 +3,7 @@ import { GoogleMap, useLoadScript, Marker, DirectionsRenderer } from '@react-goo
 
 const LocationGoogle = ({ latitudeC, longitudeC }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyAMCwh4mUljViilrr2QcNSRv-OiV6hq2RY',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY',
   });
 
   const [coordinates, setCoordinates] = useState(null);

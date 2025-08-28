@@ -29,6 +29,7 @@ export const API_ENDPOINTS = {
   // Ratings
   GET_ROOM_RATINGS: `${API_BASE_URL}/api/ratings/room`,
   GET_USER_RATING: `${API_BASE_URL}/api/ratings/user`,
+  GET_MY_RATINGS: `${API_BASE_URL}/api/ratings/my-ratings`,
   ADD_RATING: `${API_BASE_URL}/api/ratings`,
   DELETE_RATING: `${API_BASE_URL}/api/ratings`,
 

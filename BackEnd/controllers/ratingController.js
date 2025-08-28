@@ -142,6 +142,50 @@ const getUserRating = async (req, res) => {
   }
 };
 
+// Get all ratings by a user
+const getUserRatings = async (req, res) => {
+  try {
+    console.log('Get user ratings - user:', req.user);
+    
+    // Check if user is authenticated
+    if (!req.user || !req.user.userId) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    
+    const { userId } = req.user;
+    
+    // Get all ratings by the user with room information
+    const ratings = await Rating.find({ userId })
+      .populate('roomId', 'title location price images')
+      .sort({ createdAt: -1 });
+    
+    res.status(200).json({ 
+      success: true,
+      ratings: ratings.map(rating => ({
+        _id: rating._id,
+        roomId: rating.roomId,
+        rating: rating.rating,
+        review: rating.review,
+        createdAt: rating.createdAt,
+        room: rating.roomId ? {
+          title: rating.roomId.title,
+          location: rating.roomId.location,
+          price: rating.roomId.price,
+          images: rating.roomId.images
+        } : null
+      }))
+    });
+  } catch (error) {
+    console.error('Error getting user ratings:', error);
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      message: 'Internal server error',
+      error: error.message 
+    });
+  }
+};
+
 // Delete user's rating
 const deleteRating = async (req, res) => {
   try {
@@ -178,5 +222,6 @@ module.exports = {
   addRating,
   getRoomRatings,
   getUserRating,
+  getUserRatings,
   deleteRating
 };

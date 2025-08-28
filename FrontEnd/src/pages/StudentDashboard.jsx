@@ -12,6 +12,7 @@ const StudentDashboard = () => {
   const [savedRooms, setSavedRooms] = useState([]);
   const [userFeedback, setUserFeedback] = useState(null);
   const [myComments, setMyComments] = useState([]);
+  const [myRatings, setMyRatings] = useState([]);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingCommentText, setEditingCommentText] = useState('');
   const [loading, setLoading] = useState(false);
