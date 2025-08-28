@@ -33,7 +33,9 @@ const RideBooking = () => {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyDOCD7z5FLoGqOgm-hqt_n1VmEZ-lHNtws'
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    // Only load if we have an API key
+    ...(import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? {} : { disable: true })
   });
 
   const onLoad = useCallback(function callback(map) {
@@ -240,7 +242,7 @@ const RideBooking = () => {
                       position={dropoffLocation}
                       icon={{
                         url: 'data:image/svg+xml;base64,' + btoa(`
-                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#EF4444">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32 24" fill="#EF4444">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                           </svg>
                         `)
@@ -267,6 +269,7 @@ const RideBooking = () => {
                     <div className="text-sm text-gray-500 bg-gray-800/50 rounded-lg p-3">
                       <p>To enable maps, add your Google Maps API key to the .env file:</p>
                       <code className="text-blue-400">VITE_GOOGLE_MAPS_API_KEY=your_key_here</code>
+                      <p className="mt-2 text-xs">See GOOGLE_MAPS_SETUP.md for detailed instructions.</p>
                     </p>
                   </div>
                 )}

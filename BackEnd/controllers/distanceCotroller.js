@@ -10,6 +10,15 @@ const getDistance = async (req, res) => {
     
     const apiKey = process.env.GOOGLE_API_KEY; // Store your API key securely
 
+    // Check if API key is available
+    if (!apiKey) {
+        console.log('Google Maps API key not configured');
+        return res.status(500).json({ 
+            message: 'Google Maps API key not configured. Please set GOOGLE_API_KEY in your environment variables.',
+            error: 'API_KEY_MISSING'
+        });
+    }
+
     try {
         const response = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json`, {
             params: {

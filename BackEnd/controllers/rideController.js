@@ -8,6 +8,17 @@ const calculateRideDetails = async (req, res) => {
     const { pickupLat, pickupLng, dropoffLat, dropoffLng } = req.body;
 
     const apiKey = process.env.GOOGLE_API_KEY;
+    
+    // Check if API key is available
+    if (!apiKey) {
+      console.log('Google Maps API key not configured');
+      return res.status(500).json({
+        success: false,
+        message: 'Google Maps API key not configured. Please set GOOGLE_API_KEY in your environment variables.',
+        error: 'API_KEY_MISSING'
+      });
+    }
+    
     const origins = `${pickupLat},${pickupLng}`;
     const destinations = `${dropoffLat},${dropoffLng}`;
 

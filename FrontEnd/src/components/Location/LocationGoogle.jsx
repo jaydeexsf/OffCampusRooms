@@ -3,7 +3,7 @@ import { GoogleMap, useLoadScript, Marker, DirectionsRenderer } from '@react-goo
 
 const LocationGoogle = ({ latitudeC, longitudeC }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
   });
 
   const [coordinates, setCoordinates] = useState(null);
@@ -65,6 +65,28 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
       alert('Geolocation is not supported by your browser.');
     }
   };
+
+  if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-6 mb-4">
+            <h2 className="text-red-400 text-xl font-bold mb-2">Google Maps API Key Required</h2>
+            <p className="text-gray-300 text-sm mb-4">
+              To display the location map, you need to set up a Google Maps API key.
+            </p>
+            <div className="bg-gray-800 rounded-lg p-3 text-left">
+              <p className="text-gray-400 text-xs mb-2">Add this to your .env file:</p>
+              <code className="text-blue-400 text-sm">VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key_here</code>
+            </div>
+          </div>
+          <p className="text-gray-400 text-sm">
+            See GOOGLE_MAPS_SETUP.md for detailed instructions.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isLoaded || !coordinates) {
     return (
