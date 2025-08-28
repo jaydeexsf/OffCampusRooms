@@ -8,11 +8,5 @@ router.get('/answer/:id', getAnswer);
 router.post('/add-qanda', addQandA);
 router.delete('/:id', deleteFaq);
 
-//endpoint for adding QandA
-router.post('/add-qanda', addQandA);
-
-//endpoint for deleting qanda
-router.delete('/del-faq/:id', deleteFaq)
-
 
 module.exports = router;

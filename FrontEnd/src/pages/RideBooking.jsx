@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
-import { FiMapPin, FiNavigation, FiClock, FiDollarSign, FiUser, FiPhone } from 'react-icons/fi';
+import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone } from 'react-icons/fi';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
@@ -166,7 +166,7 @@ const RideBooking = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-12">
-              <FiNavigation className="w-16 h-16 text-blue-400 mx-auto mb-6" />
+                              <FiMap className="w-16 h-16 text-blue-400 mx-auto mb-6" />
               <h2 className="text-2xl font-bold text-white mb-4">Sign In Required</h2>
               <p className="text-gray-400 mb-8">
                 Please sign in to book a ride with our trusted drivers.

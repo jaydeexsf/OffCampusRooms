@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser, useAuth } from '@clerk/clerk-react';
-import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX, FiNavigation } from 'react-icons/fi';
+import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX, FiNavigation, FiMap } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
@@ -273,7 +273,7 @@ const StudentDashboard = () => {
                     className="bg-gradient-to-br from-orange-600/20 to-red-600/20 border border-orange-500/30 rounded-2xl p-6 hover:border-orange-400/50 transition-all duration-300 group"
                   >
                     <div className="bg-gradient-to-r from-orange-500 to-red-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
-                      <FiNavigation className="w-6 h-6 text-white" />
+                      <FiMap className="w-6 h-6 text-white" />
                     </div>
                     <h4 className="text-white font-bold mb-2 text-lg">Book Ride</h4>
                     <p className="text-gray-300 text-sm">Get transportation</p>

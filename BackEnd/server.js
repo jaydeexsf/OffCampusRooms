@@ -106,7 +106,15 @@ const authMiddleware = async (req, res, next) => {
 
 // Routes
 app.use("/api/rooms", roomRoutes);
-app.use('/api/faq', faqRoutes);
+// FAQ routes - only add/delete require auth (admin functions)
+app.use('/api/faq', (req, res, next) => {
+  // Skip auth for public routes (getting questions)
+  if (req.method === 'GET') {
+    return next();
+  }
+  // Apply auth middleware for admin routes (POST, DELETE)
+  return authMiddleware(req, res, next);
+}, faqRoutes);
 app.use('/api/google', distanceRoute);
 // Apply auth middleware to comment routes
 app.use('/api/comments', authMiddleware, commentRoutes);

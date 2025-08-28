@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiX, FiChevronLeft, FiChevronRight, FiArrowLeft, FiMapPin, FiClock, FiPhone, FiMail, FiMessageCircle, FiNavigation, FiStar, FiEye } from "react-icons/fi";
+import { FiX, FiChevronLeft, FiChevronRight, FiArrowLeft, FiMapPin, FiClock, FiPhone, FiMail, FiMessageCircle, FiMap, FiStar, FiEye } from "react-icons/fi";
 import { FiWifi } from "react-icons/fi";
 import { MdShower, MdBathtub, MdTableRestaurant, MdBed, MdElectricBolt } from "react-icons/md";
 import LocationGoogle from "../Location/LocationGoogle";
@@ -259,7 +259,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                           className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                           onClick={() => setShowLocation(true)}
                         >
-                          <FiNavigation className="text-lg" />
+                          <FiMap className="text-lg" />
                           <span>View Location & Get Directions</span>
                         </button>
 

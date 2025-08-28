@@ -2,7 +2,20 @@
 // Prefer .env override; fall back to production. Set VITE_API_BASE_URL to switch.
 const ENV_BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || '';
 
+// Ensure we always have a valid base URL
 export const API_BASE_URL = ENV_BASE || 'https://offcampusrooms.onrender.com';
+
+// Validate API_BASE_URL
+if (!API_BASE_URL) {
+  console.error('API_BASE_URL is not set! This will cause API calls to fail.');
+}
+
+// Debug logging to help troubleshoot API issues
+console.log('API Configuration:', {
+  ENV_BASE,
+  API_BASE_URL,
+  VITE_API_BASE_URL: typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL
+});
 
 export const API_ENDPOINTS = {
   // Rooms

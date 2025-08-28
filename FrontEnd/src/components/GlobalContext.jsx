@@ -113,11 +113,14 @@ export const GlobalProvider = ({ children }) => {
     const addFaq = async (newFaq) => {
         setIsPostingFaq(true);
         try {
+            console.log('Adding FAQ with endpoint:', API_ENDPOINTS.ADD_FAQ);
+            console.log('API_BASE_URL from config:', API_ENDPOINTS.ADD_FAQ);
             const response = await axios.post(API_ENDPOINTS.ADD_FAQ, newFaq);
             // Append the newly created FAQ to the end (under existing ones)
             setFaqs((prevFaqs) => [...prevFaqs, response.data]);
         } catch (error) {
             console.error('Error adding FAQ:', error);
+            console.error('Error details:', error.response?.status, error.response?.data);
         } finally {
             setIsPostingFaq(false);
         }
