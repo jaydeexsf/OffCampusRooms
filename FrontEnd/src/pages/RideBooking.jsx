@@ -230,102 +230,103 @@ const RideBooking = () => {
                 Select Locations
               </h3>
               
-                             {isLoaded ? (
-                 <div>
-                   <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
-                     <p className="text-green-400 text-sm">✅ Google Maps loaded successfully!</p>
-                     <p className="text-green-300 text-xs">API Key: {googleMapsApiKey ? 'Valid' : 'Invalid'}</p>
-                   </div>
-                   <GoogleMap
-                     mapContainerStyle={containerStyle}
-                     center={center}
-                     zoom={13}
-                     onLoad={onLoad}
-                     onUnmount={onUnmount}
-                     onClick={handleMapClick}
-                     options={{
-                       styles: [
-                         {
-                           featureType: 'all',
-                           elementType: 'geometry.fill',
-                           stylers: [{ color: '#1f2937' }]
-                         },
-                         {
-                           featureType: 'water',
-                           elementType: 'geometry',
-                           stylers: [{ color: '#374151' }]
-                         }
-                       ]
-                     }}
-                   >
-                  {pickupLocation && (
-                    <Marker
-                      position={pickupLocation}
-                      icon={{
-                        url: 'data:image/svg+xml;base64,' + btoa(`
-                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#10B981">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                          </svg>
-                        `)
-                      }}
-                    />
+{isLoaded ? (
+                <div>
+                  <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+                    <p className="text-green-400 text-sm">✅ Google Maps loaded successfully!</p>
+                    <p className="text-green-300 text-xs">API Key: {googleMapsApiKey ? 'Valid' : 'Invalid'}</p>
+                  </div>
+                  <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={center}
+                    zoom={13}
+                    onLoad={onLoad}
+                    onUnmount={onUnmount}
+                    onClick={handleMapClick}
+                    options={{
+                      styles: [
+                        {
+                          featureType: 'all',
+                          elementType: 'geometry.fill',
+                          stylers: [{ color: '#1f2937' }]
+                        },
+                        {
+                          featureType: 'water',
+                          elementType: 'geometry',
+                          stylers: [{ color: '#374151' }]
+                        }
+                      ]
+                    }}
+                  >
+                    {pickupLocation && (
+                      <Marker
+                        position={pickupLocation}
+                        icon={{
+                          url: 'data:image/svg+xml;base64,' + btoa(`
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#10B981">
+                              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                          `)
+                        }}
+                      />
+                    )}
+                    {dropoffLocation && (
+                      <Marker
+                        position={dropoffLocation}
+                        icon={{
+                          url: 'data:image/svg+xml;base64,' + btoa(`
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#EF4444">
+                              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                          `)
+                        }}
+                      />
+                    )}
+                    {directions && <DirectionsRenderer directions={directions} />}
+                  </GoogleMap>
+                </div>
+              ) : (
+                <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    {googleMapsApiKey ? 'Map Loading...' : 'Google Maps API Key Required'}
+                  </h3>
+                  <p className="text-gray-400 mb-4">
+                    {googleMapsApiKey ? 
+                      'Loading Google Maps...' : 
+                      'Google Maps API key not configured'
+                    }
+                  </p>
+                  
+                  {/* Debug Information */}
+                  <div className="text-sm text-gray-500 bg-gray-800/50 rounded-lg p-3 mb-4 text-left">
+                    <h4 className="text-gray-300 font-semibold mb-2">🔍 Debug Information:</h4>
+                    <div className="space-y-1 text-xs">
+                      <p><span className="text-gray-400">Environment Variable:</span> <span className={import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'text-green-400' : 'text-red-400'}>{import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'SET' : 'NOT SET'}</span></p>
+                      <p><span className="text-gray-400">Config File:</span> <span className={googleMapsApiKey && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY_HERE' ? 'text-green-400' : 'text-red-400'}>{googleMapsApiKey && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY_HERE' ? 'SET' : 'NOT SET'}</span></p>
+                      <p><span className="text-gray-400">Final API Key:</span> <span className={googleMapsApiKey ? 'text-green-400' : 'text-red-400'}>{googleMapsApiKey ? 'VALID' : 'INVALID'}</span></p>
+                      <p><span className="text-gray-400">Hostname:</span> <span className="text-blue-400">{window.location.hostname}</span></p>
+                    </div>
+                  </div>
+                  
+                  {!googleMapsApiKey && (
+                    <div className="text-sm text-gray-500 bg-gray-800/50 rounded-lg p-3">
+                      <p className="text-red-400 font-semibold mb-2">❌ To fix this issue:</p>
+                      <div className="space-y-2 text-xs">
+                        <p>1. Create a <code className="text-blue-400">.env</code> file in your FrontEnd directory</p>
+                        <p>2. Add: <code className="text-blue-400">VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key</code></p>
+                        <p>3. Or update <code className="text-blue-400">FrontEnd/src/config/env.js</code></p>
+                        <p>4. Restart your development server</p>
+                      </div>
+                      <p className="mt-2 text-xs">See SETUP_INSTRUCTIONS.md for detailed instructions.</p>
+                    </div>
                   )}
-                  {dropoffLocation && (
-                    <Marker
-                      position={dropoffLocation}
-                      icon={{
-                        url: 'data:image/svg+xml;base64,' + btoa(`
-                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#EF4444">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                          </svg>
-                        `)
-                      }}
-                    />
-                  )}
-                  {directions && <DirectionsRenderer directions={directions} />}
-                </GoogleMap>
-                             ) : (
-                 <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-8 text-center">
-                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                     <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7" />
-                     </svg>
-                   </div>
-                   <h3 className="text-xl font-semibold text-white mb-2">
-                     {googleMapsApiKey ? 'Map Loading...' : 'Google Maps API Key Required'}
-                   </h3>
-                   <p className="text-gray-400 mb-4">
-                     {googleMapsApiKey ? 
-                       'Loading Google Maps...' : 
-                       'Google Maps API key not configured'
-                     }
-                   </p>
-                   
-                   {/* Debug Information */}
-                   <div className="text-sm text-gray-500 bg-gray-800/50 rounded-lg p-3 mb-4 text-left">
-                     <h4 className="text-gray-300 font-semibold mb-2">🔍 Debug Information:</h4>
-                     <div className="space-y-1 text-xs">
-                       <p><span className="text-gray-400">Environment Variable:</span> <span className={import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'text-green-400' : 'text-red-400'}>{import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'SET' : 'NOT SET'}</span></p>
-                       <p><span className="text-gray-400">Config File:</span> <span className={googleMapsApiKey && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY_HERE' ? 'text-green-400' : 'text-red-400'}>{googleMapsApiKey && googleMapsApiKey !== 'YOUR_GOOGLE_MAPS_API_KEY_HERE' ? 'SET' : 'NOT SET'}</span></p>
-                       <p><span className="text-gray-400">Final API Key:</span> <span className={googleMapsApiKey ? 'text-green-400' : 'text-red-400'}>{googleMapsApiKey ? 'VALID' : 'INVALID'}</span></p>
-                       <p><span className="text-gray-400">Hostname:</span> <span className="text-blue-400">{window.location.hostname}</span></p>
-                     </div>
-                   </div>
-                   
-                   {!googleMapsApiKey && (
-                     <div className="text-sm text-gray-500 bg-gray-800/50 rounded-lg p-3">
-                       <p className="text-red-400 font-semibold mb-2">❌ To fix this issue:</p>
-                       <div className="space-y-2 text-xs">
-                         <p>1. Create a <code className="text-blue-400">.env</code> file in your FrontEnd directory</p>
-                         <p>2. Add: <code className="text-blue-400">VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key</code></p>
-                         <p>3. Or update <code className="text-blue-400">FrontEnd/src/config/env.js</code></p>
-                         <p>4. Restart your development server</p>
-                       </div>
-                       <p className="mt-2 text-xs">See SETUP_INSTRUCTIONS.md for detailed instructions.</p>
-                     </div>
-                   )}
-                 </div>
-               )}
+                </div>
+              )}
 
               <div className="mt-4 space-y-3">
                 <div className="flex items-center gap-2 text-sm">
