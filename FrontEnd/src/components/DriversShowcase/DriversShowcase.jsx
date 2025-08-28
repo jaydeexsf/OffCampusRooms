@@ -84,15 +84,19 @@ const DriversShowcase = () => {
 
   const fetchDrivers = async () => {
     try {
-      const response = await axios.get(API_ENDPOINTS.GET_AVAILABLE_DRIVERS);
+      const response = await axios.get(`${API_ENDPOINTS.API_BASE_URL}/api/drivers`);
       const realDrivers = response.data.drivers || [];
       
-      // Use real drivers if available, otherwise use dummy data
-      if (realDrivers.length > 0) {
-        setDrivers(realDrivers);
-      } else {
-        setDrivers(dummyDrivers);
+      // Always show real drivers first, then add dummy data if needed for demo
+      const allDrivers = [...realDrivers];
+      
+      // If we have fewer than 3 real drivers, add some dummy data for demo purposes
+      if (realDrivers.length < 3) {
+        const neededDummies = 3 - realDrivers.length;
+        allDrivers.push(...dummyDrivers.slice(0, neededDummies));
       }
+      
+      setDrivers(allDrivers);
     } catch (error) {
       console.error('Error fetching drivers:', error);
       // Fallback to dummy data on error
@@ -130,6 +134,17 @@ const DriversShowcase = () => {
     ));
   };
 
+  const renderSingleStar = (rating) => {
+    return (
+      <div className="flex items-center gap-1">
+        <FiStar className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
+        <span className="text-xs sm:text-sm md:text-base text-gray-300">
+          {rating || 4.5} ({selectedDriver?.totalRides || 0} rides)
+        </span>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <section className="py-16 bg-gray-950">
@@ -153,11 +168,11 @@ const DriversShowcase = () => {
     <>
       <section className="py-16 bg-gray-950">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 md:mb-4">
               Our Trusted Drivers
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm md:text-base text-gray-400 max-w-2xl mx-auto px-4">
               Meet our professional drivers who are ready to take you safely to your destination
             </p>
           </div>
@@ -177,13 +192,13 @@ const DriversShowcase = () => {
                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-4 right-4">
-                    <div className="bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 text-sm text-white">
+                    <div className="bg-black/70 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm md:text-base text-white">
                       R{driver.pricePerKm}/km
                     </div>
                   </div>
                   {driver.isDummy && (
                     <div className="absolute top-4 left-4">
-                      <div className="bg-blue-500/80 backdrop-blur-sm rounded-full px-3 py-1 text-xs text-white">
+                      <div className="bg-blue-500/80 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm text-white">
                         Demo
                       </div>
                     </div>
@@ -191,21 +206,21 @@ const DriversShowcase = () => {
                 </div>
 
                 {/* Driver Info */}
-                <div className="flex items-center gap-3 sm:gap-4 mb-4">
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4">
                   <img
                     src={driver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
                     alt={driver.fullName}
-                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-blue-500/30"
+                    className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-blue-500/30"
                   />
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg sm:text-xl font-semibold text-white mb-1 truncate">
+                    <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white mb-1 truncate">
                       {driver.fullName}
                     </h3>
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 sm:gap-2 mb-1">
+                      <div className="flex items-center gap-0.5 sm:gap-1">
                         {renderStars(driver.rating || 4.5)}
                       </div>
-                      <span className="text-xs sm:text-sm text-gray-400 truncate">
+                      <span className="text-xs sm:text-sm md:text-base text-gray-400 truncate">
                         ({driver.rating || 4.5}) • {driver.totalRides || 0} rides
                       </span>
                     </div>
@@ -213,31 +228,31 @@ const DriversShowcase = () => {
                 </div>
 
                 {/* Car Details */}
-                <div className="bg-white/5 rounded-xl p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <FiTruck className="text-blue-400" />
-                    <span className="text-white font-medium">
+                <div className="bg-white/5 rounded-xl p-3 sm:p-4">
+                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                    <FiTruck className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="text-xs sm:text-sm md:text-base text-white font-medium truncate">
                       {driver.carDetails.year} {driver.carDetails.make} {driver.carDetails.model}
                     </span>
                   </div>
-                  <div className="text-sm text-gray-400">
+                  <div className="text-xs sm:text-sm md:text-base text-gray-400 truncate">
                     {driver.carDetails.color} • {driver.carDetails.licensePlate}
                   </div>
                 </div>
 
                 {/* Availability Status */}
-                <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                  <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs sm:text-sm ${
+                <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <div className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm md:text-base ${
                     driver.isAvailable 
                       ? 'bg-green-500/20 text-green-400' 
                       : 'bg-red-500/20 text-red-400'
                   }`}>
-                    <div className={`w-2 h-2 rounded-full ${
+                    <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
                       driver.isAvailable ? 'bg-green-400' : 'bg-red-400'
                     }`}></div>
                     {driver.isAvailable ? 'Available' : 'Busy'}
                   </div>
-                  <span className="text-blue-400 text-xs sm:text-sm group-hover:text-blue-300">
+                  <span className="text-blue-400 text-xs sm:text-sm md:text-base group-hover:text-blue-300">
                     View Details →
                   </span>
                 </div>
@@ -257,111 +272,154 @@ const DriversShowcase = () => {
 
       {/* Driver Detail Modal */}
       {showModal && selectedDriver && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 border border-white/10 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+          <div className="bg-gray-900 border border-white/10 rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="relative">
               <img
                 src={selectedDriver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
                 alt={`${selectedDriver.carDetails.make} ${selectedDriver.carDetails.model}`}
-                className="w-full h-64 object-cover rounded-t-3xl"
+                className="w-full h-32 sm:h-48 md:h-64 object-cover rounded-t-2xl sm:rounded-t-3xl"
               />
               <button
                 onClick={closeModal}
-                className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm rounded-full p-2 text-white hover:bg-black/90 transition-colors"
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/70 backdrop-blur-sm rounded-full p-1.5 sm:p-2 text-white hover:bg-black/90 transition-colors"
               >
-                <FiX className="w-5 h-5" />
+                <FiX className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
-              <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-sm rounded-full px-4 py-2">
-                <span className="text-white font-medium">R{selectedDriver.pricePerKm}/km</span>
+              <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 bg-black/70 backdrop-blur-sm rounded-full px-2 sm:px-4 py-1 sm:py-2">
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">R{selectedDriver.pricePerKm}/km</span>
               </div>
             </div>
 
             {/* Modal Content */}
-            <div className="p-8">
-              {/* Driver Profile */}
-              <div className="flex items-center gap-6 mb-8">
-                <img
-                  src={selectedDriver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
-                  alt={selectedDriver.fullName}
-                  className="w-24 h-24 rounded-full object-cover border-4 border-blue-500/30"
-                />
-                <div className="flex-1">
-                  <h2 className="text-3xl font-bold text-white mb-2">
-                    {selectedDriver.fullName}
-                  </h2>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex items-center gap-1">
-                      {renderStars(selectedDriver.rating || 4.5)}
+            <div className="p-3 sm:p-4 md:p-6">
+              {/* Mobile Compact Layout */}
+              <div className="block sm:hidden">
+                <div className="flex items-center gap-3 mb-3">
+                  <img
+                    src={selectedDriver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
+                    alt={selectedDriver.fullName}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-blue-500/30"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-sm font-bold text-white mb-1 truncate">
+                      {selectedDriver.fullName}
+                    </h2>
+                    {renderSingleStar(selectedDriver.rating || 4.5)}
+                    <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs mt-1 ${
+                      selectedDriver.isAvailable 
+                        ? 'bg-green-500/20 text-green-400' 
+                        : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      <div className={`w-1 h-1 rounded-full ${
+                        selectedDriver.isAvailable ? 'bg-green-400' : 'bg-red-400'
+                      }`}></div>
+                      {selectedDriver.isAvailable ? 'Available' : 'Busy'}
                     </div>
-                    <span className="text-lg text-gray-300">
-                      {selectedDriver.rating || 4.5} ({selectedDriver.totalRides || 0} rides)
-                    </span>
                   </div>
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm ${
-                    selectedDriver.isAvailable 
-                      ? 'bg-green-500/20 text-green-400' 
-                      : 'bg-red-500/20 text-red-400'
-                  }`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      selectedDriver.isAvailable ? 'bg-green-400' : 'bg-red-400'
-                    }`}></div>
-                    {selectedDriver.isAvailable ? 'Available Now' : 'Currently Busy'}
+                </div>
+                
+                {/* Contact Information - Mobile Only */}
+                <div className="bg-white/5 rounded-lg p-3 mb-3">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <FiPhone className="text-blue-400 w-3 h-3" />
+                      <span className="text-xs text-gray-300">{selectedDriver.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FiMail className="text-blue-400 w-3 h-3" />
+                      <span className="text-xs text-gray-300">{selectedDriver.email}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Contact Information */}
-              <div className="bg-white/5 rounded-2xl p-6 mb-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Contact Information</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <FiPhone className="text-blue-400 w-5 h-5" />
-                    <span className="text-gray-300">{selectedDriver.phone}</span>
+              {/* Desktop Layout */}
+              <div className="hidden sm:block">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
+                  <img
+                    src={selectedDriver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
+                    alt={selectedDriver.fullName}
+                    className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full object-cover border-2 sm:border-4 border-blue-500/30"
+                  />
+                  <div className="flex-1 text-center sm:text-left">
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2">
+                      {selectedDriver.fullName}
+                    </h2>
+                    <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                      <div className="flex items-center gap-0.5 sm:gap-1">
+                        {renderStars(selectedDriver.rating || 4.5)}
+                      </div>
+                      <span className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-300">
+                        {selectedDriver.rating || 4.5} ({selectedDriver.totalRides || 0} rides)
+                      </span>
+                    </div>
+                    <div className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm md:text-base ${
+                      selectedDriver.isAvailable 
+                        ? 'bg-green-500/20 text-green-400' 
+                        : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
+                        selectedDriver.isAvailable ? 'bg-green-400' : 'bg-red-400'
+                      }`}></div>
+                      {selectedDriver.isAvailable ? 'Available Now' : 'Currently Busy'}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <FiMail className="text-blue-400 w-5 h-5" />
-                    <span className="text-gray-300">{selectedDriver.email}</span>
+                </div>
+
+                {/* Contact Information - Desktop Only */}
+                <div className="bg-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+                  <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4">Contact Information</h3>
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <FiPhone className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                      <span className="text-xs sm:text-sm md:text-base text-gray-300">{selectedDriver.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <FiMail className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                      <span className="text-xs sm:text-sm md:text-base text-gray-300">{selectedDriver.email}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Vehicle Information */}
-              <div className="bg-white/5 rounded-2xl p-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Vehicle Details</h3>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/5 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6">
+                <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4">Vehicle Details</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                   <div>
-                    <span className="text-gray-400 text-sm">Make & Model</span>
-                    <p className="text-white font-medium">
+                    <span className="text-gray-400 text-xs sm:text-sm">Make & Model</span>
+                    <p className="text-xs sm:text-sm md:text-base text-white font-medium">
                       {selectedDriver.carDetails.make} {selectedDriver.carDetails.model}
                     </p>
                   </div>
                   <div>
-                    <span className="text-gray-400 text-sm">Year</span>
-                    <p className="text-white font-medium">{selectedDriver.carDetails.year}</p>
+                    <span className="text-gray-400 text-xs sm:text-sm">Year</span>
+                    <p className="text-xs sm:text-sm md:text-base text-white font-medium">{selectedDriver.carDetails.year}</p>
                   </div>
                   <div>
-                    <span className="text-gray-400 text-sm">Color</span>
-                    <p className="text-white font-medium">{selectedDriver.carDetails.color}</p>
+                    <span className="text-gray-400 text-xs sm:text-sm">Color</span>
+                    <p className="text-xs sm:text-sm md:text-base text-white font-medium">{selectedDriver.carDetails.color}</p>
                   </div>
                   <div>
-                    <span className="text-gray-400 text-sm">License Plate</span>
-                    <p className="text-white font-medium">{selectedDriver.carDetails.licensePlate}</p>
+                    <span className="text-gray-400 text-xs sm:text-sm">License Plate</span>
+                    <p className="text-xs sm:text-sm md:text-base text-white font-medium">{selectedDriver.carDetails.licensePlate}</p>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-4 mt-8">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 sm:mt-6 md:mt-8">
                 <button 
                   onClick={handleBookRide}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-full font-medium transition-all duration-300"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-2 sm:py-3 rounded-full font-medium transition-all duration-300 text-xs sm:text-sm md:text-base"
                 >
-                  <FiMapPin className="inline w-5 h-5 mr-2" />
+                  <FiMapPin className="inline w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1 sm:mr-2" />
                   Book a Ride
                 </button>
-                <button className="flex-1 bg-white/10 hover:bg-white/20 text-white py-3 rounded-full font-medium transition-all duration-300">
-                  <FiPhone className="inline w-5 h-5 mr-2" />
+                <button className="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 sm:py-3 rounded-full font-medium transition-all duration-300 text-xs sm:text-sm md:text-base">
+                  <FiPhone className="inline w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-1 sm:mr-2" />
                   Contact Driver
                 </button>
               </div>

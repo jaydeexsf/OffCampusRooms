@@ -162,9 +162,11 @@ const Navbar = ({ handleBookRoomPopup }) => {
                 <div className="flex items-center gap-2">
                   <SignedOut>
                     {isLoaded ? (
-                      <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-medium text-sm md:text-base px-4 py-2 md:px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
-                        <SignInButton />
-                      </button>
+                      <SignInButton mode="modal">
+                        <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-medium text-sm md:text-base px-4 py-2 md:px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                          Sign In
+                        </button>
+                      </SignInButton>
                     ) : (
                       <div className="flex justify-center">
                         <div className="w-5 h-5 md:w-6 md:h-6 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>

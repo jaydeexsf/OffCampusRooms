@@ -131,7 +131,7 @@ const AddRoomForm = () => {
     const [distance, setDistance] = useState([])
     const [timeToCampus, setTimeToCampus] = useState()
     
-    const BURL = `https://offcampusrooms.onrender.com/api/google/distance`;
+    const BURL = `/api/google/distance`;
     
     // Calculate straight-line distance using Haversine formula
     const calculateDistance = (lat1, lon1, lat2, lon2) => {

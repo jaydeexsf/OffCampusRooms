@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { NavbarLinks } from "./Navbar";
-import { SignedIn, UserButton, useAuth, useUser } from "@clerk/clerk-react";
+import { SignedIn, UserButton, useAuth, useUser, SignedOut, SignInButton } from "@clerk/clerk-react";
 import { FiUser, FiGithub, FiHeart } from "react-icons/fi";
 
 const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
@@ -132,6 +132,17 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
 
           {/* Footer */}
           <div className="p-4 border-t border-white/20">
+            {!user && (
+              <div className="mb-4">
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-medium px-4 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                      Sign In
+                    </button>
+                  </SignInButton>
+                </SignedOut>
+              </div>
+            )}
             <div className="text-center">
               <p className="text-xs text-gray-400 flex items-center justify-center gap-1">
                 Made with <FiHeart className="text-red-400 text-xs" /> by{" "}

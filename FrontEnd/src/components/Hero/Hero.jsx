@@ -18,7 +18,7 @@ const Hero = ({ handleOrderPopup }) => {
   const searchRooms = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("https://offcampusrooms.onrender.com/api/rooms/search", {
+      const response = await axios.get("/api/rooms/search", {
         params: {
           location,
           maxPrice: priceValue,

@@ -19,8 +19,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ClerkProvider 
         publishableKey={PUBLISHABLE_KEY} 
         afterSignOutUrl="/"
-        signInUrl="/login"
-        signUpUrl="/login"
+        appearance={{
+          baseTheme: "dark"
+        }}
+        localization={{
+          signIn: {
+            start: {
+              title: "Sign in to OffCampusRooms",
+              subtitle: "Welcome back! Please sign in to continue"
+            }
+          }
+        }}
       >
        <GlobalProvider> 
           <App />
