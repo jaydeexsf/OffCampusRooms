@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiClock, FiMapPin, FiPhone, FiStar, FiUser, FiTruck } from 'react-icons/fi';
+import { FiMapPin, FiClock, FiDollarSign, FiUser, FiPhone, FiStar, FiTruck } from 'react-icons/fi';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
@@ -236,7 +236,7 @@ const MyRides = () => {
             </div>
           ) : (
             <div className="text-center py-20">
-              <FiCar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+              <FiTruck className="w-16 h-16 text-gray-600 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-400 mb-2">No rides found</h3>
               <p className="text-gray-500 mb-6">
                 {activeTab === 'all' 

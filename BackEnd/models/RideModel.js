@@ -133,7 +133,69 @@ const rideSchema = new mongoose.Schema({
   adminNotes: {
     type: String,
     default: ''
-  }
+  },
+  // Split fare functionality
+  splitFare: {
+    enabled: {
+      type: Boolean,
+      default: false
+    },
+    totalParticipants: {
+      type: Number,
+      default: 1,
+      min: 1,
+      max: 6
+    },
+    participants: [{
+      studentId: String,
+      studentName: String,
+      studentContact: String,
+      shareAmount: Number,
+      hasPaid: {
+        type: Boolean,
+        default: false
+      },
+      joinedAt: {
+        type: Date,
+        default: Date.now
+      }
+    }],
+    isOpen: {
+      type: Boolean,
+      default: true
+    }
+  },
+  // Ride sharing for similar destinations
+  isSharedRide: {
+    type: Boolean,
+    default: false
+  },
+  maxSharedPassengers: {
+    type: Number,
+    default: 1,
+    min: 1,
+    max: 4
+  },
+  sharedPassengers: [{
+    studentId: String,
+    studentName: String,
+    studentContact: String,
+    pickupLocation: {
+      address: String,
+      lat: Number,
+      lng: Number
+    },
+    dropoffLocation: {
+      address: String,
+      lat: Number,
+      lng: Number
+    },
+    shareAmount: Number,
+    joinedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 }, {
   timestamps: true
 });
@@ -144,5 +206,10 @@ rideSchema.index({ driverId: 1, status: 1 });
 rideSchema.index({ bookingType: 1, scheduledTime: 1 });
 rideSchema.index({ semester: 1, academicYear: 1 });
 rideSchema.index({ holidayType: 1, scheduledTime: 1 });
+// New indexes for ride sharing
+rideSchema.index({ 'pickupLocation.lat': 1, 'pickupLocation.lng': 1 });
+rideSchema.index({ 'dropoffLocation.lat': 1, 'dropoffLocation.lng': 1 });
+rideSchema.index({ isSharedRide: 1, scheduledTime: 1, status: 1 });
+rideSchema.index({ 'splitFare.enabled': 1, 'splitFare.isOpen': 1 });
 
 module.exports = mongoose.model('Ride', rideSchema);

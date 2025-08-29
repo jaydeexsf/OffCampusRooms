@@ -145,7 +145,7 @@ const StudentTestimonials = () => {
               <Slider ref={sliderRef} {...settings}>
                 {testimonials.map((testimonial) => (
                   <div key={testimonial.id} className="px-4">
-                    <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 h-full">
+                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6 h-full">
                       {/* Quote Icon */}
                       <div className="flex justify-between items-start mb-4">
                         <FiMessageSquare className="text-blue-400 w-6 h-6" />

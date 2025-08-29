@@ -16,7 +16,8 @@ import BookingInfo from "./pages/BookingInfo";
 import AdminPanel from "./pages/admin/AdminPanel";
 import Contact from "./pages/Contact";
 // import ProtectedRoute from "./components/Authentication/ProtectedRoute"; 
-import LoginPage from "./pages/LoginPage";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import Comments from "./pages/Comments";
 import StudentDashboard from "./pages/StudentDashboard";
@@ -24,6 +25,7 @@ import StudentResources from "./pages/StudentResources";
 import FeedbackForm from "./components/Feedback/FeedbackForm";
 import RideBooking from "./pages/RideBooking";
 import MyRides from "./pages/MyRides";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const App = () => {
   const { globalLoader } = useContext(GlobalContext);
@@ -51,7 +53,8 @@ const App = () => {
             <Route path="frequetly-asked-questions" element={<FaqPage />} />
             <Route path="bookinginfo" element={<BookingInfo />} />
             <Route path="contact" element={<Contact />} />
-            <Route path="login" element={<LoginPage />} />
+            <Route path="login" element={<Login />} />
+            <Route path="sign-up" element={<SignUp />} />
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="resources" element={<StudentResources />} />
             <Route path="feedback" element={<FeedbackForm />} />
@@ -61,6 +64,11 @@ const App = () => {
             <Route path="admin" element={
               <ProtectedRoute adminOnly={true}>
                 <AdminPanel />
+              </ProtectedRoute>
+            } />
+            <Route path="admin-dashboard" element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminDashboard />
               </ProtectedRoute>
             } />
             <Route path="add-room" element={

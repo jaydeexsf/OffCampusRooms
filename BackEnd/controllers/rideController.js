@@ -2,10 +2,10 @@ const Ride = require('../models/RideModel');
 const Driver = require('../models/DriverModel');
 const axios = require('axios');
 
-// Calculate ride price and distance
+// Calculate ride price and distance (simplified - no driver selection)
 const calculateRideDetails = async (req, res) => {
   try {
-    const { pickupLat, pickupLng, dropoffLat, dropoffLng } = req.body;
+    const { pickupLat, pickupLng, dropoffLat, dropoffLng, scheduledDate } = req.body;
 
     const apiKey = process.env.GOOGLE_API_KEY;
     
@@ -37,16 +37,35 @@ const calculateRideDetails = async (req, res) => {
       const distanceKm = element.distance.value / 1000; // Convert to km
       const duration = element.duration.text;
 
-      // Get available drivers and calculate prices
+      // Calculate standard price (average of all drivers)
       const drivers = await Driver.find({ isAvailable: true, status: 'active' });
-      const driverPrices = drivers.map(driver => ({
-        driverId: driver._id,
-        driverName: driver.fullName,
-        pricePerKm: driver.pricePerKm,
-        estimatedPrice: Math.round(distanceKm * driver.pricePerKm),
-        rating: driver.rating,
-        totalRides: driver.totalRides
-      }));
+      const averagePricePerKm = drivers.length > 0 
+        ? drivers.reduce((sum, driver) => sum + driver.pricePerKm, 0) / drivers.length 
+        : 15; // Default R15/km
+      
+      const estimatedPrice = Math.round(distanceKm * averagePricePerKm);
+
+      // Check for existing rides to similar destinations on the same date
+      const radiusKm = 2; // 2km radius for similar destinations
+      const radiusDegrees = radiusKm / 111.32;
+      
+      const dateStart = new Date(scheduledDate);
+      dateStart.setHours(0, 0, 0, 0);
+      const dateEnd = new Date(scheduledDate);
+      dateEnd.setHours(23, 59, 59, 999);
+
+      const similarRides = await Ride.find({
+        status: { $in: ['pending', 'accepted'] },
+        scheduledTime: { $gte: dateStart, $lte: dateEnd },
+        'dropoffLocation.lat': {
+          $gte: dropoffLat - radiusDegrees,
+          $lte: dropoffLat + radiusDegrees
+        },
+        'dropoffLocation.lng': {
+          $gte: dropoffLng - radiusDegrees,
+          $lte: dropoffLng + radiusDegrees
+        }
+      }).populate('driverId', 'fullName');
 
       res.status(200).json({
         success: true,
@@ -55,7 +74,16 @@ const calculateRideDetails = async (req, res) => {
           text: element.distance.text
         },
         duration,
-        availableDrivers: driverPrices.sort((a, b) => a.estimatedPrice - b.estimatedPrice)
+        estimatedPrice,
+        availableDrivers: drivers.length,
+        similarRides: similarRides.map(ride => ({
+          id: ride._id,
+          studentName: ride.studentName,
+          dropoffAddress: ride.dropoffLocation.address,
+          scheduledTime: ride.scheduledTime,
+          estimatedPrice: ride.estimatedPrice,
+          assignedDriver: ride.driverId?.fullName || 'Not assigned'
+        }))
       });
     } else {
       res.status(400).json({
@@ -72,21 +100,20 @@ const calculateRideDetails = async (req, res) => {
   }
 };
 
-// Book a ride with advanced booking features
-const bookRide = async (req, res) => {
+// Request a ride (no driver selection - admin assigns later)
+const requestRide = async (req, res) => {
   try {
     const {
       studentId,
       studentName,
       studentContact,
-      driverId,
       pickupLocation,
       dropoffLocation,
       distance,
       estimatedPrice,
       scheduledTime,
       notes,
-      // New advanced booking fields
+      // Advanced booking fields
       bookingType = 'regular',
       groupSize = 1,
       luggageCount = 0,
@@ -94,29 +121,25 @@ const bookRide = async (req, res) => {
       semester,
       academicYear,
       holidayType,
-      specialRequirements = ''
+      specialRequirements = '',
+      // Split fare and ride sharing
+      splitFare,
+      isSharedRide = false,
+      maxSharedPassengers = 1
     } = req.body;
-
-    // Verify driver is available
-    const driver = await Driver.findById(driverId);
-    if (!driver || !driver.isAvailable || driver.status !== 'active') {
-      return res.status(400).json({
-        success: false,
-        message: 'Selected driver is not available'
-      });
-    }
 
     const ride = new Ride({
       studentId,
       studentName,
       studentContact,
-      driverId,
+      driverId: null, // No driver assigned yet
       pickupLocation,
       dropoffLocation,
       distance,
       estimatedPrice,
       scheduledTime: scheduledTime || Date.now(),
       notes: notes || '',
+      status: 'pending', // Waiting for admin to assign driver
       // Advanced booking fields
       bookingType,
       groupSize,
@@ -125,21 +148,75 @@ const bookRide = async (req, res) => {
       semester,
       academicYear,
       holidayType,
-      specialRequirements
+      specialRequirements,
+      // Split fare and ride sharing
+      splitFare: splitFare || {
+        enabled: false,
+        totalParticipants: 1,
+        participants: [],
+        isOpen: false
+      },
+      isSharedRide,
+      maxSharedPassengers: isSharedRide ? maxSharedPassengers : 1
     });
 
     await ride.save();
-    await ride.populate('driverId');
 
     res.status(201).json({
       success: true,
-      message: 'Ride booked successfully',
+      message: 'Ride request submitted successfully! Admin will assign a driver soon.',
       ride
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error booking ride',
+      message: 'Error submitting ride request',
+      error: error.message
+    });
+  }
+};
+
+// Admin assigns driver to ride request
+const assignDriverToRide = async (req, res) => {
+  try {
+    const { rideId } = req.params;
+    const { driverId } = req.body;
+
+    // Verify driver exists and is available
+    const driver = await Driver.findById(driverId);
+    if (!driver || !driver.isAvailable || driver.status !== 'active') {
+      return res.status(400).json({
+        success: false,
+        message: 'Selected driver is not available'
+      });
+    }
+
+    const ride = await Ride.findByIdAndUpdate(
+      rideId,
+      { 
+        driverId,
+        status: 'accepted',
+        acceptedAt: new Date()
+      },
+      { new: true }
+    ).populate('driverId');
+
+    if (!ride) {
+      return res.status(404).json({
+        success: false,
+        message: 'Ride request not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Driver assigned successfully',
+      ride
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error assigning driver',
       error: error.message
     });
   }
@@ -359,14 +436,187 @@ const rateRide = async (req, res) => {
   }
 };
 
+// Find shared rides with similar destinations
+const findSharedRides = async (req, res) => {
+  try {
+    const { pickupLat, pickupLng, dropoffLat, dropoffLng, scheduledTime } = req.body;
+    const radiusKm = 2; // 2km radius for similar destinations
+    
+    // Convert radius to degrees (approximate)
+    const radiusDegrees = radiusKm / 111.32;
+    
+    const timeWindow = new Date(scheduledTime);
+    const timeStart = new Date(timeWindow.getTime() - 30 * 60000); // 30 minutes before
+    const timeEnd = new Date(timeWindow.getTime() + 30 * 60000); // 30 minutes after
+    
+    const sharedRides = await Ride.find({
+      isSharedRide: true,
+      status: 'pending',
+      scheduledTime: { $gte: timeStart, $lte: timeEnd },
+      'sharedPassengers.length': { $lt: '$maxSharedPassengers' },
+      $and: [
+        {
+          'pickupLocation.lat': {
+            $gte: pickupLat - radiusDegrees,
+            $lte: pickupLat + radiusDegrees
+          }
+        },
+        {
+          'pickupLocation.lng': {
+            $gte: pickupLng - radiusDegrees,
+            $lte: pickupLng + radiusDegrees
+          }
+        },
+        {
+          'dropoffLocation.lat': {
+            $gte: dropoffLat - radiusDegrees,
+            $lte: dropoffLat + radiusDegrees
+          }
+        },
+        {
+          'dropoffLocation.lng': {
+            $gte: dropoffLng - radiusDegrees,
+            $lte: dropoffLng + radiusDegrees
+          }
+        }
+      ]
+    }).populate('driverId');
+
+    res.status(200).json({
+      success: true,
+      sharedRides
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error finding shared rides',
+      error: error.message
+    });
+  }
+};
+
+// Join a shared ride
+const joinSharedRide = async (req, res) => {
+  try {
+    const { rideId } = req.params;
+    const { studentId, studentName, studentContact, pickupLocation, dropoffLocation } = req.body;
+    
+    const ride = await Ride.findById(rideId);
+    if (!ride || !ride.isSharedRide) {
+      return res.status(404).json({
+        success: false,
+        message: 'Shared ride not found'
+      });
+    }
+    
+    if (ride.sharedPassengers.length >= ride.maxSharedPassengers) {
+      return res.status(400).json({
+        success: false,
+        message: 'Ride is full'
+      });
+    }
+    
+    // Calculate share amount (split evenly)
+    const shareAmount = Math.round(ride.estimatedPrice / (ride.sharedPassengers.length + 2));
+    
+    ride.sharedPassengers.push({
+      studentId,
+      studentName,
+      studentContact,
+      pickupLocation,
+      dropoffLocation,
+      shareAmount
+    });
+    
+    await ride.save();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Successfully joined shared ride',
+      ride
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error joining shared ride',
+      error: error.message
+    });
+  }
+};
+
+// Join split fare
+const joinSplitFare = async (req, res) => {
+  try {
+    const { rideId } = req.params;
+    const { studentId, studentName, studentContact } = req.body;
+    
+    const ride = await Ride.findById(rideId);
+    if (!ride || !ride.splitFare.enabled || !ride.splitFare.isOpen) {
+      return res.status(404).json({
+        success: false,
+        message: 'Split fare not available for this ride'
+      });
+    }
+    
+    if (ride.splitFare.participants.length >= ride.splitFare.totalParticipants) {
+      return res.status(400).json({
+        success: false,
+        message: 'Split fare is full'
+      });
+    }
+    
+    // Check if student already joined
+    const alreadyJoined = ride.splitFare.participants.some(p => p.studentId === studentId);
+    if (alreadyJoined) {
+      return res.status(400).json({
+        success: false,
+        message: 'You have already joined this split fare'
+      });
+    }
+    
+    // Calculate share amount
+    const shareAmount = Math.round(ride.estimatedPrice / ride.splitFare.totalParticipants);
+    
+    ride.splitFare.participants.push({
+      studentId,
+      studentName,
+      studentContact,
+      shareAmount
+    });
+    
+    // Close split fare if full
+    if (ride.splitFare.participants.length >= ride.splitFare.totalParticipants) {
+      ride.splitFare.isOpen = false;
+    }
+    
+    await ride.save();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Successfully joined split fare',
+      ride
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error joining split fare',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   calculateRideDetails,
-  bookRide,
+  requestRide,
+  assignDriverToRide,
   getStudentRides,
   getDriverRides,
   getAllRides,
   getAdvancedBookings,
   updateRideStatus,
   confirmAdvancedBooking,
-  rateRide
+  rateRide,
+  findSharedRides,
+  joinSharedRide,
+  joinSplitFare
 };
