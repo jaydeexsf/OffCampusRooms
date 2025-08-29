@@ -84,7 +84,7 @@ const DriversShowcase = () => {
 
   const fetchDrivers = async () => {
     try {
-      const response = await axios.get(`${API_ENDPOINTS.API_BASE_URL}/api/drivers`);
+      const response = await axios.get(API_ENDPOINTS.GET_AVAILABLE_DRIVERS);
       const realDrivers = response.data.drivers || [];
       
       // Always show real drivers first, then add dummy data if needed for demo
