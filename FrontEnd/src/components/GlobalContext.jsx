@@ -60,9 +60,11 @@ export const GlobalProvider = ({ children }) => {
             setIsFaqLoading(true);
             try {
                 const response = await apiClient.get(API_ENDPOINTS.GET_FAQS);
-                setFaqs(response.data);
+                console.log('✅ FAQs fetched in GlobalContext:', response.data);
+                setFaqs(response.data.faqs || []);
             } catch (error) {
-                console.error('Error fetching FAQs:', error);
+                console.error('❌ Error fetching FAQs in GlobalContext:', error);
+                setFaqs([]);
             } finally {
                 setIsFaqLoading(false);
             }
@@ -187,6 +189,11 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
+    // Fetch FAQs on component mount
+    useEffect(() => {
+        fetchFAQs();
+    }, []);
+
     return (
         <GlobalContext.Provider
             value={{
@@ -203,6 +210,7 @@ export const GlobalProvider = ({ children }) => {
                 deleteRoom,
                 addFaq,
                 deleteFaq,
+                fetchFAQs,
                 globalLoader,
                 fetchAllRooms,
                 isLoggedIn: isSignedIn,

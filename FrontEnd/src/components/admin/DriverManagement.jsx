@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit3, FiTrash2, FiToggleLeft, FiToggleRight, FiUser, FiPhone, FiMail, FiStar, FiTruck, FiCheck, FiAlertCircle } from 'react-icons/fi';
+import { FiPlus, FiEdit3, FiTrash2, FiToggleLeft, FiToggleRight, FiUser, FiPhone, FiMail, FiStar, FiTruck, FiCheck, FiAlertCircle, FiLoader } from 'react-icons/fi';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
+import { useToast } from '../../hooks/useToast';
+import ToastContainer from '../ToastContainer';
 
 const DriverManagement = () => {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingDriver, setEditingDriver] = useState(null);
+  const { toasts, success, error: showError, removeToast } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
     contactNumber: '',
@@ -63,13 +66,72 @@ const DriverManagement = () => {
     }
   };
 
-  const handleInputChange = (e) => {
+  const cloudinaryUpload = async (file) => {
+    console.log('📸 Uploading driver image to Cloudinary:', file.name);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'roomImages');
+    formData.append('cloud_name', 'daqzt4zy1');
+
+    try {
+      const response = await apiClient.post(
+        `https://api.cloudinary.com/v1_1/daqzt4zy1/image/upload`,
+        formData
+      );
+      console.log('✅ Driver image uploaded successfully:', response.data.secure_url);
+      return response.data.secure_url;
+    } catch (error) {
+      console.error('❌ Error uploading driver image to Cloudinary:', error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  const deleteFromCloudinary = async (imageUrl) => {
+    try {
+      // Extract public_id from Cloudinary URL
+      const urlParts = imageUrl.split('/');
+      const publicIdWithExtension = urlParts[urlParts.length - 1];
+      const publicId = publicIdWithExtension.split('.')[0];
+      
+      console.log('🗑️ Deleting image from Cloudinary:', publicId);
+      
+      const response = await fetch(`https://api.cloudinary.com/v1_1/daqzt4zy1/image/destroy`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          public_id: publicId,
+          upload_preset: 'roomImages'
+        })
+      });
+      
+      const result = await response.json();
+      console.log('✅ Image deleted from Cloudinary:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Error deleting image from Cloudinary:', error);
+    }
+  };
+
+  const handleInputChange = async (e) => {
     const { name, value, files } = e.target;
-    if (files) {
-      setFormData(prev => ({
-        ...prev,
-        [name]: files[0]
-      }));
+    if (files && files[0]) {
+      try {
+        console.log('📤 Processing driver image upload for:', name);
+        const uploadedUrl = await cloudinaryUpload(files[0]);
+        setFormData(prev => ({
+          ...prev,
+          [name]: uploadedUrl
+        }));
+        console.log('✅ Driver image URL saved:', uploadedUrl);
+      } catch (error) {
+        console.error('❌ Failed to upload driver image:', error);
+        setMessage({ 
+          type: 'error', 
+          text: 'Failed to upload image. Please try again.' 
+        });
+      }
     } else {
       setFormData(prev => ({
         ...prev,
@@ -78,80 +140,96 @@ const DriverManagement = () => {
     }
   };
 
+  const [submitting, setSubmitting] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     setMessage({ type: '', text: '' });
 
-    try {
-      const formDataToSend = new FormData();
-      
-      Object.keys(formData).forEach(key => {
-        if (formData[key] !== null && formData[key] !== '') {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
+    console.log('🚗 Submitting driver form:', {
+      isEditing: !!editingDriver,
+      driverId: editingDriver?._id,
+      formData: {
+        fullName: formData.fullName,
+        email: formData.email,
+        hasProfileImage: !!formData.profileImage,
+        hasCarImage: !!formData.carImage
+      }
+    });
 
-      const url = editingDriver 
+    try {
+      const endpoint = editingDriver 
         ? `${API_ENDPOINTS.UPDATE_DRIVER}/${editingDriver._id}`
         : API_ENDPOINTS.ADD_DRIVER;
       
       const method = editingDriver ? 'put' : 'post';
       
-      const response = await apiClient[method](url, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      if (response.data.success) {
-        setMessage({ 
-          type: 'success', 
-          text: editingDriver ? 'Driver updated successfully!' : 'Driver added successfully!' 
-        });
-        fetchDrivers();
-        resetForm();
-        setShowAddModal(false);
-        setEditingDriver(null);
-      }
+      const response = await apiClient[method](endpoint, formData);
+      console.log('✅ Driver operation successful:', response.data);
+      
+      success(response.data?.message || `Driver ${editingDriver ? 'updated' : 'created'} successfully!`);
+      
+      await fetchDrivers();
+      resetForm();
+      setShowAddModal(false);
     } catch (error) {
-      console.error('Error saving driver:', error);
+      console.error('❌ Error saving driver:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to save driver. Please try again.';
       setMessage({ 
         type: 'error', 
-        text: error.response?.data?.message || 'Failed to save driver. Please try again.' 
+        text: errorMessage
       });
+      showError(errorMessage);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  const handleDelete = async (driverId) => {
+  const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this driver?')) return;
-
+    
     try {
-      await apiClient.delete(`${API_ENDPOINTS.DELETE_DRIVER}/${driverId}`);
-      setMessage({ type: 'success', text: 'Driver deleted successfully!' });
-      fetchDrivers();
+      // Find the driver to get image URLs before deletion
+      const driverToDelete = drivers.find(d => d._id === id);
+      
+      const response = await apiClient.delete(`${API_ENDPOINTS.DELETE_DRIVER}/${id}`);
+      
+      // Delete images from Cloudinary after successful database deletion
+      if (driverToDelete?.profileImage) {
+        await deleteFromCloudinary(driverToDelete.profileImage);
+      }
+      if (driverToDelete?.carImage) {
+        await deleteFromCloudinary(driverToDelete.carImage);
+      }
+      
+      success(response.data?.message || 'Driver deleted successfully!');
+      
+      await fetchDrivers();
     } catch (error) {
-      console.error('Error deleting driver:', error);
+      console.error('❌ Error deleting driver:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to delete driver. Please try again.';
       setMessage({ 
         type: 'error', 
-        text: error.response?.data?.message || 'Failed to delete driver. Please try again.' 
+        text: errorMessage
       });
+      showError(errorMessage);
     }
   };
 
   const toggleAvailability = async (driverId) => {
     try {
       await apiClient.patch(`${API_ENDPOINTS.TOGGLE_DRIVER_AVAILABILITY}/${driverId}`, {});
-      setMessage({ type: 'success', text: 'Driver availability updated successfully!' });
+      success('Driver availability updated successfully!');
       fetchDrivers();
     } catch (error) {
       console.error('Error toggling availability:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to update driver availability. Please try again.';
       setMessage({ 
         type: 'error', 
-        text: error.response?.data?.message || 'Failed to update driver availability. Please try again.' 
+        text: errorMessage
       });
+      showError(errorMessage);
     }
   };
 
@@ -166,8 +244,8 @@ const DriverManagement = () => {
       carColor: '',
       licensePlate: '',
       pricePerKm: '15',
-      profileImage: null,
-      carImage: null
+      profileImage: '',
+      carImage: ''
     });
     setMessage({ type: '', text: '' });
   };
@@ -184,8 +262,8 @@ const DriverManagement = () => {
       carColor: driver.carDetails.color,
       licensePlate: driver.carDetails.licensePlate,
       pricePerKm: driver.pricePerKm.toString(),
-      profileImage: null,
-      carImage: null
+      profileImage: driver.profileImage || '',
+      carImage: driver.carImage || ''
     });
     setShowAddModal(true);
   };
@@ -231,7 +309,7 @@ const DriverManagement = () => {
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-gray-700 flex items-center justify-center flex-shrink-0">
                 {driver.profileImage ? (
                   <img 
-                    src={`${API_ENDPOINTS.API_BASE_URL}${driver.profileImage}`} 
+                    src={driver.profileImage} 
                     alt={driver.fullName}
                     className="w-full h-full object-cover"
                   />
@@ -280,7 +358,7 @@ const DriverManagement = () => {
             {driver.carImage && (
               <div className="w-full h-24 sm:h-32 rounded-xl overflow-hidden mb-4">
                 <img 
-                  src={`${API_ENDPOINTS.API_BASE_URL}${driver.carImage}`} 
+                  src={driver.carImage} 
                   alt="Car"
                   className="w-full h-full object-cover"
                 />
@@ -455,6 +533,27 @@ const DriverManagement = () => {
 
                 <div>
                   <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Profile Image</label>
+                  {formData.profileImage && (
+                    <div className="mb-3">
+                      <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-700">
+                        <img 
+                          src={formData.profileImage} 
+                          alt="Profile preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            await deleteFromCloudinary(formData.profileImage);
+                            setFormData(prev => ({ ...prev, profileImage: '' }));
+                          }}
+                          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   <input
                     type="file"
                     name="profileImage"
@@ -466,6 +565,27 @@ const DriverManagement = () => {
 
                 <div>
                   <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Car Image</label>
+                  {formData.carImage && (
+                    <div className="mb-3">
+                      <div className="relative w-full h-24 rounded-xl overflow-hidden bg-gray-700">
+                        <img 
+                          src={formData.carImage} 
+                          alt="Car preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            await deleteFromCloudinary(formData.carImage);
+                            setFormData(prev => ({ ...prev, carImage: '' }));
+                          }}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   <input
                     type="file"
                     name="carImage"
@@ -479,10 +599,17 @@ const DriverManagement = () => {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed text-sm sm:text-base"
+                  disabled={submitting}
+                  className="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed text-sm sm:text-base flex items-center justify-center gap-2"
                 >
-                  {loading ? 'Saving...' : (editingDriver ? 'Update Driver' : 'Add Driver')}
+                  {submitting ? (
+                    <>
+                      <FiLoader className="w-4 h-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    editingDriver ? 'Update Driver' : 'Add Driver'
+                  )}
                 </button>
                 <button
                   type="button"
@@ -500,6 +627,9 @@ const DriverManagement = () => {
           </div>
         </div>
       )}
+      
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

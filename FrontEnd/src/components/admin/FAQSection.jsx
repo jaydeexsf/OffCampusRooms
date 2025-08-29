@@ -28,10 +28,24 @@ const FAQSection = () => {
   const fetchFAQs = async () => {
     try {
       const response = await apiClient.get(API_ENDPOINTS.GET_FAQS);
-      setFaqs(response.data.faqs || []);
-      console.log('✅ FAQs fetched successfully:', response.data.faqs?.length || 0);
+      console.log('📋 Admin FAQ response:', response.data);
+      
+      // Check if response has faqs array
+      if (response.data && response.data.faqs && Array.isArray(response.data.faqs)) {
+        setFaqs(response.data.faqs);
+        console.log('✅ Admin FAQs fetched successfully:', response.data.faqs.length);
+      } else if (response.data && Array.isArray(response.data)) {
+        // Handle case where response.data is directly an array
+        setFaqs(response.data);
+        console.log('✅ Admin FAQs fetched successfully (direct array):', response.data.length);
+      } else {
+        console.warn('⚠️ Unexpected FAQ response format:', response.data);
+        setFaqs([]);
+      }
     } catch (error) {
-      console.error('Error fetching FAQs:', error);
+      console.error('❌ Error fetching FAQs in admin:', error);
+      console.error('❌ Error details:', error.response?.data);
+      
       // Use dummy data as fallback
       const dummyFAQs = [
         { _id: '1', question: 'How do I book a room?', answer: 'You can book a room through our website by selecting your preferred location and dates.' },
@@ -55,18 +69,32 @@ const FAQSection = () => {
     setSubmitting(true);
     setMessage({ type: '', text: '' });
     
+    console.log('📝 Submitting FAQ:', { 
+      question: formData.question, 
+      answer: formData.answer, 
+      isEditing: !!editingFaq 
+    });
+    
     try {
+      let response;
       if (editingFaq) {
-        await apiClient.put(`${API_ENDPOINTS.ADD_FAQ}/${editingFaq._id}`, formData);
-        setMessage({ type: 'success', text: 'FAQ updated successfully!' });
+        response = await apiClient.put(`${API_ENDPOINTS.ADD_FAQ}/${editingFaq._id}`, formData);
+        console.log('✅ FAQ updated response:', response.data);
+        setMessage({ type: 'success', text: response.data?.message || 'FAQ updated successfully!' });
       } else {
-        await apiClient.post(API_ENDPOINTS.ADD_FAQ, formData);
-        setMessage({ type: 'success', text: 'FAQ created successfully!' });
+        response = await apiClient.post(API_ENDPOINTS.ADD_FAQ, formData);
+        console.log('✅ FAQ created response:', response.data);
+        setMessage({ type: 'success', text: response.data?.message || 'FAQ created successfully!' });
       }
       await fetchFAQs();
       resetForm();
     } catch (error) {
-      console.error('Error saving FAQ:', error);
+      console.error('❌ Error saving FAQ:', error);
+      console.error('❌ Error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
       setMessage({ 
         type: 'error', 
         text: error.response?.data?.message || 'Failed to save FAQ. Please try again.' 

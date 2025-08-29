@@ -5,13 +5,26 @@ import { GlobalContext } from "../components/GlobalContext";
 
 const FaqPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
-  const { faqs, isFaqLoading, fetchAllRooms } = useContext(GlobalContext) || {};
+  const { faqs, isFaqLoading, fetchFAQs } = useContext(GlobalContext) || {};
   const [combinedFaqs, setCombinedFaqs] = useState(FAQData);
 
   useEffect(() => {
+    // Fetch FAQs when component mounts
+    if (fetchFAQs) {
+      fetchFAQs();
+    }
+  }, [fetchFAQs]);
+
+  useEffect(() => {
     // Combine static FAQs with server FAQs appended under them
-    if (faqs && Array.isArray(faqs)) {
+    console.log('📋 FAQ page received FAQs:', faqs?.length || 0);
+    console.log('📋 FAQ page FAQs data:', faqs);
+    if (faqs && Array.isArray(faqs) && faqs.length > 0) {
+      console.log('✅ Combining static and server FAQs');
       setCombinedFaqs([...FAQData, ...faqs]);
+    } else {
+      console.log('⚠️ No server FAQs found, using only static FAQs');
+      setCombinedFaqs(FAQData);
     }
   }, [faqs]);
 

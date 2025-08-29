@@ -29,6 +29,15 @@ const getAllBestRooms = async (req, res) => {
 
 
 const addRoom = async (req, res) => {
+  console.log('🏠 Creating new room...');
+  console.log('📝 Room data received:', {
+    title: req.body.title,
+    price: req.body.price,
+    location: req.body.location,
+    imagesCount: req.body.images?.length || 0,
+    coordinates: req.body.coordinates
+  });
+
   try {
     // Destructure the room data from req.body
     const {
@@ -42,6 +51,7 @@ const addRoom = async (req, res) => {
       availableRooms,
       images,   
       coordinates,
+      bestRoom
     } = req.body;
 
     // Create a new Room instance
@@ -56,14 +66,24 @@ const addRoom = async (req, res) => {
       images: images, 
       availableRooms,
       coordinates,
+      bestRoom: bestRoom || false
     });
 
-    await newRoom.save();
+    const savedRoom = await newRoom.save();
+    console.log('✅ Room created successfully:', savedRoom._id);
     
-    res.status(201).json(newRoom);
+    res.status(201).json({
+      message: 'Room added successfully!',
+      room: savedRoom,
+      success: true
+    });
   } catch (error) {
-    console.error('Error adding room:', error); // Log the error for debugging
-    res.status(500).json({ error: 'Failed to add room' });
+    console.error('❌ Error adding room:', error);
+    res.status(500).json({ 
+      message: 'Failed to add room', 
+      error: error.message,
+      success: false 
+    });
   }
 };
 

@@ -1,28 +1,4 @@
 const Driver = require('../models/DriverModel');
-const multer = require('multer');
-const path = require('path');
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ 
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed!'), false);
-    }
-  },
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
 
 // Get all drivers
 const getAllDrivers = async (req, res) => {
@@ -91,6 +67,14 @@ const getDriversCount = async (req, res) => {
 
 // Add new driver (Admin only)
 const addDriver = async (req, res) => {
+  console.log('🚗 Creating new driver...');
+  console.log('📝 Driver data received:', {
+    fullName: req.body.fullName,
+    email: req.body.email,
+    hasProfileImage: !!req.body.profileImage,
+    hasCarImage: !!req.body.carImage
+  });
+
   try {
     const {
       fullName,
@@ -101,7 +85,9 @@ const addDriver = async (req, res) => {
       carYear,
       carColor,
       licensePlate,
-      pricePerKm
+      pricePerKm,
+      profileImage,
+      carImage
     } = req.body;
 
     // Check if driver already exists
@@ -110,6 +96,7 @@ const addDriver = async (req, res) => {
     });
     
     if (existingDriver) {
+      console.log('❌ Driver already exists:', { email, licensePlate });
       return res.status(400).json({
         success: false,
         message: 'Driver with this email or license plate already exists'
@@ -130,25 +117,27 @@ const addDriver = async (req, res) => {
       pricePerKm: parseFloat(pricePerKm) || 15
     };
 
-    // Handle file uploads
-    if (req.files) {
-      if (req.files.profileImage) {
-        driverData.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
-      }
-      if (req.files.carImage) {
-        driverData.carImage = `/uploads/${req.files.carImage[0].filename}`;
-      }
+    // Handle Cloudinary image URLs
+    if (profileImage) {
+      driverData.profileImage = profileImage;
+      console.log('✅ Profile image URL added:', profileImage);
+    }
+    if (carImage) {
+      driverData.carImage = carImage;
+      console.log('✅ Car image URL added:', carImage);
     }
 
     const driver = new Driver(driverData);
-    await driver.save();
+    const savedDriver = await driver.save();
+    console.log('✅ Driver created successfully:', savedDriver._id);
 
     res.status(201).json({
       success: true,
-      message: 'Driver added successfully',
-      driver
+      message: 'Driver added successfully!',
+      driver: savedDriver
     });
   } catch (error) {
+    console.error('❌ Error adding driver:', error);
     res.status(500).json({
       success: false,
       message: 'Error adding driver',
@@ -159,29 +148,56 @@ const addDriver = async (req, res) => {
 
 // Update driver
 const updateDriver = async (req, res) => {
+  console.log('🔄 Updating driver:', req.params.id);
+  console.log('📝 Update data received:', {
+    fullName: req.body.fullName,
+    email: req.body.email,
+    hasProfileImage: !!req.body.profileImage,
+    hasCarImage: !!req.body.carImage
+  });
+
   try {
     const { id } = req.params;
-    const updateData = { ...req.body };
+    const {
+      fullName,
+      contactNumber,
+      email,
+      carMake,
+      carModel,
+      carYear,
+      carColor,
+      licensePlate,
+      pricePerKm,
+      profileImage,
+      carImage
+    } = req.body;
+
+    const updateData = {
+      fullName,
+      contactNumber,
+      email,
+      pricePerKm: parseFloat(pricePerKm) || 15
+    };
 
     // Handle car details
-    if (req.body.carMake || req.body.carModel || req.body.carYear || req.body.carColor || req.body.licensePlate) {
+    if (carMake || carModel || carYear || carColor || licensePlate) {
       updateData.carDetails = {
-        make: req.body.carMake,
-        model: req.body.carModel,
-        year: parseInt(req.body.carYear),
-        color: req.body.carColor,
-        licensePlate: req.body.licensePlate
+        make: carMake,
+        model: carModel,
+        year: parseInt(carYear),
+        color: carColor,
+        licensePlate
       };
     }
 
-    // Handle file uploads
-    if (req.files) {
-      if (req.files.profileImage) {
-        updateData.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
-      }
-      if (req.files.carImage) {
-        updateData.carImage = `/uploads/${req.files.carImage[0].filename}`;
-      }
+    // Handle Cloudinary image URLs
+    if (profileImage) {
+      updateData.profileImage = profileImage;
+      console.log('✅ Profile image URL updated:', profileImage);
+    }
+    if (carImage) {
+      updateData.carImage = carImage;
+      console.log('✅ Car image URL updated:', carImage);
     }
 
     const driver = await Driver.findByIdAndUpdate(id, updateData, { 
@@ -190,18 +206,21 @@ const updateDriver = async (req, res) => {
     });
 
     if (!driver) {
+      console.log('❌ Driver not found:', id);
       return res.status(404).json({
         success: false,
         message: 'Driver not found'
       });
     }
 
+    console.log('✅ Driver updated successfully:', driver._id);
     res.status(200).json({
       success: true,
-      message: 'Driver updated successfully',
+      message: 'Driver updated successfully!',
       driver
     });
   } catch (error) {
+    console.error('❌ Error updating driver:', error);
     res.status(500).json({
       success: false,
       message: 'Error updating driver',
@@ -274,6 +293,5 @@ module.exports = {
   addDriver,
   updateDriver,
   deleteDriver,
-  toggleAvailability,
-  upload
+  toggleAvailability
 };

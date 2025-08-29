@@ -177,7 +177,7 @@ export const getRoomUrl = (roomId, operation = '') => {
 export const getFaqUrl = (faqId, operation = '') => {
   switch(operation) {
     case 'delete':
-      return `${API_BASE_URL}/api/rooms/del-faq/${faqId}`;
+      return `${API_BASE_URL}/api/faq/${faqId}`;
     default:
       return `${API_BASE_URL}/api/faq/${faqId}`;
   }

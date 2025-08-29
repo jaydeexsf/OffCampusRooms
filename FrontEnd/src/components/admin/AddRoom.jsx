@@ -1,12 +1,16 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { apiClient, API_ENDPOINTS } from '../../config/api';
+import { FiUpload, FiX, FiMapPin, FiDollarSign, FiHome, FiUsers, FiWifi, FiTv, FiWind, FiShield, FiCamera, FiCheck, FiAlertCircle, FiLoader } from 'react-icons/fi';
 import { GlobalContext } from '../GlobalContext';
-import { useNavigate } from 'react-router-dom';
+import { apiClient, API_ENDPOINTS } from '../../config/api';
+import { useToast } from '../../hooks/useToast';
+import ToastContainer from '../ToastContainer';
 import { IoArrowBack } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 const AddRoomForm = () => {
     const { addRoom, isAddingRoom } = useContext(GlobalContext);
     const navigate = useNavigate();
+    const { toasts, success, error: showError, removeToast } = useToast();
     const [newRoom, setNewRoom] = useState({
         title: '',
         description: '',
@@ -336,6 +340,7 @@ const AddRoomForm = () => {
 
 
     const cloudinaryUpload = async (file) => {
+        console.log('📸 Uploading image to Cloudinary:', file.name);
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', 'roomImages');
@@ -346,15 +351,18 @@ const AddRoomForm = () => {
                 `https://api.cloudinary.com/v1_1/daqzt4zy1/image/upload`,
                 formData
             );
+            console.log('✅ Image uploaded successfully:', response.data.secure_url);
             return response.data.secure_url;
         } catch (error) {
-            console.error('Error uploading image to Cloudinary:', error.response?.data || error.message);
+            console.error('❌ Error uploading image to Cloudinary:', error.response?.data || error.message);
             setError('Failed to upload image. Please try again.');
         }
     };
 
     const handleImageUpload = async (e) => {
         const files = Array.from(e.target.files);
+        console.log('📸 Processing image upload:', files.length, 'files');
+        
         if (files.length === 0) {
             setError('Please upload at least 1 image.');
             return;
@@ -366,13 +374,16 @@ const AddRoomForm = () => {
         }
 
         try {
+            console.log('📤 Starting upload for', files.length, 'images...');
             const uploadedImages = await Promise.all(files.map(cloudinaryUpload));
             const validImages = uploadedImages.filter(image => image);
+            console.log('✅ Successfully uploaded', validImages.length, 'images');
+            
             setNewRoom({ ...newRoom, images: validImages });
             setImagePreviews(files.map(file => URL.createObjectURL(file)));
             setError('');
         } catch (error) {
-            console.error('Error uploading images:', error);
+            console.error('❌ Error uploading images:', error);
             setError('Failed to upload images. Please try again.');
         }
     };
@@ -434,12 +445,37 @@ const AddRoomForm = () => {
             bestRoom: newRoom.bestRooms || false
         };
 
+        console.log('🏠 Submitting room data:', {
+            title: roomData.title,
+            price: roomData.price,
+            location: roomData.location,
+            imagesCount: roomData.images.length,
+            bestRoom: roomData.bestRoom
+        });
+
         try {
-            await addRoom(roomData);
-            navigate(-1);
+            const response = await addRoom(roomData);
+            console.log('✅ Room added successfully:', response);
+            
+            // Show success toast
+            setError('');
+            success('Room added successfully!', { duration: 3000 });
+            
+            // Navigate after a short delay to show the toast
+            setTimeout(() => {
+                navigate(-1);
+            }, 1000);
         } catch (error) {
-            console.error('Error adding room:', error);
-            setError('Error adding room. Please check your connection and try again.');
+            console.error('❌ Error adding room:', error);
+            console.error('❌ Error details:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
+            
+            const errorMessage = error.response?.data?.message || 'Error adding room. Please check your connection and try again.';
+            setError(errorMessage);
+            showError(errorMessage);
         }
     };
 
@@ -737,6 +773,9 @@ const AddRoomForm = () => {
                     </form>
                 </div>
             </div>
+            
+            {/* Toast Container */}
+            <ToastContainer toasts={toasts} removeToast={removeToast} />
         </div>
     );
 };
