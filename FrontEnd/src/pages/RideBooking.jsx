@@ -32,65 +32,190 @@ const RideBooking = () => {
   const [scheduledTime, setScheduledTime] = useState('');
   const [notes, setNotes] = useState('');
 
-  // Get Google Maps API key with debugging
+  // Get Google Maps API key with comprehensive debugging
   const googleMapsApiKey = getGoogleMapsApiKey();
   console.log('🔑 RideBooking - Google Maps API Key Status:', {
     hasKey: !!googleMapsApiKey,
     keyLength: googleMapsApiKey ? googleMapsApiKey.length : 0,
-    keyPreview: googleMapsApiKey ? `${googleMapsApiKey.substring(0, 10)}...` : 'NONE'
+    keyPreview: googleMapsApiKey ? `${googleMapsApiKey.substring(0, 10)}...` : 'NONE',
+    envVariable: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'SET' : 'NOT_SET',
+    envValue: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY.substring(0, 10)}...` : 'NONE',
+    hostname: window.location.hostname,
+    protocol: window.location.protocol,
+    fullUrl: window.location.href
   });
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey || '',
+    libraries: ['places', 'geometry'],
     // Only load if we have an API key
     ...(googleMapsApiKey ? {} : { disable: true })
   });
 
+  // Log Google Maps loading status
+  console.log('🗺️ Google Maps Loading Status:', {
+    isLoaded,
+    hasLoadError: !!loadError,
+    loadError: loadError?.message || 'None',
+    apiKey: googleMapsApiKey ? 'Present' : 'Missing',
+    timestamp: new Date().toISOString()
+  });
+
+  // Log any Google Maps errors from the global error handler
+  useEffect(() => {
+    const originalError = window.console.error;
+    window.console.error = function(...args) {
+      if (args.some(arg => typeof arg === 'string' && arg.includes('Google Maps'))) {
+        console.log('🚨 Google Maps Error Detected:', {
+          error: args,
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+          apiKey: googleMapsApiKey ? 'Present' : 'Missing'
+        });
+      }
+      originalError.apply(console, args);
+    };
+
+    return () => {
+      window.console.error = originalError;
+    };
+  }, [googleMapsApiKey]);
+
   const onLoad = useCallback(function callback(map) {
+    console.log('🗺️ Google Map onLoad callback triggered:', {
+      mapInstance: !!map,
+      mapCenter: map?.getCenter()?.toJSON(),
+      mapZoom: map?.getZoom(),
+      timestamp: new Date().toISOString()
+    });
     setMap(map);
   }, []);
 
   const onUnmount = useCallback(function callback(map) {
+    console.log('🗺️ Google Map onUnmount callback triggered:', {
+      mapInstance: !!map,
+      timestamp: new Date().toISOString()
+    });
     setMap(null);
   }, []);
 
   const handleMapClick = (event) => {
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
+    console.log('🖱️ Map click event:', {
+      hasEvent: !!event,
+      hasLatLng: !!event?.latLng,
+      canGetLat: typeof event?.latLng?.lat === 'function',
+      canGetLng: typeof event?.latLng?.lng === 'function'
+    });
 
-    if (!pickupLocation) {
-      setPickupLocation({ lat, lng });
-      getAddressFromCoords(lat, lng, setPickupAddress);
-    } else if (!dropoffLocation) {
-      setDropoffLocation({ lat, lng });
-      getAddressFromCoords(lat, lng, setDropoffAddress);
+    try {
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
+
+      console.log('📍 Map clicked at coordinates:', {
+        lat,
+        lng,
+        hasPickup: !!pickupLocation,
+        hasDropoff: !!dropoffLocation,
+        timestamp: new Date().toISOString()
+      });
+
+      if (!pickupLocation) {
+        setPickupLocation({ lat, lng });
+        console.log('✅ Setting pickup location:', { lat, lng });
+        getAddressFromCoords(lat, lng, setPickupAddress);
+      } else if (!dropoffLocation) {
+        setDropoffLocation({ lat, lng });
+        console.log('✅ Setting dropoff location:', { lat, lng });
+        getAddressFromCoords(lat, lng, setDropoffAddress);
+      }
+    } catch (error) {
+      console.error('❌ Error handling map click:', {
+        error: error.message,
+        stack: error.stack,
+        event,
+        timestamp: new Date().toISOString()
+      });
     }
   };
 
   const getAddressFromCoords = async (lat, lng, setAddress) => {
+    console.log('🔍 Starting geocoding for coordinates:', { lat, lng });
+    
     try {
+      if (!window.google || !window.google.maps || !window.google.maps.Geocoder) {
+        console.error('❌ Google Maps Geocoder not available:', {
+          hasGoogle: !!window.google,
+          hasMaps: !!window.google?.maps,
+          hasGeocoder: !!window.google?.maps?.Geocoder,
+          timestamp: new Date().toISOString()
+        });
+        return;
+      }
+
       const geocoder = new window.google.maps.Geocoder();
+      console.log('🔍 Geocoder instance created, making request...');
+      
       geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+        console.log('🔍 Geocoding response:', {
+          status,
+          resultsCount: results?.length || 0,
+          firstResult: results?.[0]?.formatted_address,
+          timestamp: new Date().toISOString()
+        });
+        
         if (status === 'OK' && results[0]) {
-          setAddress(results[0].formatted_address);
+          const address = results[0].formatted_address;
+          console.log('✅ Address found:', address);
+          setAddress(address);
+        } else {
+          console.error('❌ Geocoding failed:', {
+            status,
+            results,
+            timestamp: new Date().toISOString()
+          });
         }
       });
     } catch (error) {
-      console.error('Error getting address:', error);
+      console.error('❌ Error in getAddressFromCoords:', {
+        error: error.message,
+        stack: error.stack,
+        lat,
+        lng,
+        timestamp: new Date().toISOString()
+      });
     }
   };
 
   const calculateRide = async () => {
-    if (!pickupLocation || !dropoffLocation) return;
+    console.log('🚗 Starting ride calculation:', {
+      hasPickup: !!pickupLocation,
+      hasDropoff: !!dropoffLocation,
+      pickup: pickupLocation,
+      dropoff: dropoffLocation,
+      timestamp: new Date().toISOString()
+    });
+
+    if (!pickupLocation || !dropoffLocation) {
+      console.error('❌ Missing pickup or dropoff location');
+      return;
+    }
 
     setLoading(true);
     try {
-              const response = await apiClient.post(`${API_ENDPOINTS.CALCULATE_RIDE}`, {
+      console.log('📡 Making API request to calculate ride...');
+      const response = await apiClient.post(`${API_ENDPOINTS.CALCULATE_RIDE}`, {
         pickupLat: pickupLocation.lat,
         pickupLng: pickupLocation.lng,
         dropoffLat: dropoffLocation.lat,
         dropoffLng: dropoffLocation.lng
+      });
+
+      console.log('📡 Ride calculation API response:', {
+        success: response.data.success,
+        data: response.data,
+        status: response.status,
+        timestamp: new Date().toISOString()
       });
 
       if (response.data.success) {
@@ -98,6 +223,17 @@ const RideBooking = () => {
         setAvailableDrivers(response.data.availableDrivers);
         setBookingStep('drivers');
         
+        console.log('🗺️ Setting up directions on map...');
+        
+        if (!window.google?.maps?.DirectionsService) {
+          console.error('❌ Google Maps DirectionsService not available:', {
+            hasGoogle: !!window.google,
+            hasMaps: !!window.google?.maps,
+            hasDirectionsService: !!window.google?.maps?.DirectionsService
+          });
+          return;
+        }
+
         // Show directions on map
         const directionsService = new window.google.maps.DirectionsService();
         directionsService.route({
@@ -105,13 +241,34 @@ const RideBooking = () => {
           destination: dropoffLocation,
           travelMode: window.google.maps.TravelMode.DRIVING,
         }, (result, status) => {
+          console.log('🗺️ Directions API response:', {
+            status,
+            hasResult: !!result,
+            timestamp: new Date().toISOString()
+          });
+          
           if (status === window.google.maps.DirectionsStatus.OK) {
+            console.log('✅ Directions loaded successfully');
             setDirections(result);
+          } else {
+            console.error('❌ Directions request failed:', {
+              status,
+              result,
+              timestamp: new Date().toISOString()
+            });
           }
         });
+      } else {
+        console.error('❌ Ride calculation failed:', response.data);
       }
     } catch (error) {
-      console.error('Error calculating ride:', error);
+      console.error('❌ Error calculating ride:', {
+        error: error.message,
+        stack: error.stack,
+        response: error.response?.data,
+        status: error.response?.status,
+        timestamp: new Date().toISOString()
+      });
       alert('Error calculating ride. Please try again.');
     } finally {
       setLoading(false);
@@ -119,12 +276,28 @@ const RideBooking = () => {
   };
 
   const bookRide = async () => {
-    if (!selectedDriver || !isSignedIn) return;
+    console.log('📝 Starting ride booking:', {
+      hasSelectedDriver: !!selectedDriver,
+      isSignedIn,
+      selectedDriver,
+      timestamp: new Date().toISOString()
+    });
+
+    if (!selectedDriver || !isSignedIn) {
+      console.error('❌ Cannot book ride:', {
+        hasSelectedDriver: !!selectedDriver,
+        isSignedIn,
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
 
     setLoading(true);
     try {
+      console.log('🔐 Getting authentication token...');
       const token = await getToken();
-              const response = await apiClient.post(`${API_ENDPOINTS.API_BASE_URL}/api/rides/book`, {
+      
+      const bookingData = {
         studentId: user.id,
         studentName: user.fullName || user.firstName + ' ' + user.lastName,
         studentContact: user.primaryPhoneNumber?.phoneNumber || '',
@@ -143,15 +316,40 @@ const RideBooking = () => {
         estimatedPrice: selectedDriver.estimatedPrice,
         scheduledTime: scheduledTime || new Date().toISOString(),
         notes
-      }, {
+      };
+
+      console.log('📡 Making booking API request:', {
+        endpoint: `${API_ENDPOINTS.API_BASE_URL}/api/rides/book`,
+        bookingData,
+        hasToken: !!token,
+        timestamp: new Date().toISOString()
+      });
+
+      const response = await apiClient.post(`${API_ENDPOINTS.API_BASE_URL}/api/rides/book`, bookingData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      console.log('📡 Booking API response:', {
+        success: response.data.success,
+        data: response.data,
+        status: response.status,
+        timestamp: new Date().toISOString()
+      });
+
       if (response.data.success) {
+        console.log('✅ Ride booked successfully');
         setBookingStep('confirmation');
+      } else {
+        console.error('❌ Booking failed:', response.data);
       }
     } catch (error) {
-      console.error('Error booking ride:', error);
+      console.error('❌ Error booking ride:', {
+        error: error.message,
+        stack: error.stack,
+        response: error.response?.data,
+        status: error.response?.status,
+        timestamp: new Date().toISOString()
+      });
     } finally {
       setLoading(false);
     }
@@ -235,6 +433,8 @@ const RideBooking = () => {
                   <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
                     <p className="text-green-400 text-sm">✅ Google Maps loaded successfully!</p>
                     <p className="text-green-300 text-xs">API Key: {googleMapsApiKey ? 'Valid' : 'Invalid'}</p>
+                    <p className="text-green-300 text-xs">Load Error: {loadError ? loadError.message : 'None'}</p>
+                    <p className="text-green-300 text-xs">Timestamp: {new Date().toLocaleTimeString()}</p>
                   </div>
                   <GoogleMap
                     mapContainerStyle={containerStyle}
@@ -243,6 +443,12 @@ const RideBooking = () => {
                     onLoad={onLoad}
                     onUnmount={onUnmount}
                     onClick={handleMapClick}
+                    onError={(error) => {
+                      console.error('🗺️ Google Map Error:', {
+                        error,
+                        timestamp: new Date().toISOString()
+                      });
+                    }}
                     options={{
                       styles: [
                         {

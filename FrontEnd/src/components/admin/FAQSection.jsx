@@ -10,6 +10,8 @@ const FAQSection = () => {
   const [formData, setFormData] = useState({ question: '', answer: '' });
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, faqId: null, faqQuestion: '' });
+  const [deleting, setDeleting] = useState(null);
 
   useEffect(() => {
     fetchFAQs();
@@ -104,20 +106,39 @@ const FAQSection = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this FAQ?')) return;
+  const handleDeleteClick = (faq) => {
+    setDeleteConfirm({ 
+      show: true, 
+      faqId: faq._id, 
+      faqQuestion: faq.question 
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const { faqId } = deleteConfirm;
+    setDeleting(faqId);
+    setMessage({ type: '', text: '' });
     
     try {
-      await apiClient.delete(`${API_ENDPOINTS.DELETE_FAQ}/${id}`);
+      console.log('🗑️ Deleting FAQ:', faqId);
+      await apiClient.delete(`${API_ENDPOINTS.DELETE_FAQ}/${faqId}`);
+      console.log('✅ FAQ deleted successfully');
       setMessage({ type: 'success', text: 'FAQ deleted successfully!' });
       await fetchFAQs();
+      setDeleteConfirm({ show: false, faqId: null, faqQuestion: '' });
     } catch (error) {
-      console.error('Error deleting FAQ:', error);
+      console.error('❌ Error deleting FAQ:', error);
       setMessage({ 
         type: 'error', 
         text: error.response?.data?.message || 'Failed to delete FAQ. Please try again.' 
       });
+    } finally {
+      setDeleting(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirm({ show: false, faqId: null, faqQuestion: '' });
   };
 
   const handleEdit = (faq) => {
@@ -132,6 +153,22 @@ const FAQSection = () => {
     setShowAddModal(false);
     setMessage({ type: '', text: '' });
   };
+
+  // Close modals on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        if (deleteConfirm.show && !deleting) {
+          handleDeleteCancel();
+        } else if (showAddModal && !submitting) {
+          resetForm();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [deleteConfirm.show, showAddModal, deleting, submitting]);
 
   if (loading) {
     return (
@@ -202,11 +239,18 @@ const FAQSection = () => {
                     <span className="sm:hidden text-xs">Edit</span>
                   </button>
                   <button
-                    onClick={() => handleDelete(faq._id)}
-                    className="bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 sm:p-2 rounded-lg transition-all duration-200 flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-0"
+                    onClick={() => handleDeleteClick(faq)}
+                    disabled={deleting === faq._id}
+                    className={`bg-red-500/20 hover:bg-red-500/30 text-red-400 p-2 sm:p-2 rounded-lg transition-all duration-200 flex-1 sm:flex-none flex items-center justify-center gap-1 sm:gap-0 ${
+                      deleting === faq._id ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                   >
-                    <FiTrash2 className="w-4 h-4" />
-                    <span className="sm:hidden text-xs">Delete</span>
+                    {deleting === faq._id ? (
+                      <div className="w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin"></div>
+                    ) : (
+                      <FiTrash2 className="w-4 h-4" />
+                    )}
+                    <span className="sm:hidden text-xs">{deleting === faq._id ? 'Deleting...' : 'Delete'}</span>
                   </button>
                 </div>
               </div>
@@ -215,10 +259,63 @@ const FAQSection = () => {
         </div>
       )}
 
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm.show && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 border border-red-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiAlertCircle className="w-8 h-8 text-red-400" />
+              </div>
+              
+              <h3 className="text-xl font-bold text-white mb-2">Delete FAQ</h3>
+              <p className="text-gray-400 mb-4">
+                Are you sure you want to delete this FAQ? This action cannot be undone.
+              </p>
+              
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-6">
+                <p className="text-red-300 font-medium text-sm break-words">
+                  "{deleteConfirm.faqQuestion}"
+                </p>
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={handleDeleteCancel}
+                  disabled={deleting}
+                  className="flex-1 bg-white/10 border border-white/20 text-white font-semibold py-3 px-4 rounded-xl hover:bg-white/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  disabled={deleting}
+                  className={`flex-1 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 ${
+                    deleting ? 'opacity-50 cursor-not-allowed' : 'shadow-lg hover:shadow-xl'
+                  }`}
+                >
+                  {deleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FiTrash2 className="w-4 h-4" />
+                      <span>Delete FAQ</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Add/Edit Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start justify-center p-2 sm:p-4">
-        <div className="bg-gray-900 border border-white/10 rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+          <div className="bg-gray-900 border border-white/10 rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="p-4 sm:p-8">
               <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <h3 className="text-lg sm:text-2xl font-bold text-white">

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Slider from "react-slick";
-import { FiStar, FiMessageSquare, FiLoader } from 'react-icons/fi';
+import { FiStar, FiMessageSquare, FiLoader, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
 
@@ -9,6 +9,7 @@ const StudentTestimonials = () => {
   const [loading, setLoading] = useState(true);
   const [averageRating, setAverageRating] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const sliderRef = useRef(null);
 
   useEffect(() => {
     fetchTestimonials();
@@ -60,7 +61,7 @@ const StudentTestimonials = () => {
   };
 
   const settings = {
-    dots: true,
+    dots: false,
     arrows: false,
     infinite: testimonials.length > 3,
     speed: 600,
@@ -102,15 +103,33 @@ const StudentTestimonials = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                Students
-              </span> Say
-            </h2>
-            <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
-              Real reviews from University of Limpopo students who found their perfect accommodation
-            </p>
+          <div className="flex flex-col sm:flex-row items-end sm:items-end justify-between mb-8 sm:mb-16" data-aos="fade-up">
+            <div className="text-center sm:text-left mb-4 sm:mb-0">
+              <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4">
+                What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  Students
+                </span> Say
+              </h2>
+              <p className="text-gray-400 text-xs sm:text-sm md:text-lg max-w-2xl">
+                Real reviews from University of Limpopo students who found their perfect accommodation
+              </p>
+            </div>
+            
+            {/* Navigation Buttons */}
+            <div className="flex gap-2 self-end sm:self-end sm:mt-2">
+              <button
+                onClick={() => sliderRef.current?.slickPrev()}
+                className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 sm:p-3 text-white transition-all duration-200 hover:scale-105"
+              >
+                <FiChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+              <button
+                onClick={() => sliderRef.current?.slickNext()}
+                className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 sm:p-3 text-white transition-all duration-200 hover:scale-105"
+              >
+                <FiChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </div>
           </div>
 
           {/* Testimonials Slider */}
@@ -123,7 +142,7 @@ const StudentTestimonials = () => {
                 </div>
               </div>
             ) : testimonials.length > 0 ? (
-              <Slider {...settings}>
+              <Slider ref={sliderRef} {...settings}>
                 {testimonials.map((testimonial) => (
                   <div key={testimonial.id} className="px-4">
                     <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 h-full">

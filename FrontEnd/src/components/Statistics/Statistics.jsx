@@ -103,30 +103,40 @@ const Statistics = () => {
             </p>
           </div>
 
-          {/* Statistics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" data-aos="fade-up" data-aos-delay="200">
+         {/* Statistics Grid */}
+          <div 
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6" 
+            data-aos="fade-up" 
+            data-aos-delay="200"
+          >
             {statItems.map((item, index) => (
               <div 
                 key={index}
-                className={`bg-gradient-to-br ${item.bgColor} border ${item.borderColor} rounded-2xl p-6 text-center group hover:scale-105 transition-all duration-300`}
+                className={`bg-gradient-to-br ${item.bgColor} border ${item.borderColor} rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 text-center group hover:scale-105 transition-all duration-300`}
                 data-aos="fade-up"
                 data-aos-delay={300 + (index * 100)}
               >
-                <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${item.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <div className="text-white">
+                {/* Icon wrapper */}
+                <div 
+                  className={`inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-r ${item.color} rounded-lg sm:rounded-xl md:rounded-2xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <div className="text-white text-2xl sm:text-3xl md:text-4xl">
                     {item.icon}
                   </div>
                 </div>
                 
-                <div className="text-2xl md:text-3xl font-bold text-white mb-2">
+                {/* Value */}
+                <div className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">
                   {item.value}
                 </div>
                 
-                <div className="text-base md:text-lg font-semibold text-white mb-1">
+                {/* Label */}
+                <div className="text-sm sm:text-base md:text-lg font-semibold text-white mb-1">
                   {item.label}
                 </div>
                 
-                <div className="text-xs md:text-sm text-gray-300">
+                {/* Description */}
+                <div className="text-xs sm:text-sm md:text-base text-gray-300 leading-snug">
                   {item.description}
                 </div>
               </div>

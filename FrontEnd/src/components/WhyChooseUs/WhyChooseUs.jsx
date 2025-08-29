@@ -54,41 +54,41 @@ const WhyChooseUs = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-950">
-      <div className="container mx-auto px-4">
+    <section className="py-8 sm:py-16 bg-gray-950">
+      <div className="container mx-auto px-2 sm:px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          <div className="text-center mb-8 sm:mb-16" data-aos="fade-up">
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4">
               Why Choose <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 StudentRooms
               </span>
             </h2>
-            <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-xs sm:text-sm md:text-lg max-w-2xl mx-auto px-2">
               We're committed to making your student accommodation search easy, safe, and affordable
             </p>
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-12">
             {features.map((feature, index) => (
               <div 
                 key={index}
-                className={`bg-gradient-to-br ${feature.bgColor} border ${feature.borderColor} rounded-2xl p-6 group hover:scale-105 transition-all duration-300`}
+                className={`bg-gradient-to-br ${feature.bgColor} border ${feature.borderColor} rounded-xl sm:rounded-2xl p-3 sm:p-6 group hover:scale-105 transition-all duration-300`}
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
               >
-                <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${feature.color} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <div className="text-white">
-                    {feature.icon}
+                <div className={`inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-r ${feature.color} rounded-xl sm:rounded-2xl mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className="text-white text-sm sm:text-base">
+                    {React.cloneElement(feature.icon, { className: "w-4 h-4 sm:w-6 sm:h-6" })}
                   </div>
                 </div>
                 
-                <h3 className="text-base md:text-xl font-bold text-white mb-3">
+                <h3 className="text-xs sm:text-base md:text-xl font-bold text-white mb-1 sm:mb-3">
                   {feature.title}
                 </h3>
                 
-                <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
+                <p className="text-gray-300 text-xs sm:text-xs md:text-sm leading-relaxed hidden sm:block">
                   {feature.description}
                 </p>
               </div>
@@ -96,40 +96,40 @@ const WhyChooseUs = () => {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" data-aos="fade-up" data-aos-delay="600">
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-2xl md:text-3xl font-bold text-blue-400 mb-2">100%</div>
-              <div className="text-white font-semibold text-sm md:text-base mb-1">Verified Listings</div>
-              <div className="text-gray-400 text-xs md:text-sm">Every room is personally checked</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-12" data-aos="fade-up" data-aos-delay="600">
+            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg sm:rounded-xl p-3 sm:p-6 text-center">
+              <div className="text-lg sm:text-2xl md:text-3xl font-bold text-blue-400 mb-1 sm:mb-2">100%</div>
+              <div className="text-white font-semibold text-xs sm:text-sm md:text-base mb-1">Verified Listings</div>
+              <div className="text-gray-400 text-xs sm:text-xs md:text-sm">Every room is personally checked</div>
             </div>
             
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-2xl md:text-3xl font-bold text-green-400 mb-2">24/7</div>
-              <div className="text-white font-semibold text-sm md:text-base mb-1">Student Support</div>
-              <div className="text-gray-400 text-xs md:text-sm">Always here when you need us</div>
+            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg sm:rounded-xl p-3 sm:p-6 text-center">
+              <div className="text-lg sm:text-2xl md:text-3xl font-bold text-green-400 mb-1 sm:mb-2">24/7</div>
+              <div className="text-white font-semibold text-xs sm:text-sm md:text-base mb-1">Student Support</div>
+              <div className="text-gray-400 text-xs sm:text-xs md:text-sm">Always here when you need us</div>
             </div>
             
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 text-center">
-              <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-2">0%</div>
-              <div className="text-white font-semibold text-sm md:text-base mb-1">Booking Fees</div>
-              <div className="text-gray-400 text-xs md:text-sm">No hidden costs or charges</div>
+            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg sm:rounded-xl p-3 sm:p-6 text-center">
+              <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-400 mb-1 sm:mb-2">0%</div>
+              <div className="text-white font-semibold text-xs sm:text-sm md:text-base mb-1">Booking Fees</div>
+              <div className="text-gray-400 text-xs sm:text-xs md:text-sm">No hidden costs or charges</div>
             </div>
           </div>
 
           {/* Call to Action */}
           <div className="text-center" data-aos="fade-up" data-aos-delay="700">
-            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-3xl mx-auto">
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
+            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-8 max-w-3xl mx-auto">
+              <h3 className="text-sm sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-4">
                 Ready to Find Your Perfect Student Accommodation?
               </h3>
-              <p className="text-gray-300 text-sm md:text-base mb-6">
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base mb-3 sm:mb-6 px-2">
                 Join thousands of University of Limpopo students who have found their ideal accommodation through our platform
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center">
+                <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm">
                   Start Your Search
                 </button>
-                <button className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 border border-white/20">
+                <button className="bg-white/10 hover:bg-white/20 text-white font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 border border-white/20 text-xs sm:text-sm">
                   Learn More
                 </button>
               </div>
