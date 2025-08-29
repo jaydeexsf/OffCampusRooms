@@ -6,6 +6,9 @@ import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 import { getGoogleMapsApiKey } from '../config/env';
 
+// Static libraries array outside component to prevent reloading
+const GOOGLE_MAPS_LIBRARIES = ['places', 'geometry'];
+
 const containerStyle = {
   width: '100%',
   height: '400px'
@@ -57,13 +60,10 @@ const RideBooking = () => {
   // Get Google Maps API key
   const googleMapsApiKey = getGoogleMapsApiKey();
 
-  // Static libraries array to prevent LoadScript reloading
-  const libraries = ['places', 'geometry'];
-
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey || '',
-    libraries,
+    libraries: GOOGLE_MAPS_LIBRARIES,
     // Only load if we have an API key
     ...(googleMapsApiKey ? {} : { disable: true })
   });
@@ -122,11 +122,12 @@ const RideBooking = () => {
         pickupLat: pickupCoords.lat,
         pickupLng: pickupCoords.lng,
         dropoffLat: dropoffCoords.lat,
-        dropoffLng: dropoffCoords.lng
+        dropoffLng: dropoffCoords.lng,
+        scheduledDate: scheduledTime || new Date().toISOString()
       });
 
       if (response.data.success) {
-        setDistance(response.data.distance);
+        setDistance(response.data.distance.km);
         setEstimatedPrice(response.data.estimatedPrice);
         setSimilarRides(response.data.similarRides || []);
         setCurrentStep(2);
