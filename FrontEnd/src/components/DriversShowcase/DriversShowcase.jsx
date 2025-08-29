@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FiStar, FiPhone, FiMail, FiTruck, FiX, FiMapPin, FiLoader, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiStar, FiPhone, FiMail, FiTruck, FiX, FiMapPin, FiLoader, FiChevronLeft, FiChevronRight, FiClock, FiDollarSign, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../config/api';
@@ -21,8 +21,16 @@ const DriversShowcase = () => {
       email: 'john@example.com',
       phone: '+27 123 456 789',
       contactNumber: '+27 123 456 789',
+      contact: '+27 123 456 789',
       profileImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
       carDetails: {
+        make: 'Toyota',
+        model: 'Corolla',
+        year: 2020,
+        color: 'White',
+        licensePlate: 'ABC 123 GP'
+      },
+      vehicleInfo: {
         make: 'Toyota',
         model: 'Corolla',
         year: 2020,
@@ -33,6 +41,9 @@ const DriversShowcase = () => {
       pricePerKm: 15,
       rating: 4.8,
       totalRides: 156,
+      experience: '5 years',
+      location: 'Pretoria, Gauteng',
+      bio: 'Professional driver with 5 years of experience. Safe, reliable, and punctual service guaranteed.',
       isAvailable: true,
       isDummy: true
     },
@@ -42,8 +53,16 @@ const DriversShowcase = () => {
       email: 'sarah@example.com',
       phone: '+27 987 654 321',
       contactNumber: '+27 987 654 321',
+      contact: '+27 987 654 321',
       profileImage: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
       carDetails: {
+        make: 'Honda',
+        model: 'Civic',
+        year: 2019,
+        color: 'Blue',
+        licensePlate: 'XYZ 789 GP'
+      },
+      vehicleInfo: {
         make: 'Honda',
         model: 'Civic',
         year: 2019,
@@ -54,6 +73,9 @@ const DriversShowcase = () => {
       pricePerKm: 12,
       rating: 4.9,
       totalRides: 203,
+      experience: '3 years',
+      location: 'Johannesburg, Gauteng',
+      bio: 'Experienced driver specializing in student transportation. Clean vehicle and friendly service.',
       isAvailable: true,
       isDummy: true
     },
@@ -63,8 +85,16 @@ const DriversShowcase = () => {
       email: 'mike@example.com',
       phone: '+27 555 123 456',
       contactNumber: '+27 555 123 456',
+      contact: '+27 555 123 456',
       profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
       carDetails: {
+        make: 'Nissan',
+        model: 'Sentra',
+        year: 2021,
+        color: 'Silver',
+        licensePlate: 'DEF 456 GP'
+      },
+      vehicleInfo: {
         make: 'Nissan',
         model: 'Sentra',
         year: 2021,
@@ -75,6 +105,9 @@ const DriversShowcase = () => {
       pricePerKm: 18,
       rating: 4.7,
       totalRides: 98,
+      experience: '2 years',
+      location: 'Cape Town, Western Cape',
+      bio: 'New driver with a passion for providing excellent service. Always on time and professional.',
       isAvailable: true,
       isDummy: true
     }
@@ -128,11 +161,12 @@ const DriversShowcase = () => {
   };
 
   const renderStars = (rating) => {
+    const safeRating = rating || 0;
     return Array.from({ length: 5 }, (_, index) => (
       <FiStar
         key={index}
         className={`w-4 h-4 ${
-          index < Math.floor(rating)
+          index < Math.floor(safeRating)
             ? 'text-yellow-400 fill-current'
             : 'text-gray-400'
         }`}
@@ -156,7 +190,7 @@ const DriversShowcase = () => {
     dots: true,
     infinite: drivers.length > 3,
     speed: 500,
-    slidesToShow: Math.min(3, drivers.length),
+    slidesToShow: Math.min(3, Math.max(1, drivers.length)),
     slidesToScroll: 1,
     autoplay: drivers.length > 3,
     autoplaySpeed: 4000,
@@ -167,7 +201,7 @@ const DriversShowcase = () => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: Math.min(2, drivers.length),
+          slidesToShow: Math.min(2, Math.max(1, drivers.length)),
           slidesToScroll: 1,
           infinite: drivers.length > 2,
           autoplay: drivers.length > 2,
@@ -265,12 +299,12 @@ const DriversShowcase = () => {
                         <div className="relative mb-3 sm:mb-4">
                           <img
                             src={driver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
-                            alt={`${driver.carDetails.make} ${driver.carDetails.model}`}
+                            alt={`${driver.carDetails?.make || driver.vehicleInfo?.make || 'Car'} ${driver.carDetails?.model || driver.vehicleInfo?.model || ''}`}
                             className="w-full h-28 sm:h-32 md:h-40 object-cover rounded-lg"
                           />
                           <div className="absolute top-2 right-2">
                             <div className="bg-black/70 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm text-white">
-                              R{driver.pricePerKm}/km
+                              R{driver.pricePerKm || 'N/A'}/km
                             </div>
                           </div>
                           {driver.isDummy && (
@@ -309,25 +343,25 @@ const DriversShowcase = () => {
                           <div className="flex items-center gap-2 mb-1">
                             <FiTruck className="text-blue-400 w-3 sm:w-4 h-3 sm:h-4" />
                             <span className="text-white font-medium truncate text-xs sm:text-sm">
-                              {driver.carDetails.year} {driver.carDetails.make} {driver.carDetails.model}
+                              {driver.carDetails?.year || driver.vehicleInfo?.year || 'N/A'} {driver.carDetails?.make || driver.vehicleInfo?.make || 'N/A'} {driver.carDetails?.model || driver.vehicleInfo?.model || 'N/A'}
                             </span>
                           </div>
                           <div className="text-xs sm:text-sm text-gray-400 truncate">
-                            {driver.carDetails.color} • {driver.carDetails.licensePlate}
+                            {driver.carDetails?.color || driver.vehicleInfo?.color || 'N/A'} • {driver.carDetails?.licensePlate || driver.vehicleInfo?.licensePlate || 'N/A'}
                           </div>
                         </div>
 
                         {/* Availability Status */}
                         <div className="flex items-center justify-between">
                           <div className={`flex items-center gap-2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm ${
-                            driver.isAvailable 
+                            driver.isAvailable !== false
                               ? 'bg-green-500/20 text-green-400' 
                               : 'bg-red-500/20 text-red-400'
                           }`}>
                             <div className={`w-2 h-2 rounded-full ${
-                              driver.isAvailable ? 'bg-green-400' : 'bg-red-400'
+                              driver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
                             }`}></div>
-                            {driver.isAvailable ? 'Available' : 'Busy'}
+                            {driver.isAvailable !== false ? 'Available' : 'Busy'}
                           </div>
                         </div>
                       </div>
@@ -361,7 +395,7 @@ const DriversShowcase = () => {
             <div className="relative">
               <img
                 src={selectedDriver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
-                alt={`${selectedDriver.carDetails.make} ${selectedDriver.carDetails.model}`}
+                alt={`${selectedDriver.carDetails?.make || selectedDriver.vehicleInfo?.make || 'Car'} ${selectedDriver.carDetails?.model || selectedDriver.vehicleInfo?.model || ''}`}
                 className="w-full h-32 sm:h-48 md:h-64 object-cover rounded-t-2xl sm:rounded-t-3xl"
               />
               <button
@@ -371,7 +405,7 @@ const DriversShowcase = () => {
                 <FiX className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 bg-black/70 backdrop-blur-sm rounded-full px-2 sm:px-4 py-1 sm:py-2">
-                <span className="text-xs sm:text-sm md:text-base text-white font-medium">R{selectedDriver.pricePerKm}/km</span>
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">R{selectedDriver.pricePerKm || 'N/A'}/km</span>
               </div>
             </div>
 
@@ -381,29 +415,29 @@ const DriversShowcase = () => {
                 <div className="md:w-1/3">
                   <img
                     src={selectedDriver.profileImage || '/api/placeholder/200/200'}
-                    alt={selectedDriver.name}
+                    alt={selectedDriver.fullName}
                     className="w-full h-40 sm:h-48 md:h-64 object-cover rounded-xl"
                   />
                 </div>
                 
                 <div className="md:w-2/3 space-y-2 sm:space-y-3 md:space-y-4">
                   <div>
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{selectedDriver.name}</h3>
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{selectedDriver.fullName}</h3>
                     <div className="flex items-center gap-2 mb-2 sm:mb-3 md:mb-4">
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <FiStar
                             key={i}
                             className={`w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 ${
-                              i < Math.floor(selectedDriver.rating)
+                              i < Math.floor(selectedDriver.rating || 0)
                                   ? 'text-yellow-400 fill-current'
                                   : 'text-gray-600'
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-white font-semibold text-sm sm:text-base">{selectedDriver.rating}</span>
-                      <span className="text-gray-400 text-xs sm:text-sm">({selectedDriver.totalRides} rides)</span>
+                      <span className="text-white font-semibold text-sm sm:text-base">{selectedDriver.rating || 'N/A'}</span>
+                      <span className="text-gray-400 text-xs sm:text-sm">({selectedDriver.totalRides || 0} rides)</span>
                     </div>
                   </div>
                   
@@ -413,7 +447,7 @@ const DriversShowcase = () => {
                         <FiClock className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="text-gray-300 font-medium text-xs sm:text-sm">Experience</span>
                       </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.experience}</p>
+                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.experience || 'Not specified'}</p>
                     </div>
                     
                     <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
@@ -421,7 +455,7 @@ const DriversShowcase = () => {
                         <FiMapPin className="text-green-400 w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="text-gray-300 font-medium text-xs sm:text-sm">Location</span>
                       </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.location}</p>
+                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.location || 'Not specified'}</p>
                     </div>
                     
                     <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
@@ -429,7 +463,7 @@ const DriversShowcase = () => {
                         <FiDollarSign className="text-yellow-400 w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="text-gray-300 font-medium text-xs sm:text-sm">Rate</span>
                       </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">R{selectedDriver.pricePerKm}/km</p>
+                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">R{selectedDriver.pricePerKm || 'N/A'}/km</p>
                     </div>
                     
                     <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
@@ -437,7 +471,7 @@ const DriversShowcase = () => {
                         <FiPhone className="text-purple-400 w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="text-gray-300 font-medium text-xs sm:text-sm">Contact</span>
                       </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.contact}</p>
+                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.contact || selectedDriver.contactNumber || selectedDriver.phone || 'Not specified'}</p>
                     </div>
                   </div>
                   
@@ -446,7 +480,7 @@ const DriversShowcase = () => {
                       <FiUser className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4" />
                       About
                     </h4>
-                    <p className="text-gray-300 leading-relaxed text-xs sm:text-sm md:text-base">{selectedDriver.bio}</p>
+                    <p className="text-gray-300 leading-relaxed text-xs sm:text-sm md:text-base">{selectedDriver.bio || 'No bio available for this driver.'}</p>
                   </div>
                   
                   <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
@@ -454,19 +488,19 @@ const DriversShowcase = () => {
                     <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
                       <div>
                         <span className="text-gray-400">Make & Model:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.make} {selectedDriver.vehicleInfo?.model}</p>
+                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.make || selectedDriver.carDetails?.make || 'N/A'} {selectedDriver.vehicleInfo?.model || selectedDriver.carDetails?.model || 'N/A'}</p>
                       </div>
                       <div>
                         <span className="text-gray-400">Year:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.year}</p>
+                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.year || selectedDriver.carDetails?.year || 'N/A'}</p>
                       </div>
                       <div>
                         <span className="text-gray-400">Color:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.color}</p>
+                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.color || selectedDriver.carDetails?.color || 'N/A'}</p>
                       </div>
                       <div>
                         <span className="text-gray-400">License Plate:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.licensePlate}</p>
+                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.licensePlate || selectedDriver.carDetails?.licensePlate || 'N/A'}</p>
                       </div>
                     </div>
                   </div>

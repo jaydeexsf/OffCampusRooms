@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { ClerkProvider } from '@clerk/clerk-react'
 
 // Import your publishable key from environment variables
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_YOUR_ACTUAL_KEY_HERE";
+const PUBLISHABLE_KEY = "pk_test_bGliZXJhbC1mb3gtNDEuY2xlcmsuYWNjb3VudHMuZGV2JA";
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
