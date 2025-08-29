@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiHome, FiUsers, FiStar, FiMapPin } from 'react-icons/fi';
-import axios from 'axios';
-import { API_ENDPOINTS } from '../../config/api';
+import { API_ENDPOINTS, apiClient } from '../../config/api';
 
 const Statistics = () => {
   const [stats, setStats] = useState({
@@ -14,7 +13,7 @@ const Statistics = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get(API_ENDPOINTS.GET_STATISTICS);
+        const response = await apiClient.get(API_ENDPOINTS.GET_STATISTICS);
         const data = response.data;
         
         setStats({
@@ -27,7 +26,7 @@ const Statistics = () => {
         console.error('Error fetching statistics:', error);
         // Fallback to basic room count
         try {
-          const roomsResponse = await axios.get(API_ENDPOINTS.ALL_ROOMS);
+          const roomsResponse = await apiClient.get(API_ENDPOINTS.ALL_ROOMS);
           const rooms = roomsResponse.data.rooms || [];
           const avgDistance = rooms.length > 0 
             ? Math.round(rooms.reduce((sum, room) => sum + (room.minutesAway || 0), 0) / rooms.length)

@@ -56,15 +56,32 @@ export const GlobalProvider = ({ children }) => {
             }
         };
        
-        const fetchFAQs = async () => {
+        const fetchFAQs = async (retryCount = 0) => {
+            // Prevent multiple simultaneous calls
+            if (isFaqLoading) {
+                return;
+            }
+            
             setIsFaqLoading(true);
             try {
                 const response = await apiClient.get(API_ENDPOINTS.GET_FAQS);
-                console.log('✅ FAQs fetched in GlobalContext:', response.data);
                 setFaqs(response.data.faqs || []);
             } catch (error) {
-                console.error('❌ Error fetching FAQs in GlobalContext:', error);
-                setFaqs([]);
+                console.error('Error fetching FAQs:', error);
+                
+                // Retry logic for network errors
+                if (retryCount < 2 && (error.code === 'ECONNABORTED' || error.code === 'NETWORK_ERROR')) {
+                    console.warn(`FAQ fetch failed, retrying... (attempt ${retryCount + 1}/3)`);
+                    setTimeout(() => {
+                        fetchFAQs(retryCount + 1);
+                    }, 2000); // Wait 2 seconds before retry
+                    return;
+                }
+                
+                // Don't clear existing FAQs on error, just keep what we have
+                if (error.code === 'ECONNABORTED') {
+                    console.warn('FAQ fetch timed out after retries, keeping existing data');
+                }
             } finally {
                 setIsFaqLoading(false);
             }
@@ -114,14 +131,11 @@ export const GlobalProvider = ({ children }) => {
     const addFaq = async (newFaq) => {
         setIsPostingFaq(true);
         try {
-            console.log('Adding FAQ with endpoint:', API_ENDPOINTS.ADD_FAQ);
-            console.log('API_BASE_URL from config:', API_ENDPOINTS.ADD_FAQ);
             const response = await apiClient.post(API_ENDPOINTS.ADD_FAQ, newFaq);
             // Append the newly created FAQ to the end (under existing ones)
             setFaqs((prevFaqs) => [...prevFaqs, response.data]);
         } catch (error) {
             console.error('Error adding FAQ:', error);
-            console.error('Error details:', error.response?.status, error.response?.data);
         } finally {
             setIsPostingFaq(false);
         }
@@ -189,10 +203,8 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
-    // Fetch FAQs on component mount
-    useEffect(() => {
-        fetchFAQs();
-    }, []);
+    // FAQs will be fetched only when needed (e.g., on FAQ page)
+    // Removed automatic fetching to improve performance
 
     return (
         <GlobalContext.Provider

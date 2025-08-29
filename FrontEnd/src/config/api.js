@@ -43,7 +43,7 @@ if (!API_BASE_URL) {
 // Create axios instance with interceptors
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000, // Increased timeout to 30 seconds for better reliability
 });
 
 // Request interceptor to add auth headers

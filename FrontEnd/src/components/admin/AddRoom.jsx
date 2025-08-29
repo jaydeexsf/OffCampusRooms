@@ -171,7 +171,7 @@ const AddRoomForm = () => {
                 const baseUrl = BURL.split('/api/')[0];
                 console.log('🔍 Testing base URL:', baseUrl);
                 
-                const testResponse = await apiClient.get(`${baseUrl}/api/rooms/all`, { timeout: 5000 });
+                const testResponse = await apiClient.get(`${baseUrl}/api/rooms/all`);
                 console.log('✅ Backend connectivity test passed:', testResponse.status);
             } catch (testErr) {
                 console.log('⚠️ Backend connectivity test failed:', testErr.message);
@@ -182,7 +182,6 @@ const AddRoomForm = () => {
             console.log('📤 Request payload:', JSON.stringify(everything, null, 2));
             
             const response = await apiClient.post(BURL, everything, {
-                timeout: 10000, // 10 second timeout
                 headers: {
                     'Content-Type': 'application/json'
                 }

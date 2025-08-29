@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PlaceCard from "./PlaceCard";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Loader from "../../pages/Loader";
-import { API_ENDPOINTS } from "../../config/api";
+import { API_ENDPOINTS, apiClient } from "../../config/api";
 
 const Places = ({ handleOrderPopup }) => {
   const [bestRooms, setBestRooms] = useState([]); 
@@ -13,7 +12,7 @@ const Places = ({ handleOrderPopup }) => {
     const fetchRooms = async () => {
       try {
         console.log('🔍 Fetching best rooms from:', API_ENDPOINTS.BEST_ROOMS);
-        const response = await axios.get(API_ENDPOINTS.BEST_ROOMS);
+        const response = await apiClient.get(API_ENDPOINTS.BEST_ROOMS);
         console.log('✅ Best rooms response:', response.data);
         const rooms = response.data.bestRooms; 
         setBestRooms(rooms); 

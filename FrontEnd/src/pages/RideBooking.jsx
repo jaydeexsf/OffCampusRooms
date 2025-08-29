@@ -32,71 +32,29 @@ const RideBooking = () => {
   const [scheduledTime, setScheduledTime] = useState('');
   const [notes, setNotes] = useState('');
 
-  // Get Google Maps API key with comprehensive debugging
+  // Get Google Maps API key
   const googleMapsApiKey = getGoogleMapsApiKey();
-  console.log('🔑 RideBooking - Google Maps API Key Status:', {
-    hasKey: !!googleMapsApiKey,
-    keyLength: googleMapsApiKey ? googleMapsApiKey.length : 0,
-    keyPreview: googleMapsApiKey ? `${googleMapsApiKey.substring(0, 10)}...` : 'NONE',
-    envVariable: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? 'SET' : 'NOT_SET',
-    envValue: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY.substring(0, 10)}...` : 'NONE',
-    hostname: window.location.hostname,
-    protocol: window.location.protocol,
-    fullUrl: window.location.href
-  });
+
+  // Static libraries array to prevent LoadScript reloading
+  const libraries = ['places', 'geometry'];
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey || '',
-    libraries: ['places', 'geometry'],
+    libraries,
     // Only load if we have an API key
     ...(googleMapsApiKey ? {} : { disable: true })
   });
 
-  // Log Google Maps loading status
-  console.log('🗺️ Google Maps Loading Status:', {
-    isLoaded,
-    hasLoadError: !!loadError,
-    loadError: loadError?.message || 'None',
-    apiKey: googleMapsApiKey ? 'Present' : 'Missing',
-    timestamp: new Date().toISOString()
-  });
 
-  // Log any Google Maps errors from the global error handler
-  useEffect(() => {
-    const originalError = window.console.error;
-    window.console.error = function(...args) {
-      if (args.some(arg => typeof arg === 'string' && arg.includes('Google Maps'))) {
-        console.log('🚨 Google Maps Error Detected:', {
-          error: args,
-          timestamp: new Date().toISOString(),
-          url: window.location.href,
-          apiKey: googleMapsApiKey ? 'Present' : 'Missing'
-        });
-      }
-      originalError.apply(console, args);
-    };
 
-    return () => {
-      window.console.error = originalError;
-    };
-  }, [googleMapsApiKey]);
+
 
   const onLoad = useCallback(function callback(map) {
-    console.log('🗺️ Google Map onLoad callback triggered:', {
-      mapInstance: !!map,
-      mapCenter: map?.getCenter()?.toJSON(),
-      mapZoom: map?.getZoom(),
-      timestamp: new Date().toISOString()
-    });
     setMap(map);
   }, []);
 
   const onUnmount = useCallback(function callback(map) {
-    console.log('🗺️ Google Map onUnmount callback triggered:', {
-      mapInstance: !!map,
-      timestamp: new Date().toISOString()
-    });
     setMap(null);
   }, []);
 

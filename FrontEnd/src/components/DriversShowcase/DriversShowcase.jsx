@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiStar, FiPhone, FiMail, FiTruck, FiX, FiMapPin, FiLoader, FiChevronLeft, FiChevronRight, FiClock, FiDollarSign, FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { API_ENDPOINTS } from '../../config/api';
+import { API_ENDPOINTS, apiClient } from '../../config/api';
 import Slider from "react-slick";
 
 const DriversShowcase = () => {
@@ -119,9 +118,7 @@ const DriversShowcase = () => {
 
   const fetchDrivers = async () => {
     try {
-      console.log('Fetching drivers from:', API_ENDPOINTS.GET_AVAILABLE_DRIVERS);
-      const response = await axios.get(API_ENDPOINTS.GET_AVAILABLE_DRIVERS);
-      console.log('Driver API response:', response.data);
+              const response = await apiClient.get(API_ENDPOINTS.GET_AVAILABLE_DRIVERS);
       const realDrivers = response.data.drivers || [];
       
       // Always show real drivers first, then add dummy data if needed for demo
@@ -133,11 +130,8 @@ const DriversShowcase = () => {
         allDrivers.push(...dummyDrivers.slice(0, neededDummies));
       }
       
-      console.log('Final drivers array:', allDrivers);
       setDrivers(allDrivers);
     } catch (error) {
-      console.error('Error fetching drivers:', error);
-      console.log('Using dummy data as fallback');
       // Fallback to dummy data on error
       setDrivers(dummyDrivers);
     } finally {
