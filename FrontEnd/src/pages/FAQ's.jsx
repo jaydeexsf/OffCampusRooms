@@ -13,7 +13,7 @@ const FaqPage = () => {
     if (fetchFAQs) {
       fetchFAQs();
     }
-  }, [fetchFAQs]);
+  }, []); // Remove fetchFAQs from dependency array
 
   useEffect(() => {
     // Combine static FAQs with server FAQs appended under them

@@ -9,6 +9,9 @@ const DriverManagement = () => {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingDriver, setEditingDriver] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [driverToDelete, setDriverToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const { toasts, success, error: showError, removeToast } = useToast();
   const [formData, setFormData] = useState({
     fullName: '',
@@ -40,6 +43,7 @@ const DriverManagement = () => {
   }, [message.text]);
 
   const fetchDrivers = async () => {
+    setLoading(true);
     try {
       const response = await apiClient.get(API_ENDPOINTS.GET_ALL_DRIVERS);
       if (response.data.success) {
@@ -186,14 +190,17 @@ const DriverManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this driver?')) return;
+  const handleDeleteClick = (driver) => {
+    setDriverToDelete(driver);
+    setShowDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
+    if (!driverToDelete) return;
     
+    setDeleting(true);
     try {
-      // Find the driver to get image URLs before deletion
-      const driverToDelete = drivers.find(d => d._id === id);
-      
-      const response = await apiClient.delete(`${API_ENDPOINTS.DELETE_DRIVER}/${id}`);
+      const response = await apiClient.delete(`${API_ENDPOINTS.DELETE_DRIVER}/${driverToDelete._id}`);
       
       // Delete images from Cloudinary after successful database deletion
       if (driverToDelete?.profileImage) {
@@ -206,15 +213,20 @@ const DriverManagement = () => {
       success(response.data?.message || 'Driver deleted successfully!');
       
       await fetchDrivers();
+      setShowDeleteModal(false);
+      setDriverToDelete(null);
     } catch (error) {
       console.error('❌ Error deleting driver:', error);
       const errorMessage = error.response?.data?.message || 'Failed to delete driver. Please try again.';
-      setMessage({ 
-        type: 'error', 
-        text: errorMessage
-      });
       showError(errorMessage);
+    } finally {
+      setDeleting(false);
     }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setDriverToDelete(null);
   };
 
   const toggleAvailability = async (driverId) => {
@@ -300,10 +312,18 @@ const DriverManagement = () => {
         </div>
       )}
 
-      {/* Drivers Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {/* Loading State */}
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-white/30 border-t-blue-400 rounded-full animate-spin"></div>
+          <span className="ml-3 text-gray-400">Loading drivers...</span>
+        </div>
+      ) : (
+        <>
+          {/* Drivers Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {drivers.map((driver) => (
-          <div key={driver._id} className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
+          <div key={driver._id} className="bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/30 rounded-lg sm:rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6">
             {/* Driver Header */}
             <div className="flex items-center gap-3 sm:gap-4 mb-4">
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-gray-700 flex items-center justify-center flex-shrink-0">
@@ -400,7 +420,7 @@ const DriverManagement = () => {
                 {driver.isAvailable ? <FiToggleRight className="w-4 h-4" /> : <FiToggleLeft className="w-4 h-4" />}
               </button>
               <button
-                onClick={() => handleDelete(driver._id)}
+                onClick={() => handleDeleteClick(driver)}
                 className="bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-400 font-medium py-2 px-2 sm:px-4 rounded-lg transition-all duration-200 flex items-center justify-center"
               >
                 <FiTrash2 className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -408,11 +428,13 @@ const DriverManagement = () => {
             </div>
           </div>
         ))}
-      </div>
+          </div>
+        </>
+      )}
 
       {/* Add/Edit Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items justify-center p-2 sm:p-4">
           <div className="bg-gray-900 border border-white/20 rounded-2xl p-4 sm:p-8 max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg sm:text-2xl font-bold text-white mb-4 sm:mb-6">
               {editingDriver ? 'Edit Driver' : 'Add New Driver'}
@@ -627,7 +649,51 @@ const DriverManagement = () => {
           </div>
         </div>
       )}
-      
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiTrash2 className="w-8 h-8 text-red-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Delete Driver</h3>
+              <p className="text-gray-400 mb-6">
+                Are you sure you want to delete <span className="font-semibold text-white">{driverToDelete?.fullName}</span>? 
+                This action cannot be undone.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={cancelDelete}
+                  disabled={deleting}
+                  className="flex-1 bg-gray-600/20 hover:bg-gray-600/30 border border-gray-500/30 text-gray-300 font-semibold py-3 px-4 rounded-xl transition-all duration-200 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {deleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <FiTrash2 className="w-4 h-4" />
+                      Delete
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Toast Container */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
