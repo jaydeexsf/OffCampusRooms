@@ -21,6 +21,11 @@ const StudentTestimonials = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     const maxSlides = Math.ceil(testimonials.length / 3);
+    if (maxSlides <= 1) {
+      // Nothing to slide; re-enable immediately
+      setIsTransitioning(false);
+      return;
+    }
     console.log('Testimonials next slide clicked, current:', currentSlide, 'maxSlides:', maxSlides);
     setCurrentSlide((prev) => (prev + 1) % maxSlides);
     setTimeout(() => setIsTransitioning(false), 300);
@@ -30,6 +35,11 @@ const StudentTestimonials = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     const maxSlides = Math.ceil(testimonials.length / 3);
+    if (maxSlides <= 1) {
+      // Nothing to slide; re-enable immediately
+      setIsTransitioning(false);
+      return;
+    }
     console.log('Testimonials prev slide clicked, current:', currentSlide, 'maxSlides:', maxSlides);
     setCurrentSlide((prev) => (prev - 1 + maxSlides) % maxSlides);
     setTimeout(() => setIsTransitioning(false), 300);
@@ -210,15 +220,15 @@ const StudentTestimonials = () => {
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                Students
-              </span> Say
-            </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Real reviews from University of Limpopo students who found their perfect accommodation
-            </p>
+                         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+               What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                 Students
+               </span> Say
+             </h2>
+                         <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
+             <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
+               Real reviews from University of Limpopo students who found their perfect accommodation
+             </p>
           </div>
 
           {/* Testimonials Slider - Clean Professional Layout */}
@@ -228,7 +238,7 @@ const StudentTestimonials = () => {
               <div className="absolute top-0 right-0 z-10 flex gap-2 mb-4">
                 <button
                   onClick={prevSlide}
-                  disabled={isTransitioning || Math.ceil(testimonials.length / 3) <= 1}
+                  disabled={isTransitioning || loading || testimonials.length === 0}
                   className="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
                   title="Previous"
                 >
@@ -236,7 +246,7 @@ const StudentTestimonials = () => {
                 </button>
                 <button
                   onClick={nextSlide}
-                  disabled={isTransitioning || Math.ceil(testimonials.length / 3) <= 1}
+                  disabled={isTransitioning || loading || testimonials.length === 0}
                   className="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
                   title="Next"
                 >

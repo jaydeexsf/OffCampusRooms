@@ -12,7 +12,7 @@ const GOOGLE_MAPS_LIBRARIES = ['places', 'geometry'];
 
 const containerStyle = {
   width: '100%',
-  height: '400px'
+  height: '300px'
 };
 
 const center = {
@@ -297,21 +297,21 @@ const RideBooking = () => {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
               Book a <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Ride
               </span>
             </h1>
-            <p className="text-gray-400">Safe and reliable transportation for University of Limpopo students</p>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-400">Safe and reliable transportation for University of Limpopo students</p>
           </div>
 
           {/* Public Rides Display - Show other students' rides for potential coordination */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-white">See Other Students' Rides</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <h2 className="text-lg sm:text-xl font-semibold text-white">See Other Students' Rides</h2>
               <button
                 onClick={() => setShowPublicRides(!showPublicRides)}
-                className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors"
+                className="px-3 sm:px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm sm:text-base"
               >
                 {showPublicRides ? 'Hide' : 'Show'} Similar Rides
               </button>
@@ -326,10 +326,10 @@ const RideBooking = () => {
             )}
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
             {/* Map Section */}
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <FiMapPin className="text-blue-400" />
                 Select Locations
               </h3>
@@ -380,19 +380,19 @@ const RideBooking = () => {
               )}
 
               {/* Location Display */}
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-green-400 text-sm font-medium">Pickup Location</p>
-                    <p className="text-white text-sm">{pickupAddress || 'Click on map to select'}</p>
+              <div className="mt-4 space-y-2 sm:space-y-3">
+                <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-green-400 text-xs sm:text-sm font-medium">Pickup Location</p>
+                    <p className="text-white text-xs sm:text-sm truncate">{pickupAddress || 'Click on map to select'}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-red-400 text-sm font-medium">Dropoff Location</p>
-                    <p className="text-white text-sm">{dropoffAddress || 'Click on map to select'}</p>
+                <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full flex-shrink-0"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-red-400 text-xs sm:text-sm font-medium">Dropoff Location</p>
+                    <p className="text-white text-xs sm:text-sm truncate">{dropoffAddress || 'Click on map to select'}</p>
                   </div>
                 </div>
               </div>
@@ -410,7 +410,7 @@ const RideBooking = () => {
             </div>
 
             {/* Booking Details Section */}
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6">
               {currentStep === 1 && (
                 <div className="text-center py-12">
                   <FiMapPin className="w-16 h-16 text-gray-600 mx-auto mb-4" />
@@ -421,10 +421,10 @@ const RideBooking = () => {
 
               {currentStep === 2 && distance && estimatedPrice && (
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-4">Ride Details</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Ride Details</h3>
                   
-                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                                      <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3 sm:p-4 mb-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
                       <div>
                         <span className="text-gray-400">Distance:</span>
                         <span className="text-white ml-2">{distance.toFixed(1)} km</span>
@@ -439,7 +439,7 @@ const RideBooking = () => {
                   {/* Similar Rides */}
                   {similarRides.length > 0 && (
                     <div className="mb-6">
-                      <h4 className="text-lg font-semibold text-white mb-3">Similar Rides Today</h4>
+                      <h4 className="text-base sm:text-lg font-semibold text-white mb-3">Similar Rides Today</h4>
                       <div className="space-y-2">
                         {similarRides.map((ride, index) => (
                           <div key={index} className="bg-gray-800/50 border border-gray-600 rounded-lg p-3">

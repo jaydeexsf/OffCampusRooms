@@ -259,15 +259,15 @@ const DriversShowcase = () => {
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-12" data-aos="fade-up">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                Meet Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                  Trusted Drivers
-                </span>
-              </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                Safe, reliable, and experienced drivers ready to take you anywhere around campus
-              </p>
+                             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+                 Meet Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                   Trusted Drivers
+                 </span>
+               </h2>
+                             <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
+               <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
+                 Safe, reliable, and experienced drivers ready to take you anywhere around campus
+               </p>
             </div>
 
             {/* Drivers Display - Clean Professional Layout */}
@@ -311,7 +311,7 @@ const DriversShowcase = () => {
                           <div 
                             key={driver._id} 
                             className="w-1/3 px-4 flex-shrink-0"
-                            style={{ minWidth: '300px' }}
+                            style={{ minWidth: '260px' }}
                           >
                             {/* Driver Card - Clean and Simple */}
                             <div
@@ -321,7 +321,7 @@ const DriversShowcase = () => {
                               onClick={() => openDriverModal(driver)}
                             >
                               {/* Car Image */}
-                              <div className="relative h-48 overflow-hidden">
+                              <div className="relative h-36 sm:h-44 lg:h-48 overflow-hidden">
                                 <img
                                   src={driver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
                                   alt={`${driver.carDetails?.make || driver.vehicleInfo?.make || 'Car'} ${driver.carDetails?.model || driver.vehicleInfo?.model || ''}`}
@@ -344,14 +344,14 @@ const DriversShowcase = () => {
                               </div>
 
                               {/* Driver Info - Simplified */}
-                              <div className="p-6">
+                              <div className="p-4 sm:p-6">
                                 {/* Profile Section */}
-                                <div className="flex items-center gap-4 mb-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                                   <div className="relative">
                                     <img
                                       src={driver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
                                       alt={driver.fullName}
-                                      className="w-16 h-16 rounded-full object-cover border-2 border-blue-500/50 shadow-lg"
+                                      className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full object-cover border-2 border-blue-500/50 shadow-lg"
                                     />
                                     {/* Online Status */}
                                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-900 ${
@@ -359,27 +359,37 @@ const DriversShowcase = () => {
                                     }`}></div>
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <h3 className="text-base font-bold text-white mb-2 truncate">
+                                    <h3 className="text-sm sm:text-base font-bold text-white mb-1 sm:mb-2 truncate">
                                       {driver.fullName}
                                     </h3>
-                                    <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex items-center gap-2 mb-1 sm:mb-2">
                                       <div className="flex items-center gap-1">
-                                        {renderStars(driver.rating || 4.5)}
+                                        {/* Smaller stars on mobile */}
+                                        {Array.from({ length: 5 }, (_, index) => (
+                                          <FiStar
+                                            key={index}
+                                            className={`w-3 h-3 sm:w-4 sm:h-4 ${
+                                              index < Math.floor((driver.rating || 4.5))
+                                                ? 'text-yellow-400 fill-current'
+                                                : 'text-gray-400'
+                                            }`}
+                                          />
+                                        ))}
                                       </div>
-                                      <span className="text-sm text-gray-300 font-medium">
+                                      <span className="text-xs sm:text-sm text-gray-300 font-medium">
                                         {driver.rating || 4.5}
                                       </span>
                                     </div>
-                                    <p className="text-sm text-blue-400 font-medium">
+                                    <p className="text-xs sm:text-sm text-blue-400 font-medium">
                                       {driver.totalRides || 0} rides • {driver.experience || 'Experienced'}
                                     </p>
                                   </div>
                                 </div>
 
                                 {/* Simple Car Info */}
-                                <div className="bg-gray-700/50 rounded-lg p-3 border border-white/5 mb-4">
-                                  <div className="flex items-center gap-2 text-sm text-gray-300">
-                                    <FiTruck className="text-blue-400 w-4 h-4" />
+                                <div className="bg-gray-700/50 rounded-lg p-2 sm:p-3 border border-white/5 mb-3 sm:mb-4">
+                                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-300">
+                                    <FiTruck className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4" />
                                     <span className="truncate">
                                       {driver.carDetails?.year || driver.vehicleInfo?.year || 'N/A'} {driver.carDetails?.make || driver.vehicleInfo?.make || 'N/A'}
                                     </span>
@@ -387,7 +397,7 @@ const DriversShowcase = () => {
                                 </div>
 
                                 {/* Action Button */}
-                                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 rounded-lg text-sm font-semibold shadow-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-200">
+                                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-2 sm:py-3 rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-200">
                                   Book Now
                                 </button>
                               </div>
@@ -462,52 +472,57 @@ const DriversShowcase = () => {
             {/* Modal Content */}
             <div className="p-4 sm:p-6 lg:p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-                {/* Left Column - Profile & Contact (Mobile: side by side, Desktop: stacked) */}
-                <div className="space-y-4 sm:space-y-6">
-                  {/* Mobile: Profile and Contact side by side */}
-                  <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-                    {/* Profile Section */}
-                    <div className="text-center">
-                      <div className="relative inline-block mb-4">
-                        <img
-                          src={selectedDriver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
-                          alt={selectedDriver.fullName}
-                          className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full object-cover border-4 border-blue-500/50 shadow-xl"
-                        />
-                        {/* Online Status */}
-                        <div className={`absolute -bottom-2 -right-2 w-6 h-6 rounded-full border-3 border-gray-900 ${
-                          selectedDriver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
-                        }`}></div>
-                      </div>
-                      <h3 className="text-base sm:text-lg font-bold text-white mb-2">{selectedDriver.fullName}</h3>
-                      <div className="flex items-center justify-center gap-2 mb-3">
-                        <div className="flex items-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <FiStar
-                              key={i}
-                              className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                                i < Math.floor(selectedDriver.rating || 0)
-                                    ? 'text-yellow-400 fill-current'
-                                    : 'text-gray-600'
-                              }`}
-                            />
-                          ))}
+                                 {/* Left Column - Combined Profile & Contact */}
+                 <div className="space-y-4 sm:space-y-6">
+                   {/* Combined Profile and Contact Section */}
+                   <div className="bg-gray-800 rounded-xl p-4 sm:p-6 border border-white/10">
+                    {/* Profile + Contact layout: column on mobile, row from md */}
+                    <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
+                      {/* Profile block */}
+                      <div className="text-center md:text-left">
+                        <div className="relative inline-block mb-3 md:mb-2">
+                          <img
+                            src={selectedDriver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
+                            alt={selectedDriver.fullName}
+                            className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full object-cover border-4 border-blue-500/50 shadow-xl"
+                          />
+                          {/* Online Status */}
+                          <div className={`absolute -bottom-2 -right-2 w-5 h-5 rounded-full border-3 border-gray-900 ${
+                            selectedDriver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
+                          }`}></div>
                         </div>
-                        <span className="text-white font-bold text-sm sm:text-base ml-2">{selectedDriver.rating || 'N/A'}</span>
+                        <h3 className="text-sm sm:text-base font-bold text-white mb-1">{selectedDriver.fullName}</h3>
+                        <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                          <div className="flex items-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                              <FiStar
+                                key={i}
+                                className={`w-3 h-3 sm:w-4 sm:h-4 ${
+                                  i < Math.floor(selectedDriver.rating || 0)
+                                      ? 'text-yellow-400 fill-current'
+                                      : 'text-gray-600'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-white font-bold text-xs sm:text-sm">{selectedDriver.rating || 'N/A'}</span>
+                        </div>
+                        <p className="text-gray-300 text-xs">({selectedDriver.totalRides || 0} rides completed)</p>
                       </div>
-                      <p className="text-gray-300 text-xs sm:text-sm">({selectedDriver.totalRides || 0} rides completed)</p>
-                    </div>
-                    
-                    {/* Contact Info */}
-                    <div className="bg-gray-800 rounded-xl p-4 sm:p-6 border border-white/10">
-                      <h4 className="text-white font-semibold mb-3 sm:mb-4 flex items-center gap-2 text-sm sm:text-base">
-                        <FiPhone className="text-blue-400 w-4 h-4 sm:w-5 sm:h-5" />
-                        Contact
-                      </h4>
-                      <p className="text-white font-semibold text-sm sm:text-base">{selectedDriver.contact || selectedDriver.contactNumber || selectedDriver.phone || 'Not specified'}</p>
+
+                      {/* Contact block */}
+                      <div className="w-full md:w-auto md:min-w-[220px] border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4">
+                        <h4 className="text-white font-semibold mb-2 flex items-center gap-2 text-sm">
+                          <FiPhone className="text-blue-400 w-4 h-4" />
+                          Contact
+                        </h4>
+                        <p className="text-white font-semibold text-sm break-words">
+                          {selectedDriver.contact || selectedDriver.contactNumber || selectedDriver.phone || 'Not specified'}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                 </div>
                 
                 {/* Right Column - Vehicle Details & Actions */}
                 <div className="space-y-4 sm:space-y-6">
