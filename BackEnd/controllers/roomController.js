@@ -11,6 +11,23 @@ const getAllRooms = async (req, res) => {
   }
 };
 
+// Get single room by ID
+const getRoomById = async (req, res) => {
+  try {
+    const roomId = req.params.id;
+    const room = await Room.findById(roomId);
+    
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+    
+    res.status(200).json({ room });
+  } catch (error) {
+    console.error("Error fetching room by ID:", error);
+    res.status(500).json({ message: "Error fetching room", error: error.message });
+  }
+};
+
 
 // Get all best rooms where bestRoom is true
 const getAllBestRooms = async (req, res) => {
@@ -250,5 +267,5 @@ const searchRooms = async (req, res) => {
 };
 
 
-module.exports = { getAllRooms, getAllBestRooms, updateRoom, addRoom, deleteRoom, searchRooms };
+module.exports = { getAllRooms, getAllBestRooms, getRoomById, updateRoom, addRoom, deleteRoom, searchRooms };
 

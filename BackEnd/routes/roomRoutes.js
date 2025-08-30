@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllBestRooms, updateRoom, deleteRoom, addRoom, searchRooms } = require("../controllers/roomController");
+const { getAllBestRooms, getRoomById, updateRoom, deleteRoom, addRoom, searchRooms } = require("../controllers/roomController");
 const { getAllRooms } = require("../controllers/roomController")
 const path = require('path');
 const multer = require('multer');
@@ -8,6 +8,7 @@ const router = express.Router();
 // endpoints for getting rooms from mogn0 db
 router.get("/all", getAllRooms);
 router.get("/best-rooms", getAllBestRooms);
+router.get("/:id", getRoomById);
 
 //emnpomnt for updating rooms // i will create this later
 router.put("/update-room/:id", updateRoom);
