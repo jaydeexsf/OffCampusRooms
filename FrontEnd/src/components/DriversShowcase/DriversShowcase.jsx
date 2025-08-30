@@ -338,17 +338,17 @@ const DriversShowcase = () => {
              <div key={driver._id} className="px-2">
                {/* Driver Card */}
                                <div
-                  className="bg-gray-800 border border-white/10 rounded-2xl p-4 sm:p-6
+                  className="bg-gray-800 border border-white/10 rounded-2xl overflow-hidden
                              cursor-pointer mx-auto shadow-xl transition-none"
                   style={{height: 'auto', minHeight: '420px', maxWidth: '350px', width: '100%'}}
                   onClick={() => openDriverModal(driver)}
                 >
                                                    {/* Car Image */}
-                  <div className="relative mb-4 sm:mb-5 overflow-hidden rounded-xl">
+                  <div className="relative mb-4 sm:mb-5 overflow-hidden">
                     <img
                       src={driver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
                       alt={`${driver.carDetails?.make || driver.vehicleInfo?.make || 'Car'} ${driver.carDetails?.model || driver.vehicleInfo?.model || ''}`}
-                      className="w-full h-48 sm:h-56 md:h-64 object-cover rounded-xl"
+                      className="w-full h-48 sm:h-56 md:h-64 object-cover"
                     />
                     {/* Price Badge */}
                     <div className="absolute top-3 right-3">
@@ -366,7 +366,7 @@ const DriversShowcase = () => {
                     )}
                   </div>
                                  {/* Driver Profile Section */}
-                 <div className="flex items-center gap-4 mb-4">
+                 <div className="flex items-center gap-4 mb-4 px-4 sm:px-6">
                    <div className="relative">
                      <img
                        src={driver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
@@ -396,7 +396,7 @@ const DriversShowcase = () => {
                    </div>
                  </div>
                                  {/* Car Details with Icons */}
-                 <div className="mb-4 bg-gray-700 rounded-xl p-3 border border-white/10">
+                 <div className="mb-4 mx-4 sm:mx-6 bg-gray-700 rounded-xl p-3 border border-white/10">
                   <div className="flex items-center gap-2 mb-2">
                     <FiTruck className="text-blue-400 w-4 h-4" />
                     <span className="text-white font-semibold text-sm">
@@ -411,7 +411,7 @@ const DriversShowcase = () => {
                   </div>
                 </div>
                                  {/* Action Button */}
-                 <div className="flex justify-center">
+                 <div className="flex justify-center px-4 sm:px-6 pb-4 sm:pb-6">
                    <button className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg">
                      Book Now
                    </button>
@@ -443,8 +443,8 @@ const DriversShowcase = () => {
 
              {/* Driver Detail Modal */}
        {showModal && selectedDriver && (
-         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4" onClick={closeModal}>
-           <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-1 sm:p-4" onClick={closeModal}>
+           <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[98vh] sm:max-h-[95vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {/* Modal Header with Hero Image */}
             <div className="relative">
                              <img
@@ -460,17 +460,17 @@ const DriversShowcase = () => {
                   <FiX className="w-5 h-5" />
                 </button>
               {/* Price Badge */}
-              <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600 to-blue-500 backdrop-blur-sm border border-blue-400/30 rounded-full px-4 py-2 shadow-lg">
-                <span className="text-white font-bold text-lg">R{selectedDriver.pricePerKm || 'N/A'}/km</span>
+              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-gradient-to-r from-blue-600 to-blue-500 backdrop-blur-sm border border-blue-400/30 rounded-full px-2 sm:px-3 lg:px-4 py-1 sm:py-2 shadow-lg">
+                <span className="text-white font-bold text-xs sm:text-sm lg:text-lg">R{selectedDriver.pricePerKm || 'N/A'}/km</span>
               </div>
               
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 sm:p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="p-3 sm:p-6 lg:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {/* Left Column - Profile & Quick Info */}
-                <div className="lg:col-span-1 space-y-6">
+                <div className="lg:col-span-1 space-y-3 sm:space-y-4 lg:space-y-6">
                   {/* Profile Section */}
                   <div className="text-center">
                     <div className="relative inline-block mb-4">
@@ -484,7 +484,7 @@ const DriversShowcase = () => {
                         selectedDriver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
                       }`}></div>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">{selectedDriver.fullName}</h3>
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2">{selectedDriver.fullName}</h3>
                     <div className="flex items-center justify-center gap-2 mb-3">
                       <div className="flex items-center gap-1">
                         {[...Array(5)].map((_, i) => (
@@ -498,60 +498,60 @@ const DriversShowcase = () => {
                           />
                         ))}
                       </div>
-                      <span className="text-white font-bold text-lg ml-2">{selectedDriver.rating || 'N/A'}</span>
+                      <span className="text-white font-bold text-sm sm:text-base lg:text-lg ml-2">{selectedDriver.rating || 'N/A'}</span>
                     </div>
-                    <p className="text-gray-300 text-sm">({selectedDriver.totalRides || 0} rides completed)</p>
+                    <p className="text-gray-300 text-xs sm:text-sm">({selectedDriver.totalRides || 0} rides completed)</p>
                   </div>
 
                   
 
                                      {/* Contact Info */}
-                   <div className="bg-gray-800 rounded-2xl p-6 border border-white/10">
-                    <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
-                      <FiPhone className="text-blue-400 w-5 h-5" />
+                   <div className="bg-gray-800 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/10">
+                    <h4 className="text-white font-semibold mb-2 sm:mb-3 lg:mb-4 flex items-center gap-2 text-sm sm:text-base">
+                      <FiPhone className="text-blue-400 w-4 h-4 sm:w-5 sm:h-5" />
                       Contact
                     </h4>
-                    <p className="text-white font-semibold text-lg">{selectedDriver.contact || selectedDriver.contactNumber || selectedDriver.phone || 'Not specified'}</p>
+                    <p className="text-white font-semibold text-sm sm:text-base lg:text-lg">{selectedDriver.contact || selectedDriver.contactNumber || selectedDriver.phone || 'Not specified'}</p>
                   </div>
                 </div>
                 
                 {/* Right Column - Detailed Info */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-3 sm:space-y-4 lg:space-y-6">
                   
                   
                                      {/* Vehicle Information */}
-                   <div className="bg-gray-800 rounded-2xl p-6 border border-white/10">
-                    <h4 className="text-white font-semibold mb-4 text-lg">Vehicle Information</h4>
-                    <div className="grid grid-cols-2 gap-6">
-                      <div className="space-y-3">
+                   <div className="bg-gray-800 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/10">
+                    <h4 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base lg:text-lg">Vehicle Information</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                      <div className="space-y-2 sm:space-y-3">
                         <div>
-                          <span className="text-gray-400 text-sm">Make & Model</span>
-                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.make || selectedDriver.carDetails?.make || 'N/A'} {selectedDriver.vehicleInfo?.model || selectedDriver.carDetails?.model || 'N/A'}</p>
+                          <span className="text-gray-400 text-xs sm:text-sm">Make & Model</span>
+                          <p className="text-white font-semibold text-sm sm:text-base lg:text-lg">{selectedDriver.vehicleInfo?.make || selectedDriver.carDetails?.make || 'N/A'} {selectedDriver.vehicleInfo?.model || selectedDriver.carDetails?.model || 'N/A'}</p>
                         </div>
                         <div>
-                          <span className="text-gray-400 text-sm">Year</span>
-                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.year || selectedDriver.carDetails?.year || 'N/A'}</p>
+                          <span className="text-gray-400 text-xs sm:text-sm">Year</span>
+                          <p className="text-white font-semibold text-sm sm:text-base lg:text-lg">{selectedDriver.vehicleInfo?.year || selectedDriver.carDetails?.year || 'N/A'}</p>
                         </div>
                       </div>
-                      <div className="space-y-3">
+                      <div className="space-y-2 sm:space-y-3">
                         <div>
-                          <span className="text-gray-400 text-sm">Color</span>
-                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.color || selectedDriver.carDetails?.color || 'N/A'}</p>
+                          <span className="text-gray-400 text-xs sm:text-sm">Color</span>
+                          <p className="text-white font-semibold text-sm sm:text-base lg:text-lg">{selectedDriver.vehicleInfo?.color || selectedDriver.carDetails?.color || 'N/A'}</p>
                         </div>
                         <div>
-                          <span className="text-gray-400 text-sm">License Plate</span>
-                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.licensePlate || selectedDriver.carDetails?.licensePlate || 'N/A'}</p>
+                          <span className="text-gray-400 text-xs sm:text-sm">License Plate</span>
+                          <p className="text-white font-semibold text-sm sm:text-base lg:text-lg">{selectedDriver.vehicleInfo?.licensePlate || selectedDriver.carDetails?.licensePlate || 'N/A'}</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   
                                      {/* Action Buttons */}
-                   <div className="flex gap-4 pt-4">
-                     <button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-4 px-6 rounded-2xl shadow-lg text-lg">
+                   <div className="flex gap-2 sm:gap-4 pt-2 sm:pt-4">
+                     <button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-xl sm:rounded-2xl shadow-lg text-xs sm:text-sm lg:text-lg">
                        Book Ride Now
                      </button>
-                     <button className="flex-1 bg-gray-700 text-white font-bold py-4 px-6 rounded-2xl text-lg">
+                     <button className="flex-1 bg-gray-700 text-white font-bold py-2 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-xl sm:rounded-2xl text-xs sm:text-sm lg:text-lg">
                        Send Message
                      </button>
                    </div>
