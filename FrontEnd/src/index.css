@@ -1,9 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* Import Slick Carousel CSS */
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
+
 
 @tailwind base;
 @tailwind components;
@@ -132,40 +130,7 @@
   @apply bg-primary-400 rounded-full;
 }
 
-/* Slick Carousel Custom Styles */
-.slick-slider {
-  @apply relative block box-border;
-}
 
-.slick-list {
-  @apply relative block overflow-hidden m-0 p-0;
-}
-
-.slick-track {
-  @apply relative top-0 left-0 block;
-  display: flex !important;
-}
-
-.slick-slide {
-  @apply relative float-left h-auto min-h-0;
-  display: block !important;
-}
-
-.slick-slide > div {
-  @apply h-full;
-}
-
-.slick-dots {
-  @apply flex justify-center mt-6 space-x-2;
-}
-
-.slick-dots li button:before {
-  @apply text-white/50 text-xs;
-}
-
-.slick-dots li.slick-active button:before {
-  @apply text-blue-400;
-}
 
 @media (min-width: 1280px) and (max-width: 1536px) {
   .mainclassless {
@@ -173,66 +138,7 @@
   }
 }
 
-/* Professional Carousel Layout Styles */
-.drivers-slider .slick-slider,
-.testimonials-slider .slick-slider {
-  @apply w-full;
-}
 
-.drivers-slider .slick-track,
-.testimonials-slider .slick-track {
-  @apply flex items-stretch;
-}
-
-.drivers-slider .slick-slide,
-.testimonials-slider .slick-slide {
-  @apply h-auto;
-}
-
-.drivers-slider .slick-slide > div,
-.testimonials-slider .slick-slide > div {
-  @apply h-full px-2;
-}
-
-/* Ensure proper spacing for slider items */
-.drivers-slider .slick-slide > div > div,
-.testimonials-slider .slick-slide > div > div {
-  @apply h-full;
-}
-
-/* Professional slider dots */
-.drivers-slider .slick-dots,
-.testimonials-slider .slick-dots {
-  @apply bottom-4;
-}
-
-.drivers-slider .slick-dots li button:before,
-.testimonials-slider .slick-dots li button:before {
-  @apply text-white/60;
-}
-
-.drivers-slider .slick-dots li.slick-active button:before,
-.testimonials-slider .slick-dots li.slick-active button:before {
-  @apply text-blue-400;
-}
-
-/* Carousel Navigation Arrows */
-.drivers-slider .slick-arrow,
-.testimonials-slider .slick-arrow {
-  @apply hidden;
-}
-
-/* Ensure smooth sliding animation */
-.drivers-slider .slick-list,
-.testimonials-slider .slick-list {
-  @apply overflow-hidden;
-}
-
-/* Professional card spacing */
-.drivers-slider .slick-slide > div,
-.testimonials-slider .slick-slide > div {
-  @apply transition-none;
-}
 
 /* Global Scrollbar Styling - Website Theme */
 ::-webkit-scrollbar {

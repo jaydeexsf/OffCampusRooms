@@ -38,6 +38,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+// Respond to CORS preflight globally
+app.options('*', cors());
 app.use(express.json()); // Allows the server to accept JSON requests
 
 // Serve static files from uploads directory
@@ -107,6 +109,9 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+// Helper to detect CORS preflight
+const isPreflight = (req) => req.method === 'OPTIONS';
+
 // Routes
 app.use("/api/rooms", roomRoutes);
 // FAQ routes - only add/delete require auth (admin functions)
@@ -115,16 +120,29 @@ app.use('/api/faq', (req, res, next) => {
   if (req.method === 'GET') {
     return next();
   }
+  // Always allow CORS preflight
+  if (isPreflight(req)) {
+    return next();
+  }
   // Apply auth middleware for admin routes (POST, DELETE)
   return authMiddleware(req, res, next);
 }, faqRoutes);
 app.use('/api/google', distanceRoute);
 // Apply auth middleware to comment routes
-app.use('/api/comments', authMiddleware, commentRoutes);
+app.use('/api/comments', (req, res, next) => {
+  if (isPreflight(req)) {
+    return next();
+  }
+  return authMiddleware(req, res, next);
+}, commentRoutes);
 // Rating routes with selective authentication
 app.use('/api/ratings', (req, res, next) => {
   // Skip auth for public routes (getting room ratings)
   if (req.method === 'GET' && req.path.startsWith('/room/')) {
+    return next();
+  }
+  // Always allow CORS preflight
+  if (isPreflight(req)) {
     return next();
   }
   // Apply auth middleware for all other rating routes
@@ -137,16 +155,29 @@ app.use('/api/feedback', (req, res, next) => {
   if (req.method === 'GET' && req.path === '/public') {
     return next(); // Skip auth for public feedback
   }
+  // Always allow CORS preflight
+  if (isPreflight(req)) {
+    return next();
+  }
   return authMiddleware(req, res, next);
 }, feedbackRoutes);
 
 // Use saved room routes (all require authentication)
-app.use('/api/saved-rooms', authMiddleware, savedRoomRoutes);
+app.use('/api/saved-rooms', (req, res, next) => {
+  if (isPreflight(req)) {
+    return next();
+  }
+  return authMiddleware(req, res, next);
+}, savedRoomRoutes);
 
 // Driver routes (admin routes require auth)
 app.use('/api/drivers', (req, res, next) => {
   // Skip auth for public routes (getting available drivers and statistics)
   if (req.method === 'GET' && (req.path === '/available' || req.path === '/count')) {
+    return next();
+  }
+  // Always allow CORS preflight
+  if (isPreflight(req)) {
     return next();
   }
   // Apply auth middleware for admin routes (POST, PUT, DELETE, PATCH)
@@ -158,6 +189,10 @@ app.use('/api/rides', (req, res, next) => {
   // Skip auth for public routes (calculate ride details and public rides)
   if ((req.method === 'POST' && req.path === '/calculate') || 
       (req.method === 'GET' && req.path === '/public')) {
+    return next();
+  }
+  // Always allow CORS preflight
+  if (isPreflight(req)) {
     return next();
   }
   // Apply auth middleware for all other ride routes

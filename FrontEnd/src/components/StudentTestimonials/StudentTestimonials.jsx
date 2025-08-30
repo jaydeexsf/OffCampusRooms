@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Slider from "react-slick";
 import { FiStar, FiMessageSquare, FiLoader, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import axios from 'axios';
+import { apiClient } from '../../config/api';
 import { API_ENDPOINTS } from '../../config/api';
 
 const StudentTestimonials = () => {
@@ -9,17 +8,58 @@ const StudentTestimonials = () => {
   const [loading, setLoading] = useState(true);
   const [averageRating, setAverageRating] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const sliderRef = useRef(null);
 
   useEffect(() => {
     fetchTestimonials();
   }, []);
 
+  // Custom slider functions
+  const nextSlide = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    const maxSlides = Math.ceil(testimonials.length / 3);
+    console.log('Testimonials next slide clicked, current:', currentSlide, 'maxSlides:', maxSlides);
+    setCurrentSlide((prev) => (prev + 1) % maxSlides);
+    setTimeout(() => setIsTransitioning(false), 300);
+  };
+
+  const prevSlide = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    const maxSlides = Math.ceil(testimonials.length / 3);
+    console.log('Testimonials prev slide clicked, current:', currentSlide, 'maxSlides:', maxSlides);
+    setCurrentSlide((prev) => (prev - 1 + maxSlides) % maxSlides);
+    setTimeout(() => setIsTransitioning(false), 300);
+  };
+
+  const goToSlide = (index) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    console.log('Testimonials go to slide:', index);
+    setCurrentSlide(index);
+    setTimeout(() => setIsTransitioning(false), 300);
+  };
+
+  // Auto-play functionality
+  useEffect(() => {
+    const maxSlides = Math.ceil(testimonials.length / 3);
+    if (maxSlides <= 1) return;
+    
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [testimonials.length, currentSlide]);
+
   const fetchTestimonials = async () => {
     try {
       const url = `${API_ENDPOINTS.GET_PUBLIC_FEEDBACK}?limit=12`;
       console.log('[Testimonials] Fetch URL:', url);
-      const response = await axios.get(url);
+      const response = await apiClient.get(url);
       console.log('[Testimonials] Response:', response.status, response.data);
       const { feedback, averageRating, total } = response.data;
       
@@ -60,39 +100,7 @@ const StudentTestimonials = () => {
     }
   };
 
-  // Fixed slider settings for consistent behavior
-  const settings = {
-    dots: true,
-    arrows: false,
-    infinite: testimonials.length > 3,
-    speed: 600,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: testimonials.length > 3,
-    autoplaySpeed: 5000,
-    centerMode: false,
-    centerPadding: '0px',
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          centerMode: false,
-          centerPadding: '0px',
-        },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: false,
-          centerPadding: '0px',
-        },
-      },
-    ],
-  };
+
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -103,6 +111,97 @@ const StudentTestimonials = () => {
         }`}
       />
     ));
+  };
+
+  // Helper to render content clearly (avoids nested ternaries that can confuse parsers)
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center py-20">
+          <div className="flex flex-col items-center gap-4">
+            <FiLoader className="w-8 h-8 text-blue-400 animate-spin" />
+            <p className="text-gray-400 text-base">Loading student testimonials...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (testimonials.length > 0) {
+      return (
+        <div className="relative overflow-hidden rounded-2xl">
+          <div 
+            className="flex transition-transform duration-300 ease-out"
+            style={{
+              transform: `translateX(-${currentSlide * 100}%)`,
+              width: `${testimonials.length * (100 / 3)}%`
+            }}
+          >
+            {testimonials.map((testimonial, index) => (
+              <div 
+                key={testimonial.id} 
+                className="w-1/3 px-4 flex-shrink-0"
+                style={{ minWidth: '300px' }}
+              >
+                {/* Testimonial Card - Clean and Simple */}
+                <div className="bg-gray-800/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 h-full shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-800/70">
+                  {/* Quote Icon and Rating */}
+                  <div className="flex justify-between items-start mb-6">
+                    <FiMessageSquare className="text-blue-400 w-6 h-6" />
+                    <div className="flex gap-1">
+                      {renderStars(testimonial.rating)}
+                    </div>
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-gray-300 text-sm leading-relaxed mb-6 line-clamp-4">
+                    "{testimonial.review}"
+                  </p>
+
+                  {/* Student Info - Simplified */}
+                  <div className="flex items-center gap-4">
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/50">
+                      <img 
+                        src={testimonial.image} 
+                        alt={testimonial.name}
+                        className="w-full h-full object-cover" 
+                        onError={(e) => {
+                          e.target.src = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-white font-semibold text-sm mb-1 truncate">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-gray-400 text-xs mb-1 truncate">
+                        {testimonial.course}
+                      </p>
+                      <p className="text-blue-400 text-xs font-medium truncate">
+                        {testimonial.location}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="text-center py-20">
+        <FiMessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+        <h3 className="text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
+        <p className="text-gray-500 text-base mb-6">Be the first to share your experience!</p>
+        <a 
+          href="/feedback" 
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+        >
+          Share Your Experience
+        </a>
+      </div>
+    );
   };
 
   return (
@@ -125,97 +224,46 @@ const StudentTestimonials = () => {
           {/* Testimonials Slider - Clean Professional Layout */}
           <div className="w-full relative" data-aos="fade-up" data-aos-delay="200">
             <div className="relative">
-              {/* Left Navigation Arrow */}
-              <button
-                onClick={() => sliderRef.current?.slickPrev()}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 z-10 
-                           bg-black/80 backdrop-blur-sm border border-white/20 
-                           rounded-full p-3 text-white shadow-lg opacity-0 lg:opacity-100
-                           hover:bg-black/90 transition-all duration-200"
-              >
-                <FiChevronLeft className="w-5 h-5" />
-              </button>
-
-              {/* Right Navigation Arrow */}
-              <button
-                onClick={() => sliderRef.current?.slickNext()}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 z-10 
-                           bg-black/80 backdrop-blur-sm border border-white/20 
-                           rounded-full p-3 text-white shadow-lg opacity-0 lg:opacity-100
-                           hover:bg-black/90 transition-all duration-200"
-              >
-                <FiChevronRight className="w-5 h-5" />
-              </button>
+              {/* Navigation Buttons - Top Right */}
+              <div className="absolute top-0 right-0 z-10 flex gap-2 mb-4">
+                <button
+                  onClick={prevSlide}
+                  disabled={isTransitioning || Math.ceil(testimonials.length / 3) <= 1}
+                  className="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
+                  title="Previous"
+                >
+                  <FiChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  disabled={isTransitioning || Math.ceil(testimonials.length / 3) <= 1}
+                  className="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
+                  title="Next"
+                >
+                  <FiChevronRight className="w-5 h-5" />
+                </button>
+              </div>
 
               {/* Slider Container */}
               <div className="px-12 lg:px-16">
-                {loading ? (
-                  <div className="flex justify-center items-center py-20">
-                    <div className="flex flex-col items-center gap-4">
-                      <FiLoader className="w-8 h-8 text-blue-400 animate-spin" />
-                      <p className="text-gray-400 text-base">Loading student testimonials...</p>
-                    </div>
-                  </div>
-                ) : testimonials.length > 0 ? (
-                  <Slider ref={sliderRef} {...settings} className="testimonials-slider">
-                    {testimonials.map((testimonial) => (
-                      <div key={testimonial.id} className="px-4">
-                        {/* Testimonial Card - Clean and Simple */}
-                        <div className="bg-gray-800/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 h-full shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-800/70">
-                          {/* Quote Icon and Rating */}
-                          <div className="flex justify-between items-start mb-6">
-                            <FiMessageSquare className="text-blue-400 w-6 h-6" />
-                            <div className="flex gap-1">
-                              {renderStars(testimonial.rating)}
-                            </div>
-                          </div>
-
-                          {/* Review Text */}
-                          <p className="text-gray-300 text-sm leading-relaxed mb-6 line-clamp-4">
-                            "{testimonial.review}"
-                          </p>
-
-                          {/* Student Info - Simplified */}
-                          <div className="flex items-center gap-4">
-                            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/50">
-                              <img 
-                                src={testimonial.image} 
-                                alt={testimonial.name}
-                                className="w-full h-full object-cover" 
-                                onError={(e) => {
-                                  e.target.src = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
-                                }}
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-white font-semibold text-sm mb-1 truncate">
-                                {testimonial.name}
-                              </h4>
-                              <p className="text-gray-400 text-xs mb-1 truncate">
-                                {testimonial.course}
-                              </p>
-                              <p className="text-blue-400 text-xs font-medium truncate">
-                                {testimonial.location}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </Slider>
-                ) : (
-                  <div className="text-center py-20">
-                    <FiMessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
-                    <p className="text-gray-500 text-base mb-6">Be the first to share your experience!</p>
-                    <a 
-                      href="/feedback" 
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
-                    >
-                      Share Your Experience
-                    </a>
-                  </div>
-                )}
+                {renderContent()}
+                                 {/* Dots Navigation */}
+                 {Math.ceil(testimonials.length / 3) > 1 && !loading && (
+                   <div className="flex justify-center gap-2 mt-6">
+                     {Array.from({ length: Math.ceil(testimonials.length / 3) }, (_, index) => (
+                       <button
+                         key={index}
+                         onClick={() => goToSlide(index)}
+                         className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                           currentSlide === index
+                             ? 'bg-blue-400 scale-125'
+                             : 'bg-gray-600 hover:bg-gray-500'
+                         }`}
+                         title={`Go to slide ${index + 1}`}
+                       />
+                     ))}
+                   </div>
+                 )}
               </div>
             </div>
           </div>

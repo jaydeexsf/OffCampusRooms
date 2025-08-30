@@ -19,9 +19,8 @@
     "react-countup": "^6.5.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
-    "react-slick": "^0.29.0",
-    "slick-carousel": "^1.8.1",
-    "swiper": "^11.1.14"
+
+
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

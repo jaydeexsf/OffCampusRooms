@@ -2,15 +2,12 @@ const Room = require("../models/roomModel");
 
 const getAllRooms = async (req, res) => {
   try {
-    const rooms = await Room.find().limit();
-    // console.log("Rooms data:", rooms); 
-    // if (rooms) {
-    //   return res.status(200).json({ message: "No rooms found", });
-    // }
+    const rooms = await Room.find().limit(100);
+    console.log(`Found ${rooms.length} rooms in database`);
     res.status(200).json({rooms});
   } catch (error) {
     console.error("Error fetching rooms:", error);
-    res.status(500).json({ message: "Error fetching rooms", error });
+    res.status(500).json({ message: "Error fetching rooms", error: error.message });
   }
 };
 
@@ -193,19 +190,62 @@ const deleteRoom = async (req, res)=> {
 
 const searchRooms = async (req, res) => {
   try {
-      const { location, maxPrice, limitBy } = req.query; 
+      console.log('Search rooms query params:', req.query);
+      const { location, maxPrice, limitBy, amenities, search, maxDistance } = req.query; 
 
       let query = {};
-      if (location !== "All") query.location = location.toLowerCase();
-      if (maxPrice) query.price = { $lte: maxPrice };
+      
+      // Handle location filter
+      if (location && location !== "All") {
+          query.location = location.toLowerCase();
+      }
+      
+      // Handle price filter
+      if (maxPrice) {
+          query.price = { $lte: parseInt(maxPrice) };
+      }
+      
+      // Handle amenities filter
+      if (amenities) {
+          const amenitiesArray = amenities.split(',');
+          console.log('Amenities array:', amenitiesArray);
+          
+          // Use $and to ensure ALL selected amenities are present
+          const amenitiesConditions = amenitiesArray.map(amenity => ({
+              [`amenities.${amenity}`]: true
+          }));
+          
+          if (amenitiesConditions.length > 0) {
+              query.$and = amenitiesConditions;
+          }
+      }
+      
+      // Handle search term
+      if (search) {
+          query.$or = [
+              { title: { $regex: search, $options: 'i' } },
+              { description: { $regex: search, $options: 'i' } },
+              { location: { $regex: search, $options: 'i' } }
+          ];
+      }
+      
+      // Handle distance filter
+      if (maxDistance) {
+          query.minutesAway = { $lte: parseInt(maxDistance) };
+      }
 
-      const rooms = await Room.find(query).limit(limitBy); 
+      console.log('Final query:', JSON.stringify(query, null, 2));
+      
+      const limit = limitBy ? parseInt(limitBy) : 50;
+      const rooms = await Room.find(query).limit(limit); 
       const roomCount = await Room.countDocuments(query);
 
+      console.log(`Found ${rooms.length} rooms out of ${roomCount} total`);
+      
       res.json({rooms, roomCount});
   } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error('Search rooms error:', err);
+      res.status(500).json({ error: 'Internal server error', details: err.message });
   }
 };
 

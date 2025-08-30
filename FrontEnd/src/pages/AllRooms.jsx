@@ -6,7 +6,7 @@ import Img1 from "../assets/places/boat.jpg";
 import { GlobalContext } from "../components/GlobalContext";
 import Loader from './Loader';
 import { FiFilter, FiX, FiSearch, FiLoader } from "react-icons/fi";
-import axios from "axios";
+import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 
 const AllRooms = () => {
@@ -117,7 +117,7 @@ const AllRooms = () => {
         params.maxDistance = filters.distance;
       }
       
-      const response = await axios.get(API_ENDPOINTS.SEARCH_ROOMS, { params });
+      const response = await apiClient.get(API_ENDPOINTS.SEARCH_ROOMS, { params });
       
       const filteredRooms = response.data.rooms || [];
       setRooomsData(filteredRooms);
@@ -150,7 +150,7 @@ const AllRooms = () => {
     
     setSearchLoading(true);
     try {
-      const response = await axios.get(API_ENDPOINTS.SEARCH_ROOMS, {
+      const response = await apiClient.get(API_ENDPOINTS.SEARCH_ROOMS, {
         params: {
           search: searchTerm,
           limitBy: 50
