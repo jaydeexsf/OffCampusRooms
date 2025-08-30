@@ -55,7 +55,7 @@ const DeleteFaq = ({ faq, onDelete, onError }) => {
 
             {/* Delete Confirmation Modal */}
             {showConfirm && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex justify-center p-4">
                     <div className="bg-gray-900 border border-red-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl">
                         <div className="text-center">
                             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">

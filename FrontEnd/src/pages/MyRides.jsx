@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiMapPin, FiClock, FiDollarSign, FiUser, FiPhone, FiStar, FiTruck } from 'react-icons/fi';
 import { useAuth, useUser } from '@clerk/clerk-react';
-import { apiClient } from '../config/api';
+import { apiClient, API_BASE_URL } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 
 const MyRides = () => {
@@ -19,7 +19,7 @@ const MyRides = () => {
 
   const fetchMyRides = async () => {
     try {
-              const response = await apiClient.get(`${API_ENDPOINTS.API_BASE_URL}/api/rides/student`);
+              const response = await apiClient.get(`${API_BASE_URL}/api/rides/student`);
       if (response.data.success) {
         setRides(response.data.rides);
       }
@@ -124,7 +124,7 @@ const MyRides = () => {
                       <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex items-center justify-center">
                         {ride.driverId?.profileImage ? (
                           <img 
-                            src={`${API_ENDPOINTS.API_BASE_URL}${ride.driverId.profileImage}`} 
+                            src={`${API_BASE_URL}${ride.driverId.profileImage}`} 
                             alt={ride.driverId.fullName}
                             className="w-full h-full object-cover"
                           />

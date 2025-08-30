@@ -53,11 +53,21 @@ const UpdateRoom = ({ room, onCancel }) => {
             formData.append('cloud_name', 'daqzt4zy1');
 
             try {
-                const response = await apiClient.post(
+                // Use direct fetch instead of apiClient to avoid CORS issues with authorization header
+                const response = await fetch(
                     'https://api.cloudinary.com/v1_1/daqzt4zy1/image/upload',
-                    formData
+                    {
+                        method: 'POST',
+                        body: formData
+                    }
                 );
-                const imageUrl = response.data.secure_url;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const imageUrl = data.secure_url;
                 newImages.push(imageUrl);
             } catch (error) {
                 console.error('Error uploading image:', error);

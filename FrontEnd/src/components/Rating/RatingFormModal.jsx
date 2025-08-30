@@ -80,12 +80,17 @@ const RatingFormModal = ({ isOpen, onClose, roomId, roomTitle, onRatingUpdate, e
         review: review.trim()
       };
 
+      console.log('[Rating] Submitting rating data:', ratingData);
+      console.log('[Rating] Full URL:', API_ENDPOINTS.ADD_RATING);
+      
       const response = await axios.post(API_ENDPOINTS.ADD_RATING, ratingData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
+      
+      console.log('[Rating] Response received:', response.status, response.data);
       
       setUserRating(response.data.rating);
       setIsEditing(false);

@@ -286,6 +286,84 @@ const getAllRides = async (req, res) => {
   }
 };
 
+// Get public ride information for ride sharing (no student names)
+const getPublicRides = async (req, res) => {
+  try {
+    const { date, pickupArea, dropoffArea } = req.query;
+    
+    let filter = {
+      status: { $in: ['pending', 'accepted'] } // Only show active rides
+    };
+    
+    // Filter by date if provided
+    if (date) {
+      const startDate = new Date(date);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(date);
+      endDate.setHours(23, 59, 59, 999);
+      
+      filter.scheduledTime = { $gte: startDate, $lte: endDate };
+    }
+    
+    // Filter by pickup area if provided (within 5km radius)
+    if (pickupArea && pickupArea.lat && pickupArea.lng) {
+      const radiusKm = 5;
+      const radiusDegrees = radiusKm / 111.32;
+      
+      filter['pickupLocation.lat'] = {
+        $gte: pickupArea.lat - radiusDegrees,
+        $lte: pickupArea.lat + radiusDegrees
+      };
+      filter['pickupLocation.lng'] = {
+        $gte: pickupArea.lng - radiusDegrees,
+        $lte: pickupArea.lng + radiusDegrees
+      };
+    }
+    
+    // Filter by dropoff area if provided (within 5km radius)
+    if (dropoffArea && dropoffArea.lat && dropoffArea.lng) {
+      const radiusKm = 5;
+      const radiusDegrees = radiusKm / 111.32;
+      
+      filter['dropoffLocation.lat'] = {
+        $gte: dropoffArea.lat - radiusDegrees,
+        $lte: dropoffArea.lat + radiusDegrees
+      };
+      filter['dropoffLocation.lng'] = {
+        $gte: dropoffArea.lng - radiusDegrees,
+        $lte: dropoffArea.lng + radiusDegrees
+      };
+    }
+    
+    const rides = await Ride.find(filter)
+      .select('pickupLocation dropoffLocation scheduledTime distance estimatedPrice bookingType groupSize isSharedRide maxSharedPassengers createdAt')
+      .sort({ scheduledTime: 1, createdAt: -1 })
+      .limit(20); // Limit to prevent overwhelming the UI
+    
+    // Group rides by date for better organization
+    const ridesByDate = rides.reduce((acc, ride) => {
+      const dateKey = new Date(ride.scheduledTime).toDateString();
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(ride);
+      return acc;
+    }, {});
+    
+    res.status(200).json({
+      success: true,
+      rides: ridesByDate,
+      totalRides: rides.length
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching public rides',
+      error: error.message
+    });
+  }
+};
+
 // Get advanced bookings (admin only)
 const getAdvancedBookings = async (req, res) => {
   try {
@@ -615,6 +693,7 @@ module.exports = {
   getStudentRides,
   getDriverRides,
   getAllRides,
+  getPublicRides,
   getAdvancedBookings,
   updateRideStatus,
   confirmAdvancedBooking,

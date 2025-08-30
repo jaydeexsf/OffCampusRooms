@@ -126,6 +126,9 @@ const FAQSection = () => {
       setMessage({ type: 'success', text: 'FAQ deleted successfully!' });
       await fetchFAQs();
       setDeleteConfirm({ show: false, faqId: null, faqQuestion: '' });
+      
+      // Scroll to top after successful deletion
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('❌ Error deleting FAQ:', error);
       setMessage({ 
@@ -145,6 +148,9 @@ const FAQSection = () => {
     setEditingFaq(faq);
     setFormData({ question: faq.question, answer: faq.answer });
     setShowAddModal(true);
+    
+    // Scroll to top when editing FAQ
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const resetForm = () => {

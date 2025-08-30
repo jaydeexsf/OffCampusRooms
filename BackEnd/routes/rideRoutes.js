@@ -7,6 +7,7 @@ const {
   getStudentRides,
   getDriverRides,
   getAllRides,
+  getPublicRides,
   getAdvancedBookings,
   updateRideStatus,
   confirmAdvancedBooking,
@@ -18,6 +19,7 @@ const {
 
 // Public routes
 router.post('/calculate', calculateRideDetails);
+router.get('/public', getPublicRides);
 
 // Protected routes (require authentication)
 router.post('/request', requestRide);

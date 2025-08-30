@@ -157,6 +157,7 @@ export const API_ENDPOINTS = {
   UPDATE_RIDE_STATUS: `${API_BASE_URL}/api/rides/status`,
   RATE_RIDE: `${API_BASE_URL}/api/rides/rate`,
   GET_ALL_RIDES: `${API_BASE_URL}/api/rides/all`,
+  GET_PUBLIC_RIDES: `${API_BASE_URL}/api/rides/public`,
   GET_ADVANCED_BOOKINGS: `${API_BASE_URL}/api/rides/advanced-bookings`,
   CONFIRM_ADVANCED_BOOKING: `${API_BASE_URL}/api/rides/confirm`,
 };

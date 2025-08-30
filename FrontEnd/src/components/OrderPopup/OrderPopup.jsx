@@ -187,6 +187,28 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                     )}
                   </div>
 
+                  {/* Location & Distance Information */}
+                  <div className="mb-6">
+                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white mb-3 sm:mb-4">Location & Distance</h3>
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                      <div className="bg-white/5 rounded-lg p-3 sm:p-4 border border-white/10">
+                        <div className="flex items-center gap-2 mb-2">
+                          <FiMapPin className="text-blue-400 text-sm" />
+                          <span className="text-gray-400 text-xs">Closest Gate</span>
+                        </div>
+                        <p className="text-white font-medium text-sm capitalize">{roomDetails.location}</p>
+                      </div>
+                      
+                      <div className="bg-white/5 rounded-lg p-3 sm:p-4 border border-white/10">
+                        <div className="flex items-center gap-2 mb-2">
+                          <FiClock className="text-green-400 text-sm" />
+                          <span className="text-gray-400 text-xs">Distance</span>
+                        </div>
+                        <p className="text-white font-medium text-sm">{roomDetails.minutesAway} min to UL</p>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Amenities */}
                   <div className="mb-6">
                     <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white mb-3 sm:mb-4">Amenities</h3>

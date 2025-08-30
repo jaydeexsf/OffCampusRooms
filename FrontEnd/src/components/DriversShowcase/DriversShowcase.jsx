@@ -402,7 +402,7 @@ const DriversShowcase = () => {
       {/* Driver Detail Modal */}
       {showModal && selectedDriver && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={closeModal}>
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 rounded-2xl max-w-3xl w-full max-h-[95vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {/* Modal Header */}
             <div className="relative">
               <img
@@ -510,9 +510,7 @@ const DriversShowcase = () => {
                     >
                       Book Ride Now
                     </button>
-                    <button className="flex-1 bg-gray-700 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl hover:bg-gray-600 transition-all duration-200 text-sm sm:text-base">
-                      Send Message
-                    </button>
+
                   </div>
                 </div>
               </div>

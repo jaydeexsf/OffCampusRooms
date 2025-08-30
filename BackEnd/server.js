@@ -155,8 +155,9 @@ app.use('/api/drivers', (req, res, next) => {
 
 // Ride routes (require authentication for booking)
 app.use('/api/rides', (req, res, next) => {
-  // Skip auth for public routes (calculate ride details)
-  if (req.method === 'POST' && req.path === '/calculate') {
+  // Skip auth for public routes (calculate ride details and public rides)
+  if ((req.method === 'POST' && req.path === '/calculate') || 
+      (req.method === 'GET' && req.path === '/public')) {
     return next();
   }
   // Apply auth middleware for all other ride routes

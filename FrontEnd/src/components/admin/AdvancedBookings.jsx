@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiCalendar, FiUsers, FiPackage, FiMapPin, FiClock, FiDollarSign, FiCheck, FiX, FiFilter, FiEye } from 'react-icons/fi';
+import { FiCalendar, FiUsers, FiPackage, FiMapPin, FiClock, FiDollarSign, FiCheck, FiX, FiFilter, FiEye, FiMessageCircle, FiPhone, FiMail } from 'react-icons/fi';
 import { useAuth } from '@clerk/clerk-react';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
 
@@ -107,6 +107,68 @@ const AdvancedBookings = () => {
       default:
         return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
+  };
+
+  // Function to send WhatsApp message
+  const sendWhatsAppMessage = (studentContact, studentName, bookingDetails) => {
+    const message = `Hi ${studentName}! Your ride booking has been confirmed.\n\n` +
+      `📅 Date: ${formatDate(bookingDetails.scheduledTime)}\n` +
+      `📍 From: ${bookingDetails.pickupLocation.address}\n` +
+      `🎯 To: ${bookingDetails.dropoffLocation.address}\n` +
+      `💰 Price: R${bookingDetails.estimatedPrice}\n\n` +
+      `Please be ready at the pickup location. If you have any questions, contact us.`;
+    
+    const whatsappUrl = `https://wa.me/${studentContact.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  // Function to send SMS message (copy to clipboard)
+  const copySMSToClipboard = (studentContact, studentName, bookingDetails) => {
+    const message = `Hi ${studentName}! Your ride booking has been confirmed.\n\n` +
+      `📅 Date: ${formatDate(bookingDetails.scheduledTime)}\n` +
+      `📍 From: ${bookingDetails.pickupLocation.address}\n` +
+      `🎯 To: ${bookingDetails.dropoffLocation.address}\n` +
+      `💰 Price: R${bookingDetails.estimatedPrice}\n\n` +
+      `Please be ready at the pickup location. If you have any questions, contact us.`;
+    
+    navigator.clipboard.writeText(message).then(() => {
+      alert('SMS message copied to clipboard! You can now paste it in your SMS app.');
+    }).catch(() => {
+      alert('Failed to copy message. Please copy manually:\n\n' + message);
+    });
+  };
+
+  // Function to send WhatsApp message to driver with student booking details
+  const sendWhatsAppToDriver = (driverContact, driverName, studentName, bookingDetails) => {
+    const message = `Hi ${driverName}! You have a new ride assignment.\n\n` +
+      `👤 Student: ${studentName}\n` +
+      `📅 Date: ${formatDate(bookingDetails.scheduledTime)}\n` +
+      `📍 Pickup: ${bookingDetails.pickupLocation.address}\n` +
+      `🎯 Dropoff: ${bookingDetails.dropoffLocation.address}\n` +
+      `💰 Price: R${bookingDetails.estimatedPrice}\n` +
+      `📏 Distance: ${bookingDetails.distance} km\n\n` +
+      `Please contact the student and confirm pickup time.`;
+    
+    const whatsappUrl = `https://wa.me/${driverContact.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  // Function to copy SMS message to clipboard for driver
+  const copySMSToDriver = (driverContact, driverName, studentName, bookingDetails) => {
+    const message = `Hi ${driverName}! You have a new ride assignment.\n\n` +
+      `👤 Student: ${studentName}\n` +
+      `📅 Date: ${formatDate(bookingDetails.scheduledTime)}\n` +
+      `📍 Pickup: ${bookingDetails.pickupLocation.address}\n` +
+      `🎯 Dropoff: ${bookingDetails.dropoffLocation.address}\n` +
+      `💰 Price: R${bookingDetails.estimatedPrice}\n` +
+      `📏 Distance: ${bookingDetails.distance} km\n\n` +
+      `Please contact the student and confirm pickup time.`;
+    
+    navigator.clipboard.writeText(message).then(() => {
+      alert('Driver SMS message copied to clipboard! You can now paste it in your SMS app.');
+    }).catch(() => {
+      alert('Failed to copy message. Please copy manually:\n\n' + message);
+    });
   };
 
   const formatDate = (dateString) => {
@@ -234,6 +296,19 @@ const AdvancedBookings = () => {
                   </span>
                 </div>
 
+                {/* Student Contact Information */}
+                <div className="bg-white/5 rounded-lg p-3 mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FiUser className="text-blue-400 text-sm" />
+                    <span className="text-gray-400 text-xs">Student Details</span>
+                  </div>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-white font-medium">{booking.studentName}</p>
+                    <p className="text-gray-300">{booking.studentContact}</p>
+                    <p className="text-gray-400">Booked: {formatDate(booking.createdAt || booking.scheduledTime)}</p>
+                  </div>
+                </div>
+
                 {/* Details */}
                 <div className="space-y-2 sm:space-y-3 mb-4">
                   <div className="flex items-start gap-2 text-xs sm:text-sm">
@@ -307,6 +382,41 @@ const AdvancedBookings = () => {
                     </button>
                   )}
                 </div>
+
+                {/* Communication Buttons */}
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => sendWhatsAppMessage(booking.studentContact, booking.studentName, booking)}
+                    className="flex-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 rounded-lg px-2 py-2 text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1"
+                    title="Send WhatsApp Message"
+                  >
+                    <FiMessageCircle className="w-3 h-3" />
+                    <span className="hidden sm:inline">WhatsApp</span>
+                  </button>
+                  
+                  <button
+                    onClick={() => copySMSToClipboard(booking.studentContact, booking.studentName, booking)}
+                    className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 rounded-lg px-2 py-2 text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1"
+                    title="Copy SMS Message"
+                  >
+                    <FiPhone className="w-3 h-3" />
+                    <span className="hidden sm:inline">SMS</span>
+                  </button>
+                </div>
+
+                {/* Driver Notification Button */}
+                {booking.driverId && (
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => sendWhatsAppToDriver(booking.driverId.contactNumber, booking.driverId.fullName, booking.studentName, booking)}
+                      className="flex-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30 rounded-lg px-2 py-2 text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1"
+                      title="Notify Driver via WhatsApp"
+                    >
+                      <FiMessageCircle className="w-3 h-3" />
+                      <span className="hidden sm:inline">Notify Driver</span>
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -357,8 +467,71 @@ const AdvancedBookings = () => {
                         {selectedBooking.status}
                       </span>
                     </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Booked On:</span>
+                      <span className="text-white">{formatDate(selectedBooking.createdAt || selectedBooking.scheduledTime)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Scheduled For:</span>
+                      <span className="text-white">{formatDate(selectedBooking.scheduledTime)}</span>
+                    </div>
                   </div>
                 </div>
+
+                {/* Communication Actions */}
+                <div>
+                  <h3 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Communication</h3>
+                  <div className="bg-white/5 rounded-xl p-3 sm:p-4">
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => sendWhatsAppMessage(selectedBooking.studentContact, selectedBooking.studentName, selectedBooking)}
+                        className="flex-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
+                      >
+                        <FiMessageCircle className="w-4 h-4" />
+                        Send WhatsApp
+                      </button>
+                      
+                      <button
+                        onClick={() => copySMSToClipboard(selectedBooking.studentContact, selectedBooking.studentName, selectedBooking)}
+                        className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
+                      >
+                        <FiPhone className="w-4 h-4" />
+                        Copy SMS
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Driver Communication Section */}
+                {selectedBooking.driverId && (
+                  <div>
+                    <h3 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Notify Driver</h3>
+                    <div className="bg-white/5 rounded-xl p-3 sm:p-4">
+                      <div className="mb-3 p-3 bg-white/5 rounded-lg">
+                        <p className="text-gray-400 text-sm">Driver: {selectedBooking.driverId.fullName}</p>
+                        <p className="text-gray-400 text-sm">Contact: {selectedBooking.driverId.contactNumber}</p>
+                      </div>
+                      
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => sendWhatsAppToDriver(selectedBooking.driverId.contactNumber, selectedBooking.driverId.fullName, selectedBooking.studentName, selectedBooking)}
+                          className="flex-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
+                        >
+                          <FiMessageCircle className="w-4 h-4" />
+                          Driver WhatsApp
+                        </button>
+                        
+                        <button
+                          onClick={() => copySMSToDriver(selectedBooking.driverId.contactNumber, selectedBooking.driverId.fullName, selectedBooking.studentName, selectedBooking)}
+                          className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
+                        >
+                          <FiPhone className="w-4 h-4" />
+                          Driver SMS
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Route Info */}
                 <div>

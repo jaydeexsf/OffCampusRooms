@@ -23,6 +23,7 @@ const StudentDashboard = () => {
       fetchSavedRooms();
       fetchUserFeedback();
       fetchMyComments();
+      fetchMyRatings();
     }
   }, [isSignedIn]);
 
@@ -88,6 +89,24 @@ const StudentDashboard = () => {
     }
   };
 
+  const fetchMyRatings = async () => {
+    try {
+      if (!user) return;
+      const token = await getToken();
+      console.log('[Dashboard] GET_MY_RATINGS URL:', API_ENDPOINTS.GET_MY_RATINGS);
+      console.log('[Dashboard] Auth token present:', Boolean(token));
+      const response = await apiClient.get(API_ENDPOINTS.GET_MY_RATINGS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('[Dashboard] My ratings response:', response.status, response.data);
+      setMyRatings(response.data?.ratings || []);
+    } catch (error) {
+      console.error('[Dashboard] Error fetching my ratings:', error);
+      console.error('[Dashboard] Error details:', error?.response?.status, error?.response?.data);
+      console.error('[Dashboard] Error message:', error?.message);
+    }
+  };
+
   const startEditingComment = (comment) => {
     setEditingCommentId(comment._id);
     setEditingCommentText(comment.content);
@@ -138,6 +157,7 @@ const StudentDashboard = () => {
   const tabs = [
     { id: 'overview', name: 'Overview', icon: <FiHome /> },
     { id: 'saved', name: 'Saved Rooms', icon: <FiHeart /> },
+    { id: 'ratings', name: 'My Ratings', icon: <FiStar /> },
     { id: 'feedback', name: 'My Feedback', icon: <FiMessageSquare /> }
   ];
 
@@ -248,6 +268,17 @@ const StudentDashboard = () => {
                   </button>
 
                   <button
+                    onClick={() => setActiveTab('ratings')}
+                    className="bg-gradient-to-br from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-2xl p-6 hover:border-yellow-400/50 transition-all duration-300 group"
+                  >
+                    <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                      <FiStar className="w-6 h-6 text-white" />
+                    </div>
+                    <h4 className="text-white font-bold mb-2 text-lg">My Ratings</h4>
+                    <p className="text-gray-300 text-sm">View your room ratings</p>
+                  </button>
+
+                  <button
                     onClick={() => setActiveTab('feedback')}
                     className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition-all duration-300 group"
                   >
@@ -317,6 +348,113 @@ const StudentDashboard = () => {
                     >
                       Browse rooms to save
                     </Link>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'ratings' && (
+              <div>
+                <h3 className="text-xl font-bold text-white mb-4">My Room Ratings</h3>
+                {myRatings.length === 0 ? (
+                  <div className="text-center py-12">
+                    <FiStar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                    <p className="text-gray-400 mb-4">You haven't rated any rooms yet</p>
+                    <Link 
+                      to="/all-rooms"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 inline-block"
+                    >
+                      Browse Rooms to Rate
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {myRatings.map((rating) => (
+                      <div key={rating._id} className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl p-6">
+                        <div className="flex items-start gap-4">
+                          {/* Room Image */}
+                          <div className="w-24 h-24 bg-gray-800 rounded-xl overflow-hidden flex-shrink-0">
+                            {rating.room && rating.room.images && rating.room.images.length > 0 ? (
+                              <img 
+                                src={rating.room.images[0]} 
+                                alt={rating.room.title || 'Room'} 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                                <FiHome className="w-8 h-8 text-gray-500" />
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Rating Details */}
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h4 className="text-white font-semibold text-lg mb-1">
+                                  {rating.room ? rating.room.title : `Room ${rating.roomId}`}
+                                </h4>
+                                {rating.room && (
+                                  <p className="text-gray-400 text-sm mb-2">
+                                    {rating.room.location} • R{rating.room.price}/month
+                                  </p>
+                                )}
+                              </div>
+                              
+                              <div className="text-right">
+                                <div className="flex items-center gap-1 mb-2">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <FiStar
+                                      key={star}
+                                      className={`${
+                                        star <= rating.rating
+                                          ? 'text-yellow-400 fill-current'
+                                          : 'text-gray-400'
+                                      } text-lg`}
+                                    />
+                                  ))}
+                                </div>
+                                <span className="text-white font-bold text-lg">{rating.rating}/5</span>
+                              </div>
+                            </div>
+                            
+                            {rating.review && (
+                              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                <p className="text-gray-200 leading-relaxed">"{rating.review}"</p>
+                              </div>
+                            )}
+                            
+                            <div className="flex items-center justify-between mt-4">
+                              <span className="text-xs text-gray-400">
+                                Rated on {new Date(rating.createdAt).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                })}
+                              </span>
+                              
+                              <div className="flex gap-2">
+                                <Link 
+                                  to={`/room/${rating.roomId}`}
+                                  className="px-3 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm"
+                                >
+                                  View Room
+                                </Link>
+                                <button 
+                                  onClick={() => {
+                                    // This would open the rating modal for editing
+                                    // You can implement this functionality
+                                  }}
+                                  className="px-3 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm"
+                                >
+                                  Edit Rating
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

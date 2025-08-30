@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone, FiCheck } from 'react-icons/fi';
 import { useAuth, useUser } from '@clerk/clerk-react';
-import { apiClient } from '../config/api';
+import { apiClient, API_BASE_URL } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 import { getGoogleMapsApiKey } from '../config/env';
+import PublicRidesDisplay from '../components/Rides/PublicRidesDisplay';
 
 const containerStyle = {
   width: '100%',
@@ -54,6 +55,7 @@ const RideBooking = () => {
   const [directions, setDirections] = useState(null);
   const [pickupAddress, setPickupAddress] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
+  const [showPublicRides, setShowPublicRides] = useState(true);
 
   // Get Google Maps API key
   const googleMapsApiKey = getGoogleMapsApiKey();
@@ -200,7 +202,7 @@ const RideBooking = () => {
         maxSharedPassengers: rideSharing ? maxSharedPassengers : 1
       };
 
-      const response = await apiClient.post(`${API_ENDPOINTS.API_BASE_URL}/api/rides/request`, requestData, {
+      const response = await apiClient.post(`${API_BASE_URL}/api/rides/request`, requestData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -238,6 +240,18 @@ const RideBooking = () => {
     setSimilarRides([]);
   };
 
+  const handleRideSelect = (selectedRide) => {
+    // Auto-fill the form with selected ride details
+    setPickupCoords(selectedRide.pickupLocation);
+    setDropoffCoords(selectedRide.dropoffLocation);
+    setPickupAddress(selectedRide.pickupLocation.address || 'Selected from similar ride');
+    setDropoffAddress(selectedRide.dropoffLocation.address || 'Selected from similar ride');
+    setScheduledTime(selectedRide.scheduledTime);
+    
+    // Show success message
+    alert(`Route selected! Pickup and dropoff locations have been set. You can now calculate your ride.`);
+  };
+
   if (!isSignedIn) {
     return (
       <div className="min-h-screen bg-gray-950 py-16">
@@ -268,6 +282,27 @@ const RideBooking = () => {
               </span>
             </h1>
             <p className="text-gray-400">Safe and reliable transportation for University of Limpopo students</p>
+          </div>
+
+          {/* Public Rides Display - Show other students' rides for potential coordination */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-white">See Other Students' Rides</h2>
+              <button
+                onClick={() => setShowPublicRides(!showPublicRides)}
+                className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors"
+              >
+                {showPublicRides ? 'Hide' : 'Show'} Similar Rides
+              </button>
+            </div>
+            
+            {showPublicRides && (
+              <PublicRidesDisplay
+                pickupCoords={pickupCoords}
+                dropoffCoords={dropoffCoords}
+                onRideSelect={handleRideSelect}
+              />
+            )}
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">

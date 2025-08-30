@@ -161,13 +161,13 @@ const Hero = ({ handleOrderPopup }) => {
                         onClick={handleResetSearch}
                       >
                         <FiHome size={20} />
-                        <span>Back to Search</span>
+                        <span>Go Back</span>
                       </button>
                       <div className="text-center">
-                        <h2 className="text-xl md:text-2xl font-bold text-neutral-100">Search Results</h2>
-                        <p className="text-neutral-400 text-xs md:text-sm">
+                        <h2 className="text-xl md:text-2xl font-bold text-neutral-100"><span className="text-blue-400 md:hidden"> Search </span>Results</h2>
+                        {/* <p className="text-neutral-400 text-xs md:text-sm">
                           {searchResults?.length || 0} rooms found
-                        </p>
+                        </p> */}
                       </div>
                       <div className="w-32"></div> {/* Spacer for centering */}
                     </div>
