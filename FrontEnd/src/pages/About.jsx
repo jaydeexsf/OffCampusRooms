@@ -7,9 +7,10 @@ const About = () => {
     <>
       <div className="container pt-4 gradient-dark" >
         <div className="py-10">
-          <h1 className="my-8 border-l-8 border-primary/50 py-2 pl-2 text-3xl font-bold">
+          <h1 className="my-8 text-3xl font-bold text-white mb-3">
             About Us
           </h1>
+          <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-4"></div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
               <p className="text-gray-300 leading-relaxed mb-4">

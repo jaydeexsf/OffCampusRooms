@@ -50,11 +50,12 @@ const AdminDashboard = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between py-6">
             <div>
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-2xl font-bold text-white mb-2">
                 Admin <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Dashboard
                 </span>
               </h1>
+              <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-2"></div>
               <p className="text-gray-400 text-sm">Manage rides, drivers, and bookings</p>
             </div>
             

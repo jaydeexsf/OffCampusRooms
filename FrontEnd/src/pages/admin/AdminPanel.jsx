@@ -218,7 +218,8 @@ const AdminPanel = () => {
                   Dashboard
                 </span>
               </h1>
-                             <p className="text-gray-400 text-xs sm:text-sm lg:text-base">Manage your OffCampusRooms platform efficiently</p>
+              <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-2"></div>
+              <p className="text-gray-400 text-xs sm:text-sm lg:text-base">Manage your OffCampusRooms platform efficiently</p>
                {usingFallback && (
                  <div className="mt-2 p-2 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
                    <p className="text-yellow-400 text-xs">⚠️ Showing demo data - API connection issues detected</p>

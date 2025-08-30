@@ -166,6 +166,7 @@ const StudentDashboard = () => {
           <h1 className="text-3xl font-bold text-white mb-2">
             Welcome back, {user?.firstName || 'Student'}!
           </h1>
+          <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-3"></div>
           <p className="text-gray-400">
             Manage your saved rooms, preferences, and account settings
           </p>

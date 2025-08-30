@@ -69,12 +69,16 @@ const StudentTestimonials = () => {
     slidesToScroll: 1,
     autoplay: testimonials.length > 3,
     autoplaySpeed: 5000,
+    centerMode: false,
+    centerPadding: '0px',
     responsive: [
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
+          centerMode: false,
+          centerPadding: '0px',
         },
       },
       {
@@ -82,6 +86,8 @@ const StudentTestimonials = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          centerMode: false,
+          centerPadding: '0px',
         },
       },
     ],
@@ -103,103 +109,107 @@ const StudentTestimonials = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row items-end sm:items-end justify-between mb-8 sm:mb-16" data-aos="fade-up">
-            <div className="text-center sm:text-left mb-4 sm:mb-0">
-              <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4">
-                What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                  Students
-                </span> Say
-              </h2>
-              <p className="text-gray-400 text-xs sm:text-sm md:text-lg max-w-2xl">
-                Real reviews from University of Limpopo students who found their perfect accommodation
-              </p>
-            </div>
-            
-            {/* Navigation Buttons */}
-            <div className="flex gap-2 self-end sm:self-end sm:mt-2">
-              <button
-                onClick={() => sliderRef.current?.slickPrev()}
-                className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 sm:p-3 text-white transition-all duration-200 hover:scale-105"
-              >
-                <FiChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button
-                onClick={() => sliderRef.current?.slickNext()}
-                className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 sm:p-3 text-white transition-all duration-200 hover:scale-105"
-              >
-                <FiChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-            </div>
+          <div className="text-center mb-8 sm:mb-16" data-aos="fade-up">
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4">
+              What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                Students
+              </span> Say
+            </h2>
+            <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-3"></div>
+            <p className="text-gray-400 text-xs sm:text-sm md:text-lg max-w-2xl mx-auto">
+              Real reviews from University of Limpopo students who found their perfect accommodation
+            </p>
           </div>
 
-          {/* Testimonials Slider */}
-          <div className="max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-            {loading ? (
-              <div className="flex justify-center items-center py-20">
-                <div className="flex flex-col items-center gap-4">
-                  <FiLoader className="w-8 h-8 text-blue-400 animate-spin" />
-                  <p className="text-gray-400 text-sm md:text-base">Loading student testimonials...</p>
-                </div>
-              </div>
-            ) : testimonials.length > 0 ? (
-              <Slider ref={sliderRef} {...settings}>
-                {testimonials.map((testimonial) => (
-                  <div key={testimonial.id} className="px-4">
-                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6 h-full">
-                      {/* Quote Icon */}
-                      <div className="flex justify-between items-start mb-4">
-                        <FiMessageSquare className="text-blue-400 w-6 h-6" />
-                        <div className="flex gap-1">
-                          {renderStars(testimonial.rating)}
-                        </div>
-                      </div>
+          {/* Testimonials Slider - Professional Carousel Layout */}
+          <div className="w-full relative" data-aos="fade-up" data-aos-delay="200">
+            <div className="relative">
+              {/* Left Navigation Arrow - Fixed Position */}
+              <button
+                onClick={() => sliderRef.current?.slickPrev()}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-black/80 backdrop-blur-sm border border-white/20 rounded-full p-3 text-white shadow-lg opacity-0 lg:opacity-100"
+              >
+                <FiChevronLeft className="w-5 h-5" />
+              </button>
 
-                      {/* Review Text */}
-                      <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-6">
-                        "{testimonial.review}"
-                      </p>
+              {/* Right Navigation Arrow - Fixed Position */}
+              <button
+                onClick={() => sliderRef.current?.slickNext()}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-black/80 backdrop-blur-sm border border-white/20 rounded-full p-3 text-white shadow-lg opacity-0 lg:opacity-100"
+              >
+                <FiChevronRight className="w-5 h-5" />
+              </button>
 
-                      {/* Student Info */}
-                      <div className="flex items-center gap-4">
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500">
-                          <img 
-                            src={testimonial.image} 
-                            alt={testimonial.name}
-                            className="w-full h-full object-cover" 
-                            onError={(e) => {
-                              e.target.src = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
-                            }}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-white font-semibold text-xs md:text-sm">
-                            {testimonial.name}
-                          </h4>
-                          <p className="text-gray-400 text-xs md:text-sm">
-                            {testimonial.course}
-                          </p>
-                          <p className="text-blue-400 text-xs md:text-sm font-medium">
-                            {testimonial.location} • {testimonial.roomType} • {testimonial.price}
-                          </p>
-                        </div>
-                      </div>
+              {/* Slider Container with Side Padding for Arrows */}
+              <div className="px-8 lg:px-12">
+                {loading ? (
+                  <div className="flex justify-center items-center py-20">
+                    <div className="flex flex-col items-center gap-4">
+                      <FiLoader className="w-8 h-8 text-blue-400 animate-spin" />
+                      <p className="text-gray-400 text-sm md:text-base">Loading student testimonials...</p>
                     </div>
                   </div>
-                ))}
-              </Slider>
-            ) : (
-              <div className="text-center py-20">
-                <FiMessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-lg md:text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
-                <p className="text-gray-500 text-sm md:text-base mb-6">Be the first to share your experience!</p>
-                <a 
-                  href="/feedback" 
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                  Share Your Experience
-                </a>
+                ) : testimonials.length > 0 ? (
+                  <Slider ref={sliderRef} {...settings} className="testimonials-slider">
+                    {testimonials.map((testimonial) => (
+                      <div key={testimonial.id} className="px-4">
+                        <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl backdrop-blur-sm border border-white/10 rounded-2xl p-4 md:p-6 h-full">
+                          {/* Quote Icon */}
+                          <div className="flex justify-between items-start mb-4">
+                            <FiMessageSquare className="text-blue-400 w-6 h-6" />
+                            <div className="flex gap-1">
+                              {renderStars(testimonial.rating)}
+                            </div>
+                          </div>
+
+                          {/* Review Text */}
+                          <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-6">
+                            "{testimonial.review}"
+                          </p>
+
+                          {/* Student Info */}
+                          <div className="flex items-center gap-4">
+                            <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500">
+                              <img 
+                                src={testimonial.image} 
+                                alt={testimonial.name}
+                                className="w-full h-full object-cover" 
+                                onError={(e) => {
+                                  e.target.src = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
+                                }}
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="text-white font-semibold text-xs md:text-sm">
+                                {testimonial.name}
+                              </h4>
+                              <p className="text-gray-400 text-xs md:text-sm">
+                                {testimonial.course}
+                              </p>
+                              <p className="text-blue-400 text-xs md:text-sm font-medium">
+                                {testimonial.location} • {testimonial.roomType} • {testimonial.price}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </Slider>
+                ) : (
+                  <div className="text-center py-20">
+                    <FiMessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-lg md:text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
+                    <p className="text-gray-500 text-sm md:text-base mb-6">Be the first to share your experience!</p>
+                    <a 
+                      href="/feedback" 
+                      className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg"
+                    >
+                      Share Your Experience
+                    </a>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           {/* Overall Rating */}

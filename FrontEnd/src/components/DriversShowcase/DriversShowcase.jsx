@@ -3,6 +3,8 @@ import { FiStar, FiPhone, FiMail, FiTruck, FiX, FiMapPin, FiLoader, FiChevronLef
 import { useNavigate } from 'react-router-dom';
 import { API_ENDPOINTS, apiClient } from '../../config/api';
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const DriversShowcase = () => {
   const [drivers, setDrivers] = useState([]);
@@ -116,6 +118,46 @@ const DriversShowcase = () => {
     fetchDrivers();
   }, []);
 
+  // Add custom CSS to ensure slider visibility
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .drivers-slider .slick-slide {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+      }
+      .drivers-slider .slick-slide > div {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+      }
+      .drivers-slider .slick-track {
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  // Close modal on Escape key press
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && showModal) {
+        closeModal();
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [showModal]);
+
   const fetchDrivers = async () => {
     try {
               const response = await apiClient.get(API_ENDPOINTS.GET_AVAILABLE_DRIVERS);
@@ -190,6 +232,7 @@ const DriversShowcase = () => {
     autoplaySpeed: 4000,
     arrows: false,
     centerMode: false,
+    centerPadding: '0px',
     variableWidth: false,
     responsive: [
       {
@@ -199,6 +242,8 @@ const DriversShowcase = () => {
           slidesToScroll: 1,
           infinite: drivers.length > 2,
           autoplay: drivers.length > 2,
+          centerMode: false,
+          centerPadding: '0px',
         },
       },
       {
@@ -208,6 +253,8 @@ const DriversShowcase = () => {
           slidesToScroll: 1,
           infinite: drivers.length > 1,
           autoplay: drivers.length > 1,
+          centerMode: false,
+          centerPadding: '0px',
         },
       },
     ],
@@ -248,181 +295,202 @@ const DriversShowcase = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
-            <div className="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-12" data-aos="fade-up">
-              <div className="text-center sm:text-left mb-4 sm:mb-0">
-                <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4">
-                  Meet Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                    Trusted Drivers
-                  </span>
-                </h2>
-                <p className="text-gray-400 text-xs sm:text-sm md:text-lg max-w-2xl">
-                  Safe, reliable, and experienced drivers ready to take you anywhere around campus
-                </p>
-              </div>
-              
-              {/* Navigation Buttons - Aligned to the right on desktop, centered on mobile */}
-              <div className="flex gap-2 self-end">
-                <button
-                  onClick={() => sliderRef.current?.slickPrev()}
-                  className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 sm:p-3 text-white transition-all duration-200 hover:scale-105"
-                >
-                  <FiChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-                <button
-                  onClick={() => sliderRef.current?.slickNext()}
-                  className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-full p-2 sm:p-3 text-white transition-all duration-200 hover:scale-105"
-                >
-                  <FiChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-              </div>
+            <div className="text-center mb-8 sm:mb-12" data-aos="fade-up">
+              <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-4">
+                Meet Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  Trusted Drivers
+                </span>
+              </h2>
+              <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-3"></div>
+              <p className="text-gray-400 text-xs sm:text-sm md:text-lg max-w-2xl mx-auto">
+                Safe, reliable, and experienced drivers ready to take you anywhere around campus
+              </p>
             </div>
 
-            {/* Drivers Display - Slider on all screen sizes */}
-            <div className="max-w-6xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-              {drivers.length > 0 ? (
-                <div className="relative">
-                  <Slider ref={sliderRef} {...settings}>
-                    {drivers.map((driver) => (
-                      <div key={driver._id} className="px-2 sm:px-3">
-                        <div
-                          className="bg-gray-800 border-2 border-blue-500 rounded-xl p-4 sm:p-6 hover:bg-gray-700 hover:border-blue-400 transition-all duration-300 cursor-pointer group mx-auto shadow-lg"
-                          style={{height: 'auto', minHeight: '400px'}}
-                          onClick={() => openDriverModal(driver)}
-                        >
-                        {/* Car Image */}
-                        <div className="relative mb-3 sm:mb-4">
-                          <img
-                            src={driver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
-                            alt={`${driver.carDetails?.make || driver.vehicleInfo?.make || 'Car'} ${driver.carDetails?.model || driver.vehicleInfo?.model || ''}`}
-                            className="w-full h-28 sm:h-32 md:h-40 object-cover rounded-lg"
-                          />
-                          <div className="absolute top-2 right-2">
-                            <div className="bg-black/70 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm text-white">
-                              R{driver.pricePerKm || 'N/A'}/km
-                            </div>
-                          </div>
-                          {driver.isDummy && (
-                            <div className="absolute top-2 left-2">
-                              <div className="bg-blue-500/80 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm text-white">
-                                Demo
-                              </div>
-                            </div>
-                          )}
-                        </div>
+ {/* Drivers Display - Professional Carousel Layout */}
+ <div className="w-full relative" data-aos="fade-up" data-aos-delay="200">
+       {drivers.length > 0 ? (
+      <div className="relative">
+               {/* Left Arrow - Fixed Position */}
+        <button
+          onClick={() => sliderRef.current?.slickPrev()}
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 
+                     bg-black/80 backdrop-blur-sm border border-white/20 
+                     rounded-full p-3 text-white shadow-lg opacity-0 lg:opacity-100"
+        >
+          <FiChevronLeft className="w-5 h-5" />
+        </button>
 
-                        {/* Driver Info */}
-                        <div className="flex items-center gap-3 mb-4">
-                          <img
-                            src={driver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
-                            alt={driver.fullName}
-                            className="w-12 h-12 rounded-full object-cover border-2 border-blue-500/30"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-semibold text-white mb-1 truncate">
-                              {driver.fullName}
-                            </h3>
-                            <div className="flex items-center gap-2 mb-1">
-                              <div className="flex items-center gap-1">
-                                {renderStars(driver.rating || 4.5)}
-                              </div>
-                              <span className="text-sm text-gray-400 truncate">
-                                ({driver.rating || 4.5}) • {driver.totalRides || 0} rides
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+        {/* Right Arrow - Fixed Position */}
+        <button
+          onClick={() => sliderRef.current?.slickNext()}
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 
+                     bg-black/80 backdrop-blur-sm border border-white/20 
+                     rounded-full p-3 text-white shadow-lg opacity-0 lg:opacity-100"
+        >
+          <FiChevronRight className="w-5 h-5" />
+        </button>
 
-                        {/* Car Details */}
-                        <div className="mb-3 sm:mb-4">
-                          <div className="flex items-center gap-2 mb-1">
-                            <FiTruck className="text-blue-400 w-3 sm:w-4 h-3 sm:h-4" />
-                            <span className="text-white font-medium truncate text-xs sm:text-sm">
-                              {driver.carDetails?.year || driver.vehicleInfo?.year || 'N/A'} {driver.carDetails?.make || driver.vehicleInfo?.make || 'N/A'} {driver.carDetails?.model || driver.vehicleInfo?.model || 'N/A'}
-                            </span>
-                          </div>
-                          <div className="text-xs sm:text-sm text-gray-400 truncate">
-                            {driver.carDetails?.color || driver.vehicleInfo?.color || 'N/A'} • {driver.carDetails?.licensePlate || driver.vehicleInfo?.licensePlate || 'N/A'}
-                          </div>
-                        </div>
-
-                        {/* Availability Status */}
-                        <div className="flex items-center justify-between">
-                          <div className={`flex items-center gap-2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm ${
-                            driver.isAvailable !== false
-                              ? 'bg-green-500/20 text-green-400' 
-                              : 'bg-red-500/20 text-red-400'
-                          }`}>
-                            <div className={`w-2 h-2 rounded-full ${
-                              driver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
-                            }`}></div>
-                            {driver.isAvailable !== false ? 'Available' : 'Busy'}
-                          </div>
-                        </div>
+       {/* Slider Container with Side Padding for Arrows */}
+       <div className="px-8 lg:px-12">
+         <Slider ref={sliderRef} {...settings} className="drivers-slider">
+           {drivers.map((driver) => (
+             <div key={driver._id} className="px-4">
+               {/* Driver Card */}
+                               <div
+                  className="bg-gray-800 border border-white/10 rounded-2xl p-4 sm:p-6
+                             cursor-pointer mx-auto shadow-xl"
+                  style={{height: 'auto', minHeight: '420px', minWidth: '400px'}}
+                  onClick={() => openDriverModal(driver)}
+                >
+                                                   {/* Car Image */}
+                  <div className="relative mb-4 sm:mb-5 overflow-hidden rounded-xl">
+                    <img
+                      src={driver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
+                      alt={`${driver.carDetails?.make || driver.vehicleInfo?.make || 'Car'} ${driver.carDetails?.model || driver.vehicleInfo?.model || ''}`}
+                      className="w-full h-48 sm:h-56 md:h-64 object-cover rounded-xl"
+                    />
+                    {/* Price Badge */}
+                    <div className="absolute top-3 right-3">
+                      <div className="bg-black/90 border border-white/20 rounded-full px-3 py-2 text-sm text-white font-semibold shadow-lg">
+                        R{driver.pricePerKm || 'N/A'}/km
                       </div>
                     </div>
-                  ))}
-                </Slider>
-              </div>
-              ) : (
-                <div className="text-center py-20">
-                  <p className="text-gray-400 text-lg">No drivers available at the moment.</p>
+                    {/* Demo Badge */}
+                    {driver.isDummy && (
+                      <div className="absolute top-3 left-3">
+                        <div className="bg-gradient-to-r from-blue-500 to-blue-600 border border-blue-400/30 rounded-full px-3 py-2 text-sm text-white font-semibold shadow-lg">
+                          Demo
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                                 {/* Driver Profile Section */}
+                 <div className="flex items-center gap-4 mb-4">
+                   <div className="relative">
+                     <img
+                       src={driver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
+                       alt={driver.fullName}
+                       className="w-14 h-14 rounded-full object-cover border-3 border-blue-500 shadow-lg"
+                     />
+                     {/* Online Status Indicator */}
+                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-900 ${
+                       driver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
+                     }`}></div>
+                   </div>
+                   <div className="flex-1 min-w-0">
+                     <h3 className="text-lg font-bold text-white mb-1 truncate">
+                       {driver.fullName}
+                     </h3>
+                     <div className="flex items-center gap-2 mb-1">
+                       <div className="flex items-center gap-1">
+                         {renderStars(driver.rating || 4.5)}
+                       </div>
+                       <span className="text-sm text-gray-300 font-medium truncate">
+                         {driver.rating || 4.5} • {driver.totalRides || 0} rides
+                       </span>
+                     </div>
+                     <p className="text-xs text-blue-400 font-medium truncate">
+                       {driver.experience || 'Experienced'} driver
+                     </p>
+                   </div>
+                 </div>
+                                 {/* Car Details with Icons */}
+                 <div className="mb-4 bg-gray-700 rounded-xl p-3 border border-white/10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FiTruck className="text-blue-400 w-4 h-4" />
+                    <span className="text-white font-semibold text-sm">
+                      {driver.carDetails?.year || driver.vehicleInfo?.year || 'N/A'} {driver.carDetails?.make || driver.vehicleInfo?.make || 'N/A'} {driver.carDetails?.model || driver.vehicleInfo?.model || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-300">
+                    <FiMapPin className="text-blue-400 w-3 h-3" />
+                    <span className="truncate">
+                      {driver.carDetails?.color || driver.vehicleInfo?.color || 'N/A'} • {driver.carDetails?.licensePlate || driver.vehicleInfo?.licensePlate || 'N/A'}
+                    </span>
+                  </div>
                 </div>
-              )}
-            </div>
-
-            {drivers.length > 6 && (
-              <div className="text-center mt-12">
-                <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-full font-medium transition-all duration-300">
-                  View All Drivers
-                </button>
+                                 {/* Action Button */}
+                 <div className="flex justify-center">
+                   <button className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg">
+                     Book Now
+                   </button>
+                 </div>
               </div>
-            )}
+            </div>
+          ))}
+        </Slider>
+      </div>
+    </div>
+  ) : (
+    <div className="text-center py-20">
+      <p className="text-gray-400 text-lg">No drivers available at the moment.</p>
+    </div>
+  )}
+</div>
+
+
+                         {drivers.length > 6 && (
+               <div className="text-center mt-12">
+                 <button className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-3 rounded-full font-medium">
+                   View All Drivers
+                 </button>
+               </div>
+             )}
           </div>
         </div>
       </section>
 
-      {/* Driver Detail Modal */}
-      {showModal && selectedDriver && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
-          <div className="bg-gray-900 border border-white/10 rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            {/* Modal Header */}
+             {/* Driver Detail Modal */}
+       {showModal && selectedDriver && (
+         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4" onClick={closeModal}>
+           <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header with Hero Image */}
             <div className="relative">
-              <img
-                src={selectedDriver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
-                alt={`${selectedDriver.carDetails?.make || selectedDriver.vehicleInfo?.make || 'Car'} ${selectedDriver.carDetails?.model || selectedDriver.vehicleInfo?.model || ''}`}
-                className="w-full h-32 sm:h-48 md:h-64 object-cover rounded-t-2xl sm:rounded-t-3xl"
-              />
-              <button
-                onClick={closeModal}
-                className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/70 backdrop-blur-sm rounded-full p-1.5 sm:p-2 text-white hover:bg-black/90 transition-colors"
-              >
-                <FiX className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 bg-black/70 backdrop-blur-sm rounded-full px-2 sm:px-4 py-1 sm:py-2">
-                <span className="text-xs sm:text-sm md:text-base text-white font-medium">R{selectedDriver.pricePerKm || 'N/A'}/km</span>
+                             <img
+                 src={selectedDriver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
+                 alt={`${selectedDriver.carDetails?.make || selectedDriver.vehicleInfo?.make || 'Car'} ${selectedDriver.carDetails?.model || selectedDriver.vehicleInfo?.model || ''}`}
+                 className="w-full h-64 sm:h-72 md:h-80 object-cover rounded-t-3xl"
+               />
+                             {/* Close Button */}
+                               <button
+                  onClick={closeModal}
+                  className="absolute top-4 right-4 bg-black/90 backdrop-blur-sm rounded-full p-3 text-white shadow-lg z-10"
+                >
+                  <FiX className="w-5 h-5" />
+                </button>
+              {/* Price Badge */}
+              <div className="absolute bottom-4 left-4 bg-gradient-to-r from-blue-600 to-blue-500 backdrop-blur-sm border border-blue-400/30 rounded-full px-4 py-2 shadow-lg">
+                <span className="text-white font-bold text-lg">R{selectedDriver.pricePerKm || 'N/A'}/km</span>
               </div>
+              
             </div>
 
             {/* Modal Content */}
-            <div className="p-3 sm:p-4 md:p-6">
-              <div className="flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6">
-                <div className="md:w-1/3">
-                  <img
-                    src={selectedDriver.profileImage || '/api/placeholder/200/200'}
-                    alt={selectedDriver.fullName}
-                    className="w-full h-40 sm:h-48 md:h-64 object-cover rounded-xl"
-                  />
-                </div>
-                
-                <div className="md:w-2/3 space-y-2 sm:space-y-3 md:space-y-4">
-                  <div>
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{selectedDriver.fullName}</h3>
-                    <div className="flex items-center gap-2 mb-2 sm:mb-3 md:mb-4">
-                      <div className="flex items-center">
+            <div className="p-6 sm:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Left Column - Profile & Quick Info */}
+                <div className="lg:col-span-1 space-y-6">
+                  {/* Profile Section */}
+                  <div className="text-center">
+                    <div className="relative inline-block mb-4">
+                      <img
+                        src={selectedDriver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
+                        alt={selectedDriver.fullName}
+                        className="w-24 h-24 rounded-full object-cover border-4 border-blue-500/50 shadow-xl"
+                      />
+                      {/* Online Status */}
+                      <div className={`absolute -bottom-2 -right-2 w-6 h-6 rounded-full border-3 border-gray-900 ${
+                        selectedDriver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
+                      }`}></div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">{selectedDriver.fullName}</h3>
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                      <div className="flex items-center gap-1">
                         {[...Array(5)].map((_, i) => (
                           <FiStar
                             key={i}
-                            className={`w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 ${
+                            className={`w-5 h-5 ${
                               i < Math.floor(selectedDriver.rating || 0)
                                   ? 'text-yellow-400 fill-current'
                                   : 'text-gray-600'
@@ -430,83 +498,63 @@ const DriversShowcase = () => {
                           />
                         ))}
                       </div>
-                      <span className="text-white font-semibold text-sm sm:text-base">{selectedDriver.rating || 'N/A'}</span>
-                      <span className="text-gray-400 text-xs sm:text-sm">({selectedDriver.totalRides || 0} rides)</span>
+                      <span className="text-white font-bold text-lg ml-2">{selectedDriver.rating || 'N/A'}</span>
                     </div>
+                    <p className="text-gray-300 text-sm">({selectedDriver.totalRides || 0} rides completed)</p>
                   </div>
+
                   
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
-                    <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
-                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                        <FiClock className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="text-gray-300 font-medium text-xs sm:text-sm">Experience</span>
-                      </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.experience || 'Not specified'}</p>
-                    </div>
-                    
-                    <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
-                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                        <FiMapPin className="text-green-400 w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="text-gray-300 font-medium text-xs sm:text-sm">Location</span>
-                      </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.location || 'Not specified'}</p>
-                    </div>
-                    
-                    <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
-                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                        <FiDollarSign className="text-yellow-400 w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="text-gray-300 font-medium text-xs sm:text-sm">Rate</span>
-                      </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">R{selectedDriver.pricePerKm || 'N/A'}/km</p>
-                    </div>
-                    
-                    <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
-                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                        <FiPhone className="text-purple-400 w-3 h-3 sm:w-4 sm:h-4" />
-                        <span className="text-gray-300 font-medium text-xs sm:text-sm">Contact</span>
-                      </div>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-semibold">{selectedDriver.contact || selectedDriver.contactNumber || selectedDriver.phone || 'Not specified'}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
-                    <h4 className="text-white font-semibold mb-1 sm:mb-2 flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
-                      <FiUser className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4" />
-                      About
+
+                                     {/* Contact Info */}
+                   <div className="bg-gray-800 rounded-2xl p-6 border border-white/10">
+                    <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+                      <FiPhone className="text-blue-400 w-5 h-5" />
+                      Contact
                     </h4>
-                    <p className="text-gray-300 leading-relaxed text-xs sm:text-sm md:text-base">{selectedDriver.bio || 'No bio available for this driver.'}</p>
+                    <p className="text-white font-semibold text-lg">{selectedDriver.contact || selectedDriver.contactNumber || selectedDriver.phone || 'Not specified'}</p>
                   </div>
+                </div>
+                
+                {/* Right Column - Detailed Info */}
+                <div className="lg:col-span-2 space-y-6">
                   
-                  <div className="bg-gray-800/50 rounded-lg p-2 sm:p-3 md:p-4">
-                    <h4 className="text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Vehicle Information</h4>
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
-                      <div>
-                        <span className="text-gray-400">Make & Model:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.make || selectedDriver.carDetails?.make || 'N/A'} {selectedDriver.vehicleInfo?.model || selectedDriver.carDetails?.model || 'N/A'}</p>
+                  
+                                     {/* Vehicle Information */}
+                   <div className="bg-gray-800 rounded-2xl p-6 border border-white/10">
+                    <h4 className="text-white font-semibold mb-4 text-lg">Vehicle Information</h4>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <div>
+                          <span className="text-gray-400 text-sm">Make & Model</span>
+                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.make || selectedDriver.carDetails?.make || 'N/A'} {selectedDriver.vehicleInfo?.model || selectedDriver.carDetails?.model || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 text-sm">Year</span>
+                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.year || selectedDriver.carDetails?.year || 'N/A'}</p>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-gray-400">Year:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.year || selectedDriver.carDetails?.year || 'N/A'}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">Color:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.color || selectedDriver.carDetails?.color || 'N/A'}</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">License Plate:</span>
-                        <p className="text-white font-medium">{selectedDriver.vehicleInfo?.licensePlate || selectedDriver.carDetails?.licensePlate || 'N/A'}</p>
+                      <div className="space-y-3">
+                        <div>
+                          <span className="text-gray-400 text-sm">Color</span>
+                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.color || selectedDriver.carDetails?.color || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 text-sm">License Plate</span>
+                          <p className="text-white font-semibold text-lg">{selectedDriver.vehicleInfo?.licensePlate || selectedDriver.carDetails?.licensePlate || 'N/A'}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex gap-2 sm:gap-3 pt-2 sm:pt-3 md:pt-4">
-                    <button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 md:px-6 rounded-lg sm:rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-base">
-                      Book Ride
-                    </button>
-                    <button className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 md:px-6 rounded-lg sm:rounded-xl transition-all duration-200 text-xs sm:text-sm md:text-base">
-                      Message
-                    </button>
-                  </div>
+                                     {/* Action Buttons */}
+                   <div className="flex gap-4 pt-4">
+                     <button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-4 px-6 rounded-2xl shadow-lg text-lg">
+                       Book Ride Now
+                     </button>
+                     <button className="flex-1 bg-gray-700 text-white font-bold py-4 px-6 rounded-2xl text-lg">
+                       Send Message
+                     </button>
+                   </div>
                 </div>
               </div>
             </div>
