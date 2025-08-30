@@ -154,7 +154,14 @@ app.use('/api/drivers', (req, res, next) => {
 }, driverRoutes);
 
 // Ride routes (require authentication for booking)
-app.use('/api/rides', rideRoutes);
+app.use('/api/rides', (req, res, next) => {
+  // Skip auth for public routes (calculate ride details)
+  if (req.method === 'POST' && req.path === '/calculate') {
+    return next();
+  }
+  // Apply auth middleware for all other ride routes
+  return authMiddleware(req, res, next);
+}, rideRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 5000;

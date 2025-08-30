@@ -103,9 +103,11 @@ const calculateRideDetails = async (req, res) => {
 // Request a ride (no driver selection - admin assigns later)
 const requestRide = async (req, res) => {
   try {
+    // Get authenticated user info from middleware
+    const authenticatedUserId = req.user.userId;
+    const authenticatedUserName = req.user.userName;
+    
     const {
-      studentId,
-      studentName,
       studentContact,
       pickupLocation,
       dropoffLocation,
@@ -129,8 +131,8 @@ const requestRide = async (req, res) => {
     } = req.body;
 
     const ride = new Ride({
-      studentId,
-      studentName,
+      studentId: authenticatedUserId,
+      studentName: authenticatedUserName,
       studentContact,
       driverId: null, // No driver assigned yet
       pickupLocation,
@@ -225,8 +227,9 @@ const assignDriverToRide = async (req, res) => {
 // Get student's rides
 const getStudentRides = async (req, res) => {
   try {
-    const { studentId } = req.params;
-    const rides = await Ride.find({ studentId })
+    // Get authenticated user ID from middleware
+    const authenticatedUserId = req.user.userId;
+    const rides = await Ride.find({ studentId: authenticatedUserId })
       .populate('driverId')
       .sort({ createdAt: -1 });
 

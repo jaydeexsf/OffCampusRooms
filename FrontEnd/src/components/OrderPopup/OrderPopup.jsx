@@ -106,7 +106,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
     <>
       {orderPopup && (
         <div className="h-screen w-screen fixed top-0 left-0 bg-black/80 z-[9999] backdrop-blur-sm">
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 sm:p-4 shadow-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700/50 rounded-2xl duration-200 w-[95%] sm:w-[90%] max-w-[500px] max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 sm:p-4 shadow-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700/50 rounded-2xl duration-200 w-[95%] sm:w-[90%] max-w-[500px] lg:max-w-[600px] max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
             
             {/* Header with Back Button */}
             <div className="flex items-center justify-between mb-4 flex-shrink-0">
@@ -121,7 +121,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   </button>
                 )}
                 
-                <h1 className="text-lg sm:text-xl font-bold text-white">
+                <h1 className="text-base sm:text-lg lg:text-xl font-bold text-white">
                   {getCurrentView()}
                 </h1>
               </div>
@@ -187,26 +187,17 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                     )}
                   </div>
 
-                  {/* Title Only */}
-                  <div className="mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold text-white">
-                      {title}
-                    </h2>
-                  </div>
-
                   {/* Amenities */}
                   <div className="mb-6">
-                    <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Amenities</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white mb-3 sm:mb-4">Amenities</h3>
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                       {Object.keys(amenities).map((amenity) =>
                         amenities[amenity] ? (
                           <div
                             key={amenity}
-                            className="flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-gray-800/50 to-gray-700/50 border border-gray-600/30 px-2 sm:px-3 py-2 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm"
+                            className="flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-sm px-3 py-2 rounded-lg text-xs sm:text-sm"
                           >
-                            <div className="p-1.5 sm:p-2 bg-gray-700/50 rounded-lg">
-                              {amenitiesIcons[amenity]}
-                            </div>
+                            {amenitiesIcons[amenity]}
                             <span className="text-white font-medium">{amenitiesLabels[amenity]}</span>
                           </div>
                         ) : null
@@ -216,7 +207,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
                   {/* Contact Information */}
                   <div className="mb-6">
-                    <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Contact</h3>
+                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white mb-3 sm:mb-4">Contact</h3>
                     <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 border border-gray-600/30 rounded-xl p-3 sm:p-4 space-y-2 sm:space-y-3">
                       {contact.phone && (
                         <div className="flex items-center gap-2 sm:gap-3">
@@ -247,7 +238,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
                   {/* Rating Summary */}
                   <div className="mb-6 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-xl p-3 sm:p-4">
-                    <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">Rating</h3>
+                    <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white mb-2 sm:mb-3">Rating</h3>
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div className="flex items-center gap-1">
                         {loading ? (

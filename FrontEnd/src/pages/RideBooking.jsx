@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone, FiCheck } from 'react-icons/fi';
-import { useAuth } from '@clerk/clerk-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 import { getGoogleMapsApiKey } from '../config/env';
@@ -20,7 +20,8 @@ const center = {
 };
 
 const RideBooking = () => {
-  const { getToken, isSignedIn, user } = useAuth();
+  const { getToken, isSignedIn } = useAuth();
+  const { user } = useUser();
   const [currentStep, setCurrentStep] = useState(1);
   const [pickupLocation, setPickupLocation] = useState('');
   const [dropoffLocation, setDropoffLocation] = useState('');
@@ -163,9 +164,12 @@ const RideBooking = () => {
     try {
       const token = await getToken();
       
+      // Check if user exists
+      if (!user) {
+        throw new Error('User not found. Please sign in again.');
+      }
+      
       const requestData = {
-        studentId: user.id,
-        studentName: user.fullName || user.firstName + ' ' + user.lastName,
         studentContact: user.primaryPhoneNumber?.phoneNumber || '',
         pickupLocation: {
           lat: pickupCoords.lat,

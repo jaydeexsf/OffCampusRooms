@@ -176,13 +176,13 @@ const FeedbackForm = () => {
       <div className="min-h-screen bg-gray-950 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-12">
-              <FiAlertCircle className="w-16 h-16 text-blue-400 mx-auto mb-6" />
-              <h2 className="text-2xl font-bold text-white mb-4">Sign In Required</h2>
-              <p className="text-gray-400 mb-8">
+            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 lg:p-12">
+              <FiAlertCircle className="w-12 h-12 sm:w-16 sm:h-16 text-blue-400 mx-auto mb-4 sm:mb-6" />
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Sign In Required</h2>
+              <p className="text-gray-400 mb-6 sm:mb-8 text-sm sm:text-base">
                 Please sign in to share your feedback and help other students find great accommodation.
               </p>
-              <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+              <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base">
                 Sign In to Continue
               </button>
             </div>
@@ -193,29 +193,29 @@ const FeedbackForm = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 py-16">
-      <div className="container mx-auto px-0">
+    <div className="min-h-screen bg-gray-950 py-8 sm:py-12 lg:py-16">
+      <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12" data-aos="fade-up">
+          <div className="text-center mb-8 sm:mb-12" data-aos="fade-up">
             <h1 className="text-2xl md:text-4xl font-bold text-white mb-6">
               Share Your <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Experience
               </span>
             </h1>
-            <p className="text-gray-400 text-xs md:text-lg max-w-2xl mx-auto">
+            <p className="text-gray-400 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
               Help other University of Limpopo students by sharing your accommodation experience and rating our platform.
             </p>
           </div>
 
           {/* Message Display */}
           {message.text && (
-            <div className={`mb-8 p-4 rounded-xl border ${
+            <div className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-xl border ${
               message.type === 'success' 
                 ? 'bg-green-500/10 border-green-500/30 text-green-400' 
                 : 'bg-red-500/10 border-red-500/30 text-red-400'
             }`} data-aos="fade-up">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm sm:text-base">
                 {message.type === 'success' ? <FiCheck /> : <FiAlertCircle />}
                 {message.text}
               </div>
@@ -224,9 +224,9 @@ const FeedbackForm = () => {
 
           {/* Existing Feedback Display */}
           {existingFeedback && !isEditing && (
-            <div className="mb-8 bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8" data-aos="fade-up">
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="text-xl font-bold text-white">Your Feedback</h3>
+            <div className="mb-6 sm:mb-8 bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8" data-aos="fade-up">
+              <div className="flex justify-between items-start mb-4 sm:mb-6">
+                <h3 className="text-lg sm:text-xl font-bold text-white">Your Feedback</h3>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setIsEditing(true)}
@@ -243,53 +243,53 @@ const FeedbackForm = () => {
                 </div>
               </div>
               
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Website Rating</p>
-                  <div className="flex gap-1 mb-4">
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">Website Rating</p>
+                  <div className="flex gap-1 mb-3 sm:mb-4">
                     {Array.from({ length: 5 }, (_, i) => (
-                      <FiStar key={i} className={`w-5 h-5 ${
+                      <FiStar key={i} className={`w-4 h-4 sm:w-5 sm:h-5 ${
                         i < existingFeedback.websiteRating ? 'text-yellow-400 fill-current' : 'text-gray-600'
                       }`} />
                     ))}
                   </div>
                   
-                  <p className="text-gray-400 text-sm mb-1">Location</p>
-                  <p className="text-white mb-4">{existingFeedback.location}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">Location</p>
+                  <p className="text-white mb-3 sm:mb-4 text-sm sm:text-base">{existingFeedback.location}</p>
                   
-                  <p className="text-gray-400 text-sm mb-1">Monthly Rent</p>
-                  <p className="text-white mb-4">R{existingFeedback.monthlyRent}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">Monthly Rent</p>
+                  <p className="text-white mb-3 sm:mb-4 text-sm sm:text-base">R{existingFeedback.monthlyRent}</p>
                 </div>
                 
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Study Year</p>
-                  <p className="text-white mb-4">{existingFeedback.studyYear}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">Study Year</p>
+                  <p className="text-white mb-3 sm:mb-4 text-sm sm:text-base">{existingFeedback.studyYear}</p>
                   
-                  <p className="text-gray-400 text-sm mb-1">Course</p>
-                  <p className="text-white mb-4">{existingFeedback.course}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">Course</p>
+                  <p className="text-white mb-3 sm:mb-4 text-sm sm:text-base">{existingFeedback.course}</p>
                   
-                  <p className="text-gray-400 text-sm mb-1">Room Type</p>
-                  <p className="text-white mb-4">{existingFeedback.roomType}</p>
+                  <p className="text-gray-400 text-xs sm:text-sm mb-1">Room Type</p>
+                  <p className="text-white mb-3 sm:mb-4 text-sm sm:text-base">{existingFeedback.roomType}</p>
                 </div>
               </div>
               
-              <p className="text-gray-400 text-sm mb-2">Your Review</p>
-              <p className="text-white leading-relaxed">{existingFeedback.review}</p>
+              <p className="text-gray-400 text-xs sm:text-sm mb-2">Your Review</p>
+              <p className="text-white leading-relaxed text-sm sm:text-base">{existingFeedback.review}</p>
             </div>
           )}
 
           {/* Feedback Form */}
           {(!existingFeedback || isEditing) && (
-            <form onSubmit={handleSubmit} className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8" data-aos="fade-up">
+            <form onSubmit={handleSubmit} className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8" data-aos="fade-up">
               {/* Website Rating */}
-              <div className="mb-8">
-                <label className="block text-white font-semibold mb-4 text-lg">
+              <div className="mb-6 sm:mb-8">
+                <label className="block text-white font-semibold mb-3 sm:mb-4 text-base sm:text-lg">
                   Rate Our Website *
                 </label>
-                <div className="flex gap-2 mb-2">
+                <div className="flex gap-1 sm:gap-2 mb-2">
                   {renderStars()}
                 </div>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-xs sm:text-sm">
                   {formData.websiteRating > 0 && (
                     `${formData.websiteRating} out of 5 stars`
                   )}
@@ -297,8 +297,8 @@ const FeedbackForm = () => {
               </div>
 
               {/* Review */}
-              <div className="mb-8">
-                <label htmlFor="review" className="block text-white font-semibold mb-3">
+              <div className="mb-6 sm:mb-8">
+                <label htmlFor="review" className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                   Your Experience *
                 </label>
                 <textarea
@@ -309,15 +309,15 @@ const FeedbackForm = () => {
                   required
                   rows={5}
                   placeholder="Share your experience with our platform and accommodation search..."
-                  className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 resize-none"
+                  className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 resize-none text-sm sm:text-base"
                 />
               </div>
 
               {/* Personal Information Grid */}
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 {/* Location */}
                 <div>
-                  <label htmlFor="location" className="block text-white font-semibold mb-3">
+                  <label htmlFor="location" className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                     Where are you staying? *
                   </label>
                   <input
@@ -328,13 +328,13 @@ const FeedbackForm = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="e.g., Gate 1, Gate 2, Ga-motintane"
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
 
                 {/* Monthly Rent */}
                 <div>
-                  <label htmlFor="monthlyRent" className="block text-white font-semibold mb-3">
+                  <label htmlFor="monthlyRent" className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                     Monthly Rent (R) *
                   </label>
                   <input
@@ -346,13 +346,13 @@ const FeedbackForm = () => {
                     required
                     min="0"
                     placeholder="e.g., 2500"
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
 
                 {/* Study Year */}
                 <div>
-                  <label htmlFor="studyYear" className="block text-white font-semibold mb-3">
+                  <label htmlFor="studyYear" className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                     Study Year *
                   </label>
                   <select
@@ -361,7 +361,7 @@ const FeedbackForm = () => {
                     value={formData.studyYear}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   >
                     <option value="">Select your year</option>
                     {studyYears.map(year => (
@@ -374,7 +374,7 @@ const FeedbackForm = () => {
 
                 {/* Course */}
                 <div>
-                  <label htmlFor="course" className="block text-white font-semibold mb-3">
+                  <label htmlFor="course" className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                     Course/Program *
                   </label>
                   <input
@@ -385,13 +385,13 @@ const FeedbackForm = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="e.g., Computer Science, Medicine, Law"
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
 
                 {/* Room Type */}
-                <div className="md:col-span-2">
-                  <label htmlFor="roomType" className="block text-white font-semibold mb-3">
+                <div className="sm:col-span-2">
+                  <label htmlFor="roomType" className="block text-white font-semibold mb-2 sm:mb-3 text-sm sm:text-base">
                     Room Type *
                   </label>
                   <select
@@ -400,7 +400,7 @@ const FeedbackForm = () => {
                     value={formData.roomType}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   >
                     <option value="">Select room type</option>
                     {roomTypes.map(type => (
@@ -413,11 +413,11 @@ const FeedbackForm = () => {
               </div>
 
               {/* Submit Button */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -445,7 +445,7 @@ const FeedbackForm = () => {
                         roomType: existingFeedback.roomType
                       });
                     }}
-                    className="px-6 py-4 bg-gray-600/20 hover:bg-gray-600/30 border border-gray-500/30 rounded-xl text-gray-300 font-semibold transition-all duration-200"
+                    className="px-4 sm:px-6 py-2 sm:py-4 bg-gray-600/20 hover:bg-gray-600/30 border border-gray-500/30 rounded-xl text-gray-300 font-semibold transition-all duration-200 text-sm sm:text-base"
                   >
                     Cancel
                   </button>

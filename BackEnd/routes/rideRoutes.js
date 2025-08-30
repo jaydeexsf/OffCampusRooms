@@ -22,7 +22,7 @@ router.post('/calculate', calculateRideDetails);
 // Protected routes (require authentication)
 router.post('/request', requestRide);
 router.post('/assign/:rideId', assignDriverToRide);
-router.get('/student/:studentId', getStudentRides);
+router.get('/student', getStudentRides);
 router.get('/driver/:driverId', getDriverRides);
 router.patch('/status/:id', updateRideStatus);
 router.post('/rate/:id', rateRide);

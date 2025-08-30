@@ -26,6 +26,7 @@ import FeedbackForm from "./components/Feedback/FeedbackForm";
 import RideBooking from "./pages/RideBooking";
 import MyRides from "./pages/MyRides";
 import AdminDashboard from "./pages/AdminDashboard";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const { globalLoader } = useContext(GlobalContext);
@@ -43,6 +44,7 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         {globalLoader && <Loader />}
         <Routes>
           <Route path="/" element={<Layout />}>

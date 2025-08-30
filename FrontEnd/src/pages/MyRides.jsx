@@ -19,7 +19,7 @@ const MyRides = () => {
 
   const fetchMyRides = async () => {
     try {
-              const response = await apiClient.get(`${API_ENDPOINTS.API_BASE_URL}/api/rides/student/${user.id}`);
+              const response = await apiClient.get(`${API_ENDPOINTS.API_BASE_URL}/api/rides/student`);
       if (response.data.success) {
         setRides(response.data.rides);
       }
