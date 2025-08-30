@@ -32,11 +32,7 @@
 @layer components {
   /* Modern Card Component */
   .dev-card {
-    @apply bg-neutral-900/50 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 shadow-soft hover:shadow-soft-lg hover:border-neutral-700/50 transition-all duration-300;
-  }
-  
-  .dev-card:hover {
-    @apply transform -translate-y-1;
+    @apply bg-neutral-900/50 backdrop-blur-sm border border-neutral-800/50 rounded-xl p-6 shadow-soft transition-none;
   }
   
   /* Modern Button Styles */
@@ -235,12 +231,7 @@
 /* Professional card spacing */
 .drivers-slider .slick-slide > div,
 .testimonials-slider .slick-slide > div {
-  @apply transition-all duration-300;
-}
-
-.drivers-slider .slick-slide > div:hover,
-.testimonials-slider .slick-slide > div:hover {
-  @apply transform scale-105;
+  @apply transition-none;
 }
 
 /* Global Scrollbar Styling - Website Theme */

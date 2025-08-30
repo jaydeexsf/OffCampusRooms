@@ -332,15 +332,15 @@ const DriversShowcase = () => {
         </button>
 
        {/* Slider Container with Side Padding for Arrows */}
-       <div className="px-8 lg:px-12">
+       <div className="px-4 lg:px-8">
          <Slider ref={sliderRef} {...settings} className="drivers-slider">
            {drivers.map((driver) => (
-             <div key={driver._id} className="px-4">
+             <div key={driver._id} className="px-2">
                {/* Driver Card */}
                                <div
                   className="bg-gray-800 border border-white/10 rounded-2xl p-4 sm:p-6
-                             cursor-pointer mx-auto shadow-xl"
-                  style={{height: 'auto', minHeight: '420px', minWidth: '400px'}}
+                             cursor-pointer mx-auto shadow-xl transition-none"
+                  style={{height: 'auto', minHeight: '420px', maxWidth: '350px', width: '100%'}}
                   onClick={() => openDriverModal(driver)}
                 >
                                                    {/* Car Image */}
