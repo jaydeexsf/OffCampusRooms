@@ -29,6 +29,17 @@ const PublicRidesDisplay = ({ pickupCoords, dropoffCoords, onRideSelect }) => {
   }
 
   const fetchPublicRides = async () => {
+    if (!pickupCoords || !dropoffCoords) {
+      console.log('Missing coordinates for public rides fetch');
+      return;
+    }
+
+    // Validate coordinates
+    if (!pickupCoords.lat || !pickupCoords.lng || !dropoffCoords.lat || !dropoffCoords.lng) {
+      console.log('Invalid coordinates for public rides fetch:', { pickupCoords, dropoffCoords });
+      return;
+    }
+
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -40,6 +51,8 @@ const PublicRidesDisplay = ({ pickupCoords, dropoffCoords, onRideSelect }) => {
         params.append('dropoffArea', JSON.stringify(dropoffCoords));
       }
 
+      console.log('Fetching public rides with params:', params.toString());
+
       const response = await apiClient.get(`/api/rides/public?${params}`);
       
       if (response.data.success) {
@@ -47,6 +60,24 @@ const PublicRidesDisplay = ({ pickupCoords, dropoffCoords, onRideSelect }) => {
       }
     } catch (error) {
       console.error('Error fetching public rides:', error);
+      
+      // Handle specific error cases
+      if (error.response) {
+        console.error('Error response:', error.response.status, error.response.data);
+        
+        if (error.response.status === 404) {
+          console.log('Public rides endpoint not found - this might be a backend issue');
+        } else if (error.response.status === 500) {
+          console.log('Server error occurred while fetching public rides');
+        }
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
+      
+      // Set empty rides to prevent UI errors
+      setPublicRides({});
     } finally {
       setLoading(false);
     }

@@ -215,7 +215,27 @@ const RideBooking = () => {
       }
     } catch (error) {
       console.error('Error submitting ride request:', error);
-      alert('Error submitting ride request. Please try again.');
+      
+      let errorMessage = 'Error submitting ride request. Please try again.';
+      
+      if (error.response) {
+        console.error('Error response:', error.response.status, error.response.data);
+        
+        if (error.response.status === 400) {
+          errorMessage = error.response.data.message || 'Invalid request data. Please check your input.';
+        } else if (error.response.status === 401) {
+          errorMessage = 'Authentication failed. Please sign in again.';
+        } else if (error.response.status === 500) {
+          errorMessage = 'Server error occurred. Please try again later.';
+        }
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        errorMessage = 'No response from server. Please check your connection.';
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -130,6 +130,29 @@ const requestRide = async (req, res) => {
       maxSharedPassengers = 1
     } = req.body;
 
+    // Validate required fields
+    if (!studentContact || !pickupLocation || !dropoffLocation || !distance || !estimatedPrice) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: studentContact, pickupLocation, dropoffLocation, distance, estimatedPrice'
+      });
+    }
+
+    // Validate location structure
+    if (!pickupLocation.address || !pickupLocation.lat || !pickupLocation.lng) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid pickup location format'
+      });
+    }
+
+    if (!dropoffLocation.address || !dropoffLocation.lat || !dropoffLocation.lng) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid dropoff location format'
+      });
+    }
+
     const ride = new Ride({
       studentId: authenticatedUserId,
       studentName: authenticatedUserName,
@@ -162,7 +185,17 @@ const requestRide = async (req, res) => {
       maxSharedPassengers: isSharedRide ? maxSharedPassengers : 1
     });
 
+    console.log('Saving ride request:', {
+      studentId: ride.studentId,
+      studentName: ride.studentName,
+      pickupLocation: ride.pickupLocation,
+      dropoffLocation: ride.dropoffLocation,
+      distance: ride.distance,
+      estimatedPrice: ride.estimatedPrice
+    });
+
     await ride.save();
+    console.log('Ride request saved successfully with ID:', ride._id);
 
     res.status(201).json({
       success: true,
@@ -170,6 +203,26 @@ const requestRide = async (req, res) => {
       ride
     });
   } catch (error) {
+    console.error('Error in requestRide:', error);
+    
+    // Check for validation errors
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: validationErrors
+      });
+    }
+    
+    // Check for duplicate key errors
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Duplicate ride request detected'
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Error submitting ride request',
@@ -306,39 +359,68 @@ const getPublicRides = async (req, res) => {
     }
     
     // Filter by pickup area if provided (within 5km radius)
-    if (pickupArea && pickupArea.lat && pickupArea.lng) {
-      const radiusKm = 5;
-      const radiusDegrees = radiusKm / 111.32;
-      
-      filter['pickupLocation.lat'] = {
-        $gte: pickupArea.lat - radiusDegrees,
-        $lte: pickupArea.lat + radiusDegrees
-      };
-      filter['pickupLocation.lng'] = {
-        $gte: pickupArea.lng - radiusDegrees,
-        $lte: pickupArea.lng + radiusDegrees
-      };
+    if (pickupArea) {
+      try {
+        // Parse pickupArea if it's a JSON string
+        const pickupCoords = typeof pickupArea === 'string' ? JSON.parse(pickupArea) : pickupArea;
+        
+        if (pickupCoords && pickupCoords.lat && pickupCoords.lng) {
+          const radiusKm = 5;
+          const radiusDegrees = radiusKm / 111.32;
+          
+          filter['pickupLocation.lat'] = {
+            $gte: pickupCoords.lat - radiusDegrees,
+            $lte: pickupCoords.lat + radiusDegrees
+          };
+          filter['pickupLocation.lng'] = {
+            $gte: pickupCoords.lng - radiusDegrees,
+            $lte: pickupCoords.lng + radiusDegrees
+          };
+        }
+      } catch (parseError) {
+        console.error('Error parsing pickupArea:', parseError);
+        // Continue without pickup filtering if parsing fails
+      }
     }
     
     // Filter by dropoff area if provided (within 5km radius)
-    if (dropoffArea && dropoffArea.lat && dropoffArea.lng) {
-      const radiusKm = 5;
-      const radiusDegrees = radiusKm / 111.32;
-      
-      filter['dropoffLocation.lat'] = {
-        $gte: dropoffArea.lat - radiusDegrees,
-        $lte: dropoffArea.lat + radiusDegrees
-      };
-      filter['dropoffLocation.lng'] = {
-        $gte: dropoffArea.lng - radiusDegrees,
-        $lte: dropoffArea.lng + radiusDegrees
-      };
+    if (dropoffArea) {
+      try {
+        // Parse dropoffArea if it's a JSON string
+        const dropoffCoords = typeof dropoffArea === 'string' ? JSON.parse(dropoffArea) : dropoffArea;
+        
+        if (dropoffCoords && dropoffCoords.lat && dropoffCoords.lng) {
+          const radiusKm = 5;
+          const radiusDegrees = radiusKm / 111.32;
+          
+          filter['dropoffLocation.lat'] = {
+            $gte: dropoffCoords.lat - radiusDegrees,
+            $lte: dropoffCoords.lat + radiusDegrees
+          };
+          filter['dropoffLocation.lng'] = {
+            $gte: dropoffCoords.lng - radiusDegrees,
+            $lte: dropoffCoords.lng + radiusDegrees
+          };
+        }
+      } catch (parseError) {
+        console.error('Error parsing dropoffArea:', parseError);
+        // Continue without dropoff filtering if parsing fails
+      }
     }
+    
+    // Add additional safety checks
+    if (!filter.status) {
+      filter.status = { $in: ['pending', 'accepted'] };
+    }
+    
+    console.log('Public rides filter:', JSON.stringify(filter, null, 2));
     
     const rides = await Ride.find(filter)
       .select('pickupLocation dropoffLocation scheduledTime distance estimatedPrice bookingType groupSize isSharedRide maxSharedPassengers createdAt')
       .sort({ scheduledTime: 1, createdAt: -1 })
       .limit(20); // Limit to prevent overwhelming the UI
+    
+    console.log(`Found ${rides.length} rides matching criteria`);
     
     // Group rides by date for better organization
     const ridesByDate = rides.reduce((acc, ride) => {
@@ -356,6 +438,7 @@ const getPublicRides = async (req, res) => {
       totalRides: rides.length
     });
   } catch (error) {
+    console.error('Error in getPublicRides:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching public rides',
