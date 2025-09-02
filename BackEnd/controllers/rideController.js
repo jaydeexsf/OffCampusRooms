@@ -139,18 +139,25 @@ const requestRide = async (req, res) => {
     }
 
     // Validate location structure
-    if (!pickupLocation.address || !pickupLocation.lat || !pickupLocation.lng) {
+    // Allow address-less submissions by generating a fallback address string
+    if (!pickupLocation.lat || !pickupLocation.lng) {
       return res.status(400).json({
         success: false,
         message: 'Invalid pickup location format'
       });
     }
+    if (!pickupLocation.address) {
+      pickupLocation.address = `(${pickupLocation.lat.toFixed(5)}, ${pickupLocation.lng.toFixed(5)})`;
+    }
 
-    if (!dropoffLocation.address || !dropoffLocation.lat || !dropoffLocation.lng) {
+    if (!dropoffLocation.lat || !dropoffLocation.lng) {
       return res.status(400).json({
         success: false,
         message: 'Invalid dropoff location format'
       });
+    }
+    if (!dropoffLocation.address) {
+      dropoffLocation.address = `(${dropoffLocation.lat.toFixed(5)}, ${dropoffLocation.lng.toFixed(5)})`;
     }
 
     const ride = new Ride({

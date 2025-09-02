@@ -12,11 +12,28 @@ const DriversShowcase = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const sliderRef = useRef(null);
   const navigate = useNavigate();
+  const [itemsPerView, setItemsPerView] = useState(3);
+
+  // Determine items per view based on viewport width
+  useEffect(() => {
+    const computeItemsPerView = () => {
+      if (typeof window === 'undefined') return 3;
+      const width = window.innerWidth;
+      if (width < 640) return 1; // mobile
+      if (width < 1024) return 2; // tablet
+      return 3; // desktop
+    };
+
+    const updateItems = () => setItemsPerView(computeItemsPerView());
+    updateItems();
+    window.addEventListener('resize', updateItems);
+    return () => window.removeEventListener('resize', updateItems);
+  }, []);
 
   // Custom slider functions
   const nextSlide = () => {
     if (isTransitioning) return;
-    const maxSlides = Math.ceil(drivers.length / 3);
+    const maxSlides = Math.ceil(drivers.length / Math.max(itemsPerView, 1)) || 1;
     console.log('Drivers next slide clicked, current:', currentSlide, 'maxSlides:', maxSlides, 'total drivers:', drivers.length);
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev + 1) % maxSlides);
@@ -25,7 +42,7 @@ const DriversShowcase = () => {
 
   const prevSlide = () => {
     if (isTransitioning) return;
-    const maxSlides = Math.ceil(drivers.length / 3);
+    const maxSlides = Math.ceil(drivers.length / Math.max(itemsPerView, 1)) || 1;
     console.log('Drivers prev slide clicked, current:', currentSlide, 'maxSlides:', maxSlides, 'total drivers:', drivers.length);
     setIsTransitioning(true);
     setCurrentSlide((prev) => (prev - 1 + maxSlides) % maxSlides);
@@ -41,7 +58,7 @@ const DriversShowcase = () => {
 
   // Auto-play functionality
   useEffect(() => {
-    const maxSlides = Math.ceil(drivers.length / 3);
+    const maxSlides = Math.ceil(drivers.length / Math.max(itemsPerView, 1));
     if (maxSlides <= 1) return;
     
     const interval = setInterval(() => {
@@ -49,7 +66,7 @@ const DriversShowcase = () => {
     }, 5000);
     
     return () => clearInterval(interval);
-  }, [drivers.length, currentSlide]);
+  }, [drivers.length, currentSlide, itemsPerView]);
 
   // Dummy data for when no drivers exist
   const dummyDrivers = [
@@ -226,7 +243,7 @@ const DriversShowcase = () => {
   if (loading) {
     return (
       <section className="py-16 bg-gray-950">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-3 sm:px-4">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-16" data-aos="fade-up">
@@ -255,7 +272,7 @@ const DriversShowcase = () => {
   return (
     <>
       <section className="py-16 bg-gray-950">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-3 sm:px-4">
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-12" data-aos="fade-up">
@@ -277,7 +294,7 @@ const DriversShowcase = () => {
                   
 
                   {/* Custom Slider Container */}
-                  <div className="px-8 lg:px-12">
+                  <div className="px-2 sm:px-4 md:px-6 lg:px-12">
                     {/* Navigation Buttons - Top Right */}
                     <div className="absolute top-0 right-0 z-10 flex gap-2 mb-4">
                                              <button
@@ -304,14 +321,14 @@ const DriversShowcase = () => {
                         className="flex transition-transform duration-300 ease-out"
                         style={{
                           transform: `translateX(-${currentSlide * 100}%)`,
-                          width: `${drivers.length * (100 / 3)}%`
+                          width: `${drivers.length * (100 / Math.max(itemsPerView, 1))}%`
                         }}
                       >
                         {drivers.map((driver, index) => (
                           <div 
                             key={driver._id} 
-                            className="w-1/3 px-4 flex-shrink-0"
-                            style={{ minWidth: '260px' }}
+                            className="px-3 sm:px-4 flex-shrink-0"
+                            style={{ flex: `0 0 ${100 / Math.max(itemsPerView, 1)}%`, minWidth: itemsPerView === 1 ? '280px' : undefined }}
                           >
                             {/* Driver Card - Clean and Simple */}
                             <div
@@ -344,7 +361,7 @@ const DriversShowcase = () => {
                               </div>
 
                               {/* Driver Info - Simplified */}
-                              <div className="p-4 sm:p-6">
+                              <div className="p-4 sm:p-5 lg:p-6">
                                 {/* Profile Section */}
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                                   <div className="relative">
@@ -408,9 +425,9 @@ const DriversShowcase = () => {
                     </div>
 
                                          {/* Dots Navigation */}
-                     {Math.ceil(drivers.length / 3) > 1 && (
+                     {Math.ceil(drivers.length / Math.max(itemsPerView, 1)) > 1 && (
                        <div className="flex justify-center gap-2 mt-6">
-                         {Array.from({ length: Math.ceil(drivers.length / 3) }, (_, index) => (
+                         {Array.from({ length: Math.ceil(drivers.length / Math.max(itemsPerView, 1)) }, (_, index) => (
                            <button
                              key={index}
                              onClick={() => goToSlide(index)}
@@ -554,14 +571,13 @@ const DriversShowcase = () => {
                   </div>
                   
                   {/* Action Buttons */}
-                  <div className="flex gap-3 sm:gap-4 pt-3 sm:pt-4">
+                  <div className="pt-3 sm:pt-4">
                     <button 
                       onClick={handleBookRide}
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl shadow-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-200 text-sm sm:text-base"
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3 sm:py-4 px-4 sm:px-6 rounded-xl shadow-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-200 text-sm sm:text-base"
                     >
                       Book Ride Now
                     </button>
-
                   </div>
                 </div>
               </div>

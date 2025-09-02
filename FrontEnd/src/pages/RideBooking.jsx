@@ -172,14 +172,16 @@ const RideBooking = () => {
       }
       
       const requestData = {
-        studentContact: user.primaryPhoneNumber?.phoneNumber || '',
+        studentContact: user.primaryPhoneNumber?.phoneNumber || user?.phoneNumbers?.[0]?.phoneNumber || user?.emailAddresses?.[0]?.emailAddress || 'N/A',
         pickupLocation: {
           lat: pickupCoords.lat,
-          lng: pickupCoords.lng
+          lng: pickupCoords.lng,
+          address: pickupAddress || `(${pickupCoords.lat.toFixed(5)}, ${pickupCoords.lng.toFixed(5)})`
         },
         dropoffLocation: {
           lat: dropoffCoords.lat,
-          lng: dropoffCoords.lng
+          lng: dropoffCoords.lng,
+          address: dropoffAddress || `(${dropoffCoords.lat.toFixed(5)}, ${dropoffCoords.lng.toFixed(5)})`
         },
         distance,
         estimatedPrice,

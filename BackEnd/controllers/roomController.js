@@ -205,6 +205,14 @@ const deleteRoom = async (req, res)=> {
   }
 }
 
+const escapeRegex = (text) => {
+  try {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  } catch (e) {
+    return text;
+  }
+};
+
 const searchRooms = async (req, res) => {
   try {
       console.log('Search rooms query params:', req.query);
@@ -214,46 +222,68 @@ const searchRooms = async (req, res) => {
       
       // Handle location filter
       if (location && location !== "All") {
-          query.location = location.toLowerCase();
+          // Case-insensitive exact match on location
+          const safe = escapeRegex(String(location));
+          query.location = { $regex: new RegExp(`^${safe}$`, 'i') };
       }
       
       // Handle price filter
       if (maxPrice) {
-          query.price = { $lte: parseInt(maxPrice) };
+          const priceNum = parseInt(maxPrice, 10);
+          if (!Number.isNaN(priceNum)) {
+              query.price = { $lte: priceNum };
+          }
       }
       
       // Handle amenities filter
       if (amenities) {
-          const amenitiesArray = amenities.split(',');
+          // Support comma-separated string, repeated query params, or array
+          const amenitiesArray = Array.isArray(amenities)
+            ? amenities
+            : typeof amenities === 'string'
+              ? amenities.split(',').map(a => a.trim()).filter(Boolean)
+              : [];
           console.log('Amenities array:', amenitiesArray);
-          
-          // Use $and to ensure ALL selected amenities are present
-          const amenitiesConditions = amenitiesArray.map(amenity => ({
-              [`amenities.${amenity}`]: true
-          }));
-          
-          if (amenitiesConditions.length > 0) {
-              query.$and = amenitiesConditions;
+
+          if (amenitiesArray.length > 0) {
+              // Use $and to ensure ALL selected amenities are present
+              const amenitiesConditions = amenitiesArray.map(amenity => ({
+                  [`amenities.${amenity}`]: true
+              }));
+              if (amenitiesConditions.length > 0) {
+                  query.$and = amenitiesConditions;
+              }
           }
       }
       
       // Handle search term
       if (search) {
+          const safeSearch = escapeRegex(String(search));
           query.$or = [
-              { title: { $regex: search, $options: 'i' } },
-              { description: { $regex: search, $options: 'i' } },
-              { location: { $regex: search, $options: 'i' } }
+              { title: { $regex: safeSearch, $options: 'i' } },
+              { description: { $regex: safeSearch, $options: 'i' } },
+              { location: { $regex: safeSearch, $options: 'i' } }
           ];
       }
       
       // Handle distance filter
       if (maxDistance) {
-          query.minutesAway = { $lte: parseInt(maxDistance) };
+          const distNum = parseInt(maxDistance, 10);
+          if (!Number.isNaN(distNum)) {
+              query.minutesAway = { $lte: distNum };
+          }
       }
 
       console.log('Final query:', JSON.stringify(query, null, 2));
       
-      const limit = limitBy ? parseInt(limitBy) : 50;
+      let limit = 50;
+      if (typeof limitBy !== 'undefined') {
+          const parsed = parseInt(limitBy, 10);
+          if (!Number.isNaN(parsed) && parsed > 0 && parsed <= 200) {
+              limit = parsed;
+          }
+      }
+
       const rooms = await Room.find(query).limit(limit); 
       const roomCount = await Room.countDocuments(query);
 
