@@ -160,6 +160,11 @@ const requestRide = async (req, res) => {
       dropoffLocation.address = `(${dropoffLocation.lat.toFixed(5)}, ${dropoffLocation.lng.toFixed(5)})`;
     }
 
+    // Normalize optional enumerations: treat empty string as null
+    const normalizedSemester = semester === '' ? null : semester;
+    const normalizedAcademicYear = academicYear === '' ? null : academicYear;
+    const normalizedHolidayType = holidayType === '' ? null : holidayType;
+
     const ride = new Ride({
       studentId: authenticatedUserId,
       studentName: authenticatedUserName,
@@ -177,9 +182,9 @@ const requestRide = async (req, res) => {
       groupSize,
       luggageCount,
       furnitureItems,
-      semester,
-      academicYear,
-      holidayType,
+      semester: normalizedSemester,
+      academicYear: normalizedAcademicYear,
+      holidayType: normalizedHolidayType,
       specialRequirements,
       // Split fare and ride sharing
       splitFare: splitFare || {
