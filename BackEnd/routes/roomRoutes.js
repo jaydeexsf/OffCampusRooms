@@ -8,6 +8,8 @@ const router = express.Router();
 // endpoints for getting rooms from mogn0 db
 router.get("/all", getAllRooms);
 router.get("/best-rooms", getAllBestRooms);
+// Search MUST come before dynamic :id to avoid route conflicts
+router.get("/search", searchRooms);
 router.get("/:id", getRoomById);
 
 //emnpomnt for updating rooms // i will create this later
@@ -30,7 +32,7 @@ router.post("/add-room", addRoom);
 //api for deleting a room
 router.delete('/delete-room/:id', deleteRoom)
 
-router.get("/search", searchRooms)
+// search route moved above
 
 //emnpomnt for updating QandA // i will create this later
 // router.put('/update-questions', );
