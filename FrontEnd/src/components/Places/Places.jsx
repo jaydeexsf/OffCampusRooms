@@ -9,20 +9,42 @@ const Places = ({ handleOrderPopup }) => {
   const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
-    const fetchRooms = async () => {
+    const fetchRooms = async (retryCount = 0) => {
       try {
-        console.log('🔍 Fetching best rooms from:', API_ENDPOINTS.BEST_ROOMS);
+        console.log(`🔍 Fetching best rooms from: ${API_ENDPOINTS.BEST_ROOMS} (attempt ${retryCount + 1})`);
         const response = await apiClient.get(API_ENDPOINTS.BEST_ROOMS);
         console.log('✅ Best rooms response:', response.data);
         const rooms = response.data.bestRooms; 
-        setBestRooms(rooms); 
+        
+        if (rooms && Array.isArray(rooms)) {
+          console.log(`📊 Found ${rooms.length} best rooms`);
+          setBestRooms(rooms);
+        } else {
+          console.warn('⚠️ No best rooms found or invalid data format');
+          setBestRooms([]);
+        }
 
       } catch (error) {
         console.error("❌ Error fetching best rooms:", error);
         console.error("❌ Error details:", error.response?.data || error.message);
+        console.error("❌ Error status:", error.response?.status);
+        
+        // Retry logic for network errors
+        if (retryCount < 2 && (error.code === 'ECONNABORTED' || error.code === 'NETWORK_ERROR' || !error.response)) {
+          console.warn(`🔄 Retrying best rooms fetch... (attempt ${retryCount + 2}/3)`);
+          setTimeout(() => {
+            fetchRooms(retryCount + 1);
+          }, 2000); // Wait 2 seconds before retry
+          return;
+        }
+        
+        // Set empty array on error to prevent undefined state
+        setBestRooms([]);
 
       } finally {
-        setLoading(false); 
+        if (retryCount === 0 || retryCount >= 2) {
+          setLoading(false);
+        }
       }
     };
 
@@ -34,15 +56,16 @@ const Places = ({ handleOrderPopup }) => {
       <section data-aos="fade-up" className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="flex sm:flex-row items-start sm:items-center justify-between mb-12">
-            <div className="mb-6 sm:mb-0">
-              <h2 className="text-2xl md:text-4xl font-bold text-white mb-2">
-                Best <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                  Rooms
-                </span>
-              </h2>
-              <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
-            </div>
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+              Best <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                Rooms
+              </span>
+            </h2>
+            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto mb-8">
+              Handpicked accommodations that offer the best value and convenience for University of Limpopo students
+            </p>
             
             <Link 
               to="/all-rooms"

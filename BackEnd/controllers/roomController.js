@@ -32,11 +32,21 @@ const getRoomById = async (req, res) => {
 // Get all best rooms where bestRoom is true
 const getAllBestRooms = async (req, res) => {
   try {
+    console.log('🔍 Fetching best rooms from database...');
     const bestRooms = await Room.find({ bestRoom: true });
+    console.log(`✅ Found ${bestRooms.length} best rooms in database`);
 
-    res.status(200).json({bestRooms}); // Send best rooms
+    // If no best rooms found, try to get some regular rooms as fallback
+    if (bestRooms.length === 0) {
+      console.log('⚠️ No best rooms found, fetching regular rooms as fallback...');
+      const regularRooms = await Room.find().limit(6);
+      console.log(`📊 Using ${regularRooms.length} regular rooms as fallback`);
+      return res.status(200).json({ bestRooms: regularRooms });
+    }
+
+    res.status(200).json({ bestRooms });
   } catch (error) {
-    console.error("Error fetching best rooms:", error);
+    console.error("❌ Error fetching best rooms:", error);
     res.status(500).json({ message: "Error fetching best rooms", error: error.message });
   }
 };

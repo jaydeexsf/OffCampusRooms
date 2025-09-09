@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { FiHome, FiUsers, FiMessageSquare, FiStar, FiTruck, FiCalendar, FiSettings, FiBarChart, FiActivity } from 'react-icons/fi';
+import { FiHome, FiUsers, FiMessageSquare, FiStar, FiTruck, FiCalendar, FiSettings, FiBarChart, FiActivity, FiPlus, FiSearch, FiFilter } from 'react-icons/fi';
 import RoomSection from '../../components/admin/RoomSection';
 import FAQSection from '../../components/admin/FAQSection';
 import DriverManagement from '../../components/admin/DriverManagement';
 import AdvancedBookings from '../../components/admin/AdvancedBookings';
+import AddRoomPopup from '../../components/admin/AddRoomPopup';
+import AddFaqPopup from '../../components/admin/AddFaqPopup';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
 
 const AdminPanel = () => {
@@ -24,6 +26,10 @@ const AdminPanel = () => {
   };
   const [loading, setLoading] = useState(true);
   const [usingFallback, setUsingFallback] = useState(false);
+  
+  // Popup states
+  const [showAddRoomPopup, setShowAddRoomPopup] = useState(false);
+  const [showAddFaqPopup, setShowAddFaqPopup] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -139,43 +145,99 @@ const AdminPanel = () => {
 
       {/* Quick Actions */}
       <div className="bg-white/5 border border-white/10 rounded-lg sm:rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6">
-        <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-3 sm:mb-4 lg:mb-6">Quick Actions</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+        <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-3 sm:mb-4 lg:mb-6 flex items-center gap-2">
+          <FiPlus className="w-5 h-5 text-blue-400" />
+          Quick Actions
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Add Room Button */}
+          <button
+            onClick={() => setShowAddRoomPopup(true)}
+            className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 border border-blue-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <FiHome className="w-5 h-5 text-blue-400" />
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">Add New Room</p>
+                <p className="text-gray-400 text-xs">Create room listing</p>
+              </div>
+            </div>
+            <p className="text-gray-300 text-xs">Quickly add a new room with all details</p>
+          </button>
+          
+          {/* Add FAQ Button */}
+          <button
+            onClick={() => setShowAddFaqPopup(true)}
+            className="bg-gradient-to-r from-purple-500/20 to-purple-600/20 hover:from-purple-500/30 hover:to-purple-600/30 border border-purple-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <FiMessageSquare className="w-5 h-5 text-purple-400" />
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">Add FAQ</p>
+                <p className="text-gray-400 text-xs">Create help content</p>
+              </div>
+            </div>
+            <p className="text-gray-300 text-xs">Add frequently asked questions</p>
+          </button>
+          
+          {/* Manage Rooms Button */}
           <button
             onClick={() => setActiveTab('rooms')}
-            className="bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-4 text-left transition-all duration-200 group"
+            className="bg-gradient-to-r from-green-500/20 to-green-600/20 hover:from-green-500/30 hover:to-green-600/30 border border-green-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
           >
-            <FiHome className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-400 mb-1 sm:mb-2 group-hover:scale-110 transition-transform" />
-            <p className="text-white font-medium text-xs sm:text-sm lg:text-base">Add Room</p>
-            <p className="text-gray-400 text-xs lg:text-sm">Create new listings</p>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-green-500/20 rounded-lg">
+                <FiSearch className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">Manage Rooms</p>
+                <p className="text-gray-400 text-xs">Search & edit rooms</p>
+              </div>
+            </div>
+            <p className="text-gray-300 text-xs">Search, edit, and manage all rooms</p>
           </button>
-          
-          <button
-            onClick={() => setActiveTab('drivers')}
-            className="bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-4 text-left transition-all duration-200 group"
-          >
-            <FiTruck className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-400 mb-1 sm:mb-2 group-hover:scale-110 transition-transform" />
-            <p className="text-white font-medium text-xs sm:text-sm lg:text-base">Add Driver</p>
-            <p className="text-gray-400 text-xs lg:text-sm">Register drivers</p>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab('faqs')}
-            className="bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-4 text-left transition-all duration-200 group"
-          >
-            <FiMessageSquare className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-purple-400 mb-1 sm:mb-2 group-hover:scale-110 transition-transform" />
-            <p className="text-white font-medium text-xs sm:text-sm lg:text-base">Add FAQ</p>
-            <p className="text-gray-400 text-xs lg:text-sm">Create help content</p>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab('bookings')}
-            className="bg-orange-500/20 hover:bg-orange-500/30 border border-orange-500/30 rounded-lg lg:rounded-xl p-2 sm:p-3 lg:p-4 text-left transition-all duration-200 group"
-          >
-            <FiCalendar className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-orange-400 mb-1 sm:mb-2 group-hover:scale-110 transition-transform" />
-            <p className="text-white font-medium text-xs sm:text-sm lg:text-base">View Bookings</p>
-            <p className="text-gray-400 text-xs lg:text-sm">Monitor reservations</p>
-          </button>
+        </div>
+        
+        {/* Secondary Actions */}
+        <div className="mt-6 pt-6 border-t border-white/10">
+          <h4 className="text-white font-medium mb-4">Other Actions</h4>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <button
+              onClick={() => setActiveTab('drivers')}
+              className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-3 text-center transition-all duration-200 group"
+            >
+              <FiTruck className="w-5 h-5 text-green-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <p className="text-white font-medium text-xs">Drivers</p>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('faqs')}
+              className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-3 text-center transition-all duration-200 group"
+            >
+              <FiMessageSquare className="w-5 h-5 text-purple-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <p className="text-white font-medium text-xs">FAQs</p>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('bookings')}
+              className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-3 text-center transition-all duration-200 group"
+            >
+              <FiCalendar className="w-5 h-5 text-orange-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <p className="text-white font-medium text-xs">Bookings</p>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-3 text-center transition-all duration-200 group"
+            >
+              <FiBarChart className="w-5 h-5 text-blue-400 mx-auto mb-2 group-hover:scale-110 transition-transform" />
+              <p className="text-white font-medium text-xs">Analytics</p>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -262,6 +324,23 @@ const AdminPanel = () => {
           {tabs.find(tab => tab.id === activeTab)?.component}
         </div>
       </div>
+      
+      {/* Popup Components */}
+      <AddRoomPopup 
+        isOpen={showAddRoomPopup}
+        onClose={() => setShowAddRoomPopup(false)}
+        onRoomAdded={() => {
+          fetchStats(); // Refresh stats after adding room
+        }}
+      />
+      
+      <AddFaqPopup 
+        isOpen={showAddFaqPopup}
+        onClose={() => setShowAddFaqPopup(false)}
+        onFaqAdded={() => {
+          fetchStats(); // Refresh stats after adding FAQ
+        }}
+      />
     </div>
   );
 };

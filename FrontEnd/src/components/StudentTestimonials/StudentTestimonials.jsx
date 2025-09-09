@@ -16,13 +16,31 @@ const StudentTestimonials = () => {
     fetchTestimonials();
   }, []);
 
+  // Responsive items per view
+  const [itemsPerView, setItemsPerView] = useState(3);
+
+  useEffect(() => {
+    const computeItemsPerView = () => {
+      if (typeof window === 'undefined') return 3;
+      const width = window.innerWidth;
+      if (width < 640) return 1; // mobile - single item
+      if (width < 768) return 1; // small mobile - single item
+      if (width < 1024) return 2; // tablet - two items
+      return 3; // desktop - three items
+    };
+
+    const updateItems = () => setItemsPerView(computeItemsPerView());
+    updateItems();
+    window.addEventListener('resize', updateItems);
+    return () => window.removeEventListener('resize', updateItems);
+  }, []);
+
   // Custom slider functions
   const nextSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    const maxSlides = Math.ceil(testimonials.length / 3);
+    const maxSlides = Math.ceil(testimonials.length / Math.max(itemsPerView, 1));
     if (maxSlides <= 1) {
-      // Nothing to slide; re-enable immediately
       setIsTransitioning(false);
       return;
     }
@@ -34,9 +52,8 @@ const StudentTestimonials = () => {
   const prevSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    const maxSlides = Math.ceil(testimonials.length / 3);
+    const maxSlides = Math.ceil(testimonials.length / Math.max(itemsPerView, 1));
     if (maxSlides <= 1) {
-      // Nothing to slide; re-enable immediately
       setIsTransitioning(false);
       return;
     }
@@ -55,7 +72,7 @@ const StudentTestimonials = () => {
 
   // Auto-play functionality
   useEffect(() => {
-    const maxSlides = Math.ceil(testimonials.length / 3);
+    const maxSlides = Math.ceil(testimonials.length / Math.max(itemsPerView, 1));
     if (maxSlides <= 1) return;
     
     const interval = setInterval(() => {
@@ -63,7 +80,7 @@ const StudentTestimonials = () => {
     }, 5000);
     
     return () => clearInterval(interval);
-  }, [testimonials.length, currentSlide]);
+  }, [testimonials.length, currentSlide, itemsPerView]);
 
   const fetchTestimonials = async () => {
     try {
@@ -143,33 +160,36 @@ const StudentTestimonials = () => {
             className="flex transition-transform duration-300 ease-out"
             style={{
               transform: `translateX(-${currentSlide * 100}%)`,
-              width: `${testimonials.length * (100 / 3)}%`
+              width: `${testimonials.length * (100 / Math.max(itemsPerView, 1))}%`
             }}
           >
             {testimonials.map((testimonial, index) => (
               <div 
                 key={testimonial.id} 
-                className="w-1/3 px-4 flex-shrink-0"
-                style={{ minWidth: '300px' }}
+                className="px-3 sm:px-4 flex-shrink-0"
+                style={{ 
+                  flex: `0 0 ${100 / Math.max(itemsPerView, 1)}%`, 
+                  minWidth: itemsPerView === 1 ? '280px' : undefined 
+                }}
               >
-                {/* Testimonial Card - Clean and Simple */}
-                <div className="bg-gray-800/50 backdrop-blur-sm border border-white/10 rounded-xl p-6 h-full shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-800/70">
+                {/* Enhanced Testimonial Card */}
+                <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-2xl p-5 sm:p-6 h-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:from-blue-500/20 hover:to-blue-600/30 hover:border-blue-400/50 group">
                   {/* Quote Icon and Rating */}
-                  <div className="flex justify-between items-start mb-6">
-                    <FiMessageSquare className="text-blue-400 w-6 h-6" />
+                  <div className="flex justify-between items-start mb-5 sm:mb-6">
+                    <FiMessageSquare className="text-blue-400 w-6 h-6 sm:w-7 sm:h-7 group-hover:text-blue-300 transition-colors duration-300" />
                     <div className="flex gap-1">
                       {renderStars(testimonial.rating)}
                     </div>
                   </div>
 
                   {/* Review Text */}
-                  <p className="text-gray-300 text-sm leading-relaxed mb-6 line-clamp-4">
+                  <p className="text-gray-200 text-sm sm:text-base leading-relaxed mb-6 sm:mb-7 line-clamp-4 group-hover:text-white transition-colors duration-300">
                     "{testimonial.review}"
                   </p>
 
-                  {/* Student Info - Simplified */}
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/50">
+                  {/* Enhanced Student Info */}
+                  <div className="flex items-center gap-4 sm:gap-5">
+                    <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden border-3 border-blue-400/60 shadow-xl group-hover:border-blue-400/80 transition-all duration-300">
                       <img 
                         src={testimonial.image} 
                         alt={testimonial.name}
@@ -180,13 +200,13 @@ const StudentTestimonials = () => {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-white font-semibold text-sm mb-1 truncate">
+                      <h4 className="text-white font-bold text-sm sm:text-base mb-2 truncate group-hover:text-blue-100 transition-colors duration-300">
                         {testimonial.name}
                       </h4>
-                      <p className="text-gray-400 text-xs mb-1 truncate">
+                      <p className="text-gray-300 text-xs sm:text-sm mb-1 truncate font-medium">
                         {testimonial.course}
                       </p>
-                      <p className="text-blue-400 text-xs font-medium truncate">
+                      <p className="text-blue-300 text-xs sm:text-sm font-semibold truncate">
                         {testimonial.location}
                       </p>
                     </div>
@@ -220,15 +240,15 @@ const StudentTestimonials = () => {
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12" data-aos="fade-up">
-                         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
-               What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                 Students
-               </span> Say
-             </h2>
-                         <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
-             <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
-               Real reviews from University of Limpopo students who found their perfect accommodation
-             </p>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+              What Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                Students
+              </span> Say
+            </h2>
+            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
+              Real reviews from University of Limpopo students who found their perfect accommodation
+            </p>
           </div>
 
           {/* Testimonials Slider - Clean Professional Layout */}

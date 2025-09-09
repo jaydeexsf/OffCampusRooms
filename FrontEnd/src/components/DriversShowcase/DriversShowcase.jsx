@@ -19,9 +19,10 @@ const DriversShowcase = () => {
     const computeItemsPerView = () => {
       if (typeof window === 'undefined') return 3;
       const width = window.innerWidth;
-      if (width < 640) return 1; // mobile
-      if (width < 1024) return 2; // tablet
-      return 3; // desktop
+      if (width < 640) return 1; // mobile - single item
+      if (width < 768) return 1; // small mobile - single item
+      if (width < 1024) return 2; // tablet - two items
+      return 3; // desktop - three items
     };
 
     const updateItems = () => setItemsPerView(computeItemsPerView());
@@ -276,43 +277,41 @@ const DriversShowcase = () => {
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-12" data-aos="fade-up">
-                             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
-                 Meet Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                   Trusted Drivers
-                 </span>
-               </h2>
-                             <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
-               <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
-                 Safe, reliable, and experienced drivers ready to take you anywhere around campus
-               </p>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+                Meet Our <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  Trusted Drivers
+                </span>
+              </h2>
+              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
+                Safe, reliable, and experienced drivers ready to take you anywhere around campus
+              </p>
             </div>
 
             {/* Drivers Display - Clean Professional Layout */}
             <div className="w-full relative" data-aos="fade-up" data-aos-delay="200">
               {drivers.length > 0 ? (
                 <div className="relative">
-                  
-
                   {/* Custom Slider Container */}
                   <div className="px-2 sm:px-4 md:px-6 lg:px-12">
-                    {/* Navigation Buttons - Top Right */}
+                    {/* Navigation Buttons - Responsive positioning */}
                     <div className="absolute top-0 right-0 z-10 flex gap-2 mb-4">
-                                             <button
-                         onClick={prevSlide}
-                         disabled={isTransitioning || Math.ceil(drivers.length / 3) <= 1}
-                         className="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
-                         title="Previous"
-                       >
-                         <FiChevronLeft className="w-5 h-5" />
-                       </button>
-                                             <button
-                         onClick={nextSlide}
-                         disabled={isTransitioning || Math.ceil(drivers.length / 3) <= 1}
-                         className="p-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
-                         title="Next"
-                       >
-                         <FiChevronRight className="w-5 h-5" />
-                       </button>
+                      <button
+                        onClick={prevSlide}
+                        disabled={isTransitioning || Math.ceil(drivers.length / Math.max(itemsPerView, 1)) <= 1}
+                        className="p-2 sm:p-3 bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg sm:rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 shadow-lg"
+                        title="Previous"
+                      >
+                        <FiChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
+                      <button
+                        onClick={nextSlide}
+                        disabled={isTransitioning || Math.ceil(drivers.length / Math.max(itemsPerView, 1)) <= 1}
+                        className="p-2 sm:p-3 bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 text-blue-400 border border-blue-500/30 rounded-lg sm:rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 shadow-lg"
+                        title="Next"
+                      >
+                        <FiChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
                     </div>
 
                     {/* Slider Content */}
@@ -330,30 +329,34 @@ const DriversShowcase = () => {
                             className="px-3 sm:px-4 flex-shrink-0"
                             style={{ flex: `0 0 ${100 / Math.max(itemsPerView, 1)}%`, minWidth: itemsPerView === 1 ? '280px' : undefined }}
                           >
-                            {/* Driver Card - Clean and Simple */}
+                            {/* Driver Card - Enhanced Design */}
                             <div
-                              className="bg-gradient-to-r from-blue-600/20 to-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-xl overflow-hidden
-                                         cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300
-                                         hover:from-blue-600/30 hover:to-blue-500/30 group"
+                              className="bg-gradient-to-br from-blue-500/15 to-blue-600/25 backdrop-blur-sm border border-blue-400/40 rounded-2xl overflow-hidden
+                                         cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300
+                                         hover:from-blue-500/25 hover:to-blue-600/35 hover:border-blue-400/60 group"
                               onClick={() => openDriverModal(driver)}
                             >
                               {/* Car Image */}
-                              <div className="relative h-36 sm:h-44 lg:h-48 overflow-hidden">
+                              <div className="relative h-40 sm:h-48 lg:h-52 overflow-hidden">
                                 <img
                                   src={driver.carImage || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=400&h=300&fit=crop'}
                                   alt={`${driver.carDetails?.make || driver.vehicleInfo?.make || 'Car'} ${driver.carDetails?.model || driver.vehicleInfo?.model || ''}`}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
+                                {/* Gradient Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                
                                 {/* Price Badge */}
                                 <div className="absolute top-3 right-3">
-                                  <div className="bg-black/90 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 text-sm text-white font-semibold shadow-lg">
+                                  <div className="bg-gradient-to-r from-blue-600 to-blue-500 backdrop-blur-sm border border-blue-400/50 rounded-full px-3 py-2 text-sm text-white font-bold shadow-xl">
                                     R{driver.pricePerKm || 'N/A'}/km
                                   </div>
                                 </div>
+                                
                                 {/* Demo Badge */}
                                 {driver.isDummy && (
                                   <div className="absolute top-3 left-3">
-                                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 border border-blue-400/30 rounded-full px-3 py-2 text-sm text-white font-semibold shadow-lg">
+                                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 border border-blue-400/50 rounded-full px-3 py-2 text-sm text-white font-bold shadow-xl">
                                       Demo
                                     </div>
                                   </div>
@@ -363,29 +366,28 @@ const DriversShowcase = () => {
                               {/* Driver Info - Simplified */}
                               <div className="p-4 sm:p-5 lg:p-6">
                                 {/* Profile Section */}
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-5">
                                   <div className="relative">
                                     <img
                                       src={driver.profileImage || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'}
                                       alt={driver.fullName}
-                                      className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full object-cover border-2 border-blue-500/50 shadow-lg"
+                                      className="w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 rounded-full object-cover border-3 border-blue-400/60 shadow-xl group-hover:border-blue-400/80 transition-all duration-300"
                                     />
                                     {/* Online Status */}
-                                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-900 ${
+                                    <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-3 border-gray-900 ${
                                       driver.isAvailable !== false ? 'bg-green-400' : 'bg-red-400'
                                     }`}></div>
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <h3 className="text-sm sm:text-base font-bold text-white mb-1 sm:mb-2 truncate">
+                                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3 truncate group-hover:text-blue-100 transition-colors duration-300">
                                       {driver.fullName}
                                     </h3>
-                                    <div className="flex items-center gap-2 mb-1 sm:mb-2">
+                                    <div className="flex items-center gap-2 mb-2 sm:mb-3">
                                       <div className="flex items-center gap-1">
-                                        {/* Smaller stars on mobile */}
                                         {Array.from({ length: 5 }, (_, index) => (
                                           <FiStar
                                             key={index}
-                                            className={`w-3 h-3 sm:w-4 sm:h-4 ${
+                                            className={`w-4 h-4 sm:w-5 sm:h-5 ${
                                               index < Math.floor((driver.rating || 4.5))
                                                 ? 'text-yellow-400 fill-current'
                                                 : 'text-gray-400'
@@ -393,28 +395,28 @@ const DriversShowcase = () => {
                                           />
                                         ))}
                                       </div>
-                                      <span className="text-xs sm:text-sm text-gray-300 font-medium">
+                                      <span className="text-sm sm:text-base text-white font-bold">
                                         {driver.rating || 4.5}
                                       </span>
                                     </div>
-                                    <p className="text-xs sm:text-sm text-blue-400 font-medium">
+                                    <p className="text-sm sm:text-base text-blue-300 font-medium">
                                       {driver.totalRides || 0} rides • {driver.experience || 'Experienced'}
                                     </p>
                                   </div>
                                 </div>
 
-                                {/* Simple Car Info */}
-                                <div className="bg-gray-700/50 rounded-lg p-2 sm:p-3 border border-white/5 mb-3 sm:mb-4">
-                                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-300">
-                                    <FiTruck className="text-blue-400 w-3 h-3 sm:w-4 sm:h-4" />
-                                    <span className="truncate">
+                                {/* Enhanced Car Info */}
+                                <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-xl p-3 sm:p-4 border border-blue-400/20 mb-4 sm:mb-5 group-hover:from-blue-500/20 group-hover:to-blue-600/20 transition-all duration-300">
+                                  <div className="flex items-center gap-3 text-sm sm:text-base text-gray-200">
+                                    <FiTruck className="text-blue-400 w-4 h-4 sm:w-5 sm:h-5" />
+                                    <span className="truncate font-medium">
                                       {driver.carDetails?.year || driver.vehicleInfo?.year || 'N/A'} {driver.carDetails?.make || driver.vehicleInfo?.make || 'N/A'}
                                     </span>
                                   </div>
                                 </div>
 
-                                {/* Action Button */}
-                                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-2 sm:py-3 rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-200">
+                                {/* Enhanced Action Button */}
+                                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-3 sm:py-4 rounded-xl text-sm sm:text-base font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                                   Book Now
                                 </button>
                               </div>
@@ -424,23 +426,23 @@ const DriversShowcase = () => {
                       </div>
                     </div>
 
-                                         {/* Dots Navigation */}
-                     {Math.ceil(drivers.length / Math.max(itemsPerView, 1)) > 1 && (
-                       <div className="flex justify-center gap-2 mt-6">
-                         {Array.from({ length: Math.ceil(drivers.length / Math.max(itemsPerView, 1)) }, (_, index) => (
-                           <button
-                             key={index}
-                             onClick={() => goToSlide(index)}
-                             className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                               currentSlide === index
-                                 ? 'bg-blue-400 scale-125'
-                                 : 'bg-gray-600 hover:bg-gray-500'
-                             }`}
-                             title={`Go to slide ${index + 1}`}
-                           />
-                         ))}
-                       </div>
-                     )}
+                    {/* Enhanced Dots Navigation */}
+                    {Math.ceil(drivers.length / Math.max(itemsPerView, 1)) > 1 && (
+                      <div className="flex justify-center gap-3 mt-8">
+                        {Array.from({ length: Math.ceil(drivers.length / Math.max(itemsPerView, 1)) }, (_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => goToSlide(index)}
+                            className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-300 ${
+                              currentSlide === index
+                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 scale-125 shadow-lg shadow-blue-500/50'
+                                : 'bg-gray-600 hover:bg-gray-500 hover:scale-110'
+                            }`}
+                            title={`Go to slide ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -450,10 +452,10 @@ const DriversShowcase = () => {
               )}
             </div>
 
-            {/* View All Button */}
+            {/* Enhanced View All Button */}
             {drivers.length > 6 && (
-              <div className="text-center mt-12">
-                <button className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-3 rounded-full font-medium hover:from-blue-700 hover:to-blue-600 transition-all duration-200">
+              <div className="text-center mt-16">
+                <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                   View All Drivers
                 </button>
               </div>
