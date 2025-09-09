@@ -56,16 +56,12 @@ const Places = ({ handleOrderPopup }) => {
       <section data-aos="fade-up" className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
+          <div className="text-left mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
               Best <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Rooms
               </span>
             </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-              Handpicked accommodations that offer the best value and convenience for University of Limpopo students
-            </p>
             
             <Link 
               to="/all-rooms"

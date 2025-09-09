@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
-import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone, FiCheck } from 'react-icons/fi';
+import { GoogleMap, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
+import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone, FiCheck, FiEye, FiX } from 'react-icons/fi';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import { apiClient, API_BASE_URL } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 import { getGoogleMapsApiKey } from '../config/env';
 import PublicRidesDisplay from '../components/Rides/PublicRidesDisplay';
+import { useToast } from '../hooks/useToast';
+import ToastNotification from '../components/ToastNotification';
 
 // Static libraries array outside component to prevent reloading
-const GOOGLE_MAPS_LIBRARIES = ['places', 'geometry'];
+const GOOGLE_MAPS_LIBRARIES = ['places', 'geometry', 'marker'];
 
 const containerStyle = {
   width: '100%',
@@ -23,6 +25,7 @@ const center = {
 const RideBooking = () => {
   const { getToken, isSignedIn } = useAuth();
   const { user } = useUser();
+  const { toasts, success, error, removeToast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [pickupLocation, setPickupLocation] = useState('');
   const [dropoffLocation, setDropoffLocation] = useState('');
@@ -59,6 +62,13 @@ const RideBooking = () => {
   const [pickupAddress, setPickupAddress] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
   const [showPublicRides, setShowPublicRides] = useState(true);
+  
+  // Booked routes state
+  const [bookedRoutes, setBookedRoutes] = useState([]);
+  const [showBookedRoutes, setShowBookedRoutes] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [showRoutePopup, setShowRoutePopup] = useState(false);
+  const [map, setMap] = useState(null);
 
   // Get Google Maps API key
   const googleMapsApiKey = getGoogleMapsApiKey();
@@ -74,6 +84,35 @@ const RideBooking = () => {
   const onLoad = useCallback(function callback(map) {
     setMap(map);
   }, []);
+
+  // Create AdvancedMarkerElement markers
+  const createMarker = (position, color, label) => {
+    if (!map || !window.google?.maps?.marker?.AdvancedMarkerElement) return null;
+    
+    const markerElement = document.createElement('div');
+    markerElement.innerHTML = `
+      <div style="
+        background: ${color};
+        border: 3px solid white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      ">${label}</div>
+    `;
+    
+    return new window.google.maps.marker.AdvancedMarkerElement({
+      map: map,
+      position: position,
+      content: markerElement
+    });
+  };
 
   const onUnmount = useCallback(function callback(map) {
     setMap(null);
@@ -211,9 +250,9 @@ const RideBooking = () => {
 
       if (response.data.success) {
         setCurrentStep(3);
-        alert('Ride request submitted! An admin will assign a driver soon.');
+        success('Ride request submitted! An admin will assign a driver soon.');
       } else {
-        alert('Failed to submit ride request. Please try again.');
+        error('Failed to submit ride request. Please try again.');
       }
     } catch (error) {
       console.error('Error submitting ride request:', error);
@@ -237,7 +276,7 @@ const RideBooking = () => {
         console.error('Error setting up request:', error.message);
       }
       
-      alert(errorMessage);
+      error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -263,6 +302,159 @@ const RideBooking = () => {
     setSimilarRides([]);
   };
 
+  // Fetch booked routes for the user
+  const fetchBookedRoutes = async () => {
+    try {
+      const token = await getToken();
+      const response = await apiClient.get(`${API_BASE_URL}/api/rides/my-rides`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data.success) {
+        setBookedRoutes(response.data.rides || []);
+        setShowBookedRoutes(true);
+        success('Booked routes loaded successfully!');
+      } else {
+        error('Failed to load booked routes.');
+      }
+    } catch (error) {
+      console.error('Error fetching booked routes:', error);
+      error('Error loading booked routes. Please try again.');
+    }
+  };
+
+  // Handle route marker click
+  const handleRouteClick = (route) => {
+    setSelectedRoute(route);
+    setShowRoutePopup(true);
+  };
+
+  // Close route popup
+  const closeRoutePopup = () => {
+    setShowRoutePopup(false);
+    setSelectedRoute(null);
+  };
+
+  // Create markers when map loads
+  useEffect(() => {
+    if (map && window.google?.maps?.marker?.AdvancedMarkerElement) {
+      // Create pickup marker
+      if (pickupCoords) {
+        const pickupElement = document.createElement('div');
+        pickupElement.innerHTML = `
+          <div style="
+            background: #10B981;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          ">P</div>
+        `;
+        
+        new window.google.maps.marker.AdvancedMarkerElement({
+          map: map,
+          position: pickupCoords,
+          content: pickupElement
+        });
+      }
+
+      // Create dropoff marker
+      if (dropoffCoords) {
+        const dropoffElement = document.createElement('div');
+        dropoffElement.innerHTML = `
+          <div style="
+            background: #EF4444;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          ">D</div>
+        `;
+        
+        new window.google.maps.marker.AdvancedMarkerElement({
+          map: map,
+          position: dropoffCoords,
+          content: dropoffElement
+        });
+      }
+
+      // Create booked route markers
+      if (showBookedRoutes && bookedRoutes.length > 0) {
+        bookedRoutes.forEach((route) => {
+          // Pickup marker
+          const pickupElement = document.createElement('div');
+          pickupElement.innerHTML = `
+            <div style="
+              background: #3B82F6;
+              border: 3px solid white;
+              border-radius: 50%;
+              width: 20px;
+              height: 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: bold;
+              font-size: 10px;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+              cursor: pointer;
+            ">P</div>
+          `;
+          
+          const pickupMarker = new window.google.maps.marker.AdvancedMarkerElement({
+            map: map,
+            position: route.pickupLocation,
+            content: pickupElement
+          });
+          
+          pickupMarker.addListener('click', () => handleRouteClick(route));
+
+          // Dropoff marker
+          const dropoffElement = document.createElement('div');
+          dropoffElement.innerHTML = `
+            <div style="
+              background: #EF4444;
+              border: 3px solid white;
+              border-radius: 50%;
+              width: 20px;
+              height: 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: bold;
+              font-size: 10px;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+              cursor: pointer;
+            ">D</div>
+          `;
+          
+          const dropoffMarker = new window.google.maps.marker.AdvancedMarkerElement({
+            map: map,
+            position: route.dropoffLocation,
+            content: dropoffElement
+          });
+          
+          dropoffMarker.addListener('click', () => handleRouteClick(route));
+        });
+      }
+    }
+  }, [map, pickupCoords, dropoffCoords, showBookedRoutes, bookedRoutes]);
+
   const handleRideSelect = (selectedRide) => {
     // Auto-fill the form with selected ride details
     setPickupCoords(selectedRide.pickupLocation);
@@ -272,7 +464,7 @@ const RideBooking = () => {
     setScheduledTime(selectedRide.scheduledTime);
     
     // Show success message
-    alert(`Route selected! Pickup and dropoff locations have been set. You can now calculate your ride.`);
+    success('Route selected! Pickup and dropoff locations have been set. You can now calculate your ride.');
   };
 
   if (!isSignedIn) {
@@ -311,12 +503,21 @@ const RideBooking = () => {
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
               <h2 className="text-lg sm:text-xl font-semibold text-white">See Other Students' Rides</h2>
-              <button
-                onClick={() => setShowPublicRides(!showPublicRides)}
-                className="px-3 sm:px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm sm:text-base"
-              >
-                {showPublicRides ? 'Hide' : 'Show'} Similar Rides
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowPublicRides(!showPublicRides)}
+                  className="px-3 sm:px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm sm:text-base"
+                >
+                  {showPublicRides ? 'Hide' : 'Show'} Similar Rides
+                </button>
+                <button
+                  onClick={fetchBookedRoutes}
+                  className="px-3 sm:px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm sm:text-base flex items-center gap-2"
+                >
+                  <FiEye className="w-4 h-4" />
+                  {showBookedRoutes ? 'Hide' : 'Show'} My Routes
+                </button>
+              </div>
             </div>
             
             {showPublicRides && (
@@ -345,34 +546,6 @@ const RideBooking = () => {
                   onUnmount={onUnmount}
                   onClick={handleMapClick}
                 >
-                  {pickupCoords && (
-                    <Marker
-                      position={pickupCoords}
-                      icon={{
-                        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-                          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="16" cy="16" r="12" fill="#10B981" stroke="white" stroke-width="2"/>
-                            <circle cx="16" cy="16" r="4" fill="white"/>
-                          </svg>
-                        `),
-                        scaledSize: new window.google.maps.Size(32, 32)
-                      }}
-                    />
-                  )}
-                  {dropoffCoords && (
-                    <Marker
-                      position={dropoffCoords}
-                      icon={{
-                        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-                          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="16" cy="16" r="12" fill="#EF4444" stroke="white" stroke-width="2"/>
-                            <circle cx="16" cy="16" r="4" fill="white"/>
-                          </svg>
-                        `),
-                        scaledSize: new window.google.maps.Size(32, 32)
-                      }}
-                    />
-                  )}
                   {directions && <DirectionsRenderer directions={directions} />}
                 </GoogleMap>
               ) : (
@@ -606,6 +779,104 @@ const RideBooking = () => {
           </div>
         </div>
       </div>
+      
+      {/* Route Details Popup */}
+      {showRoutePopup && selectedRoute && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={closeRoutePopup}>
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <h3 className="text-xl font-bold text-white">Route Details</h3>
+              <button
+                onClick={closeRoutePopup}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <FiX className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6 space-y-4">
+              {/* Route Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+                  <h4 className="text-blue-400 font-semibold mb-2 flex items-center gap-2">
+                    <FiMapPin className="w-4 h-4" />
+                    Pickup Location
+                  </h4>
+                  <p className="text-white text-sm">{selectedRoute.pickupLocation.address}</p>
+                </div>
+                
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                  <h4 className="text-red-400 font-semibold mb-2 flex items-center gap-2">
+                    <FiMapPin className="w-4 h-4" />
+                    Dropoff Location
+                  </h4>
+                  <p className="text-white text-sm">{selectedRoute.dropoffLocation.address}</p>
+                </div>
+              </div>
+              
+              {/* Route Details */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gray-800/50 border border-white/10 rounded-xl p-4">
+                  <h4 className="text-gray-400 font-semibold mb-2 flex items-center gap-2">
+                    <FiClock className="w-4 h-4" />
+                    Scheduled Time
+                  </h4>
+                  <p className="text-white text-sm">
+                    {new Date(selectedRoute.scheduledTime).toLocaleString()}
+                  </p>
+                </div>
+                
+                <div className="bg-gray-800/50 border border-white/10 rounded-xl p-4">
+                  <h4 className="text-gray-400 font-semibold mb-2 flex items-center gap-2">
+                    <FiDollarSign className="w-4 h-4" />
+                    Estimated Price
+                  </h4>
+                  <p className="text-white text-sm">R{selectedRoute.estimatedPrice}</p>
+                </div>
+                
+                <div className="bg-gray-800/50 border border-white/10 rounded-xl p-4">
+                  <h4 className="text-gray-400 font-semibold mb-2 flex items-center gap-2">
+                    <FiUser className="w-4 h-4" />
+                    Status
+                  </h4>
+                  <p className="text-white text-sm capitalize">{selectedRoute.status || 'Pending'}</p>
+                </div>
+              </div>
+              
+              {/* Additional Info */}
+              {selectedRoute.notes && (
+                <div className="bg-gray-800/50 border border-white/10 rounded-xl p-4">
+                  <h4 className="text-gray-400 font-semibold mb-2">Notes</h4>
+                  <p className="text-white text-sm">{selectedRoute.notes}</p>
+                </div>
+              )}
+              
+              {selectedRoute.driver && (
+                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                  <h4 className="text-green-400 font-semibold mb-2">Assigned Driver</h4>
+                  <p className="text-white text-sm">{selectedRoute.driver.fullName}</p>
+                  <p className="text-gray-400 text-xs">{selectedRoute.driver.contact}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Toast Notifications */}
+      {toasts.map((toast) => (
+        <ToastNotification
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          showProgress={toast.showProgress}
+          allowCancel={toast.allowCancel}
+          onClose={() => removeToast(toast.id)}
+        />
+      ))}
     </div>
   );
 };

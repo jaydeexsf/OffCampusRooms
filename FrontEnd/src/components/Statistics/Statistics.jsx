@@ -117,7 +117,7 @@ const Statistics = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12" data-aos="fade-up">
-            <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="flex items-center gap-4 mb-4">
               <h2 className="text-2xl md:text-3xl font-bold text-white">
                 Trusted by <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                   University of Limpopo

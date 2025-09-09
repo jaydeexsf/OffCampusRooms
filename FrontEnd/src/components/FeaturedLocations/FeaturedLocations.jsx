@@ -43,16 +43,12 @@ const FeaturedLocations = () => {
       <section data-aos="fade-up" className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
+          <div className="text-left mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
               Popular <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Locations
               </span> Near UL
             </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
-              Discover the most popular areas around University of Limpopo where students love to live
-            </p>
           </div>
 
           {/* Locations Grid */}

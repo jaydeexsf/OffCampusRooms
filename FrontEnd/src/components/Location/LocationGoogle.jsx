@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, useLoadScript, Marker, DirectionsRenderer } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, DirectionsRenderer } from '@react-google-maps/api';
 import { getGoogleMapsApiKey } from '../../config/env';
 
 // Static libraries array to prevent performance warnings
-const GOOGLE_MAPS_LIBRARIES = ['places'];
+const GOOGLE_MAPS_LIBRARIES = ['places', 'marker'];
 
 const LocationGoogle = ({ latitudeC, longitudeC }) => {
   // Get Google Maps API key
@@ -26,6 +26,8 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
   const [mapError, setMapError] = useState(null);
   const [mapLoadAttempts, setMapLoadAttempts] = useState(0);
   const [mapLoadTimeout, setMapLoadTimeout] = useState(false);
+  const [map, setMap] = useState(null);
+  const [roomMarker, setRoomMarker] = useState(null);
 
   const colors = ['#FF5733', '#33FF57', '#5733FF', '#FFD700', '#FF00FF', '#00FFFF', '#800000', '#FF4500', '#2E8B57', '#4B0082'];
 
@@ -212,6 +214,32 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
     );
   }
 
+  // Create room marker when map loads
+  useEffect(() => {
+    if (map && coordinates && window.google?.maps?.marker?.AdvancedMarkerElement) {
+      const markerElement = document.createElement('div');
+      markerElement.innerHTML = `
+        <div style="
+          background: #3b82f6;
+          border: 3px solid white;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        "></div>
+      `;
+      
+      const marker = new window.google.maps.marker.AdvancedMarkerElement({
+        map: map,
+        position: coordinates,
+        content: markerElement,
+        title: 'Room Location'
+      });
+      
+      setRoomMarker(marker);
+    }
+  }, [map, coordinates]);
+
   const getDirections = () => {
     setDirectionsStatus('Getting Directions...');
     if (navigator.geolocation) {
@@ -256,31 +284,12 @@ const LocationGoogle = ({ latitudeC, longitudeC }) => {
           center={coordinates}
           zoom={16}
           mapContainerStyle={{ width: '100%', height: '100%', borderRadius: '0.75rem' }}
-          onLoad={handleMapLoad}
+          onLoad={(map) => {
+            setMap(map);
+            handleMapLoad();
+          }}
           onError={handleMapError}
         >
-          <Marker
-            position={coordinates}
-            icon={{
-              path: window.google.maps.SymbolPath.CIRCLE,
-              scale: 8,
-              fillColor: color,
-              fillOpacity: 1,
-              strokeWeight: 3,
-              strokeColor: '#FFFFFF',
-            }}
-          />
-
-          {coordinates && (
-            <Marker
-              position={coordinates}
-              icon={{
-                url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                scaledSize: new window.google.maps.Size(35, 35),
-              }}
-            />
-          )}
-
           {directionsResponse && (
             <DirectionsRenderer
               directions={directionsResponse}

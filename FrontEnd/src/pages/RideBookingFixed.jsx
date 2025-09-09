@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
-import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone, FiCheck } from 'react-icons/fi';
+import { FiMapPin, FiMap, FiClock, FiDollarSign, FiUser, FiPhone, FiCheck, FiEye, FiX } from 'react-icons/fi';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import { apiClient, API_BASE_URL } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 import { getGoogleMapsApiKey } from '../config/env';
 import PublicRidesDisplay from '../components/Rides/PublicRidesDisplay';
+import { useToast } from '../hooks/useToast';
+import ToastNotification from '../components/ToastNotification';
 
 const containerStyle = {
   width: '100%',
@@ -17,9 +19,10 @@ const center = {
   lng: 29.4473
 };
 
-const RideBooking = () => {
+const RideBookingFixed = () => {
   const { getToken, isSignedIn } = useAuth();
   const { user } = useUser();
+  const { toasts, success, error, removeToast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [pickupLocation, setPickupLocation] = useState('');
   const [dropoffLocation, setDropoffLocation] = useState('');
@@ -208,13 +211,13 @@ const RideBooking = () => {
 
       if (response.data.success) {
         setCurrentStep(3);
-        alert('Ride request submitted! An admin will assign a driver soon.');
+        success('Ride request submitted! An admin will assign a driver soon.');
       } else {
-        alert('Failed to submit ride request. Please try again.');
+        error('Failed to submit ride request. Please try again.');
       }
     } catch (error) {
       console.error('Error submitting ride request:', error);
-      alert('Error submitting ride request. Please try again.');
+      error('Error submitting ride request. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -583,8 +586,21 @@ const RideBooking = () => {
           </div>
         </div>
       </div>
+      
+      {/* Toast Notifications */}
+      {toasts.map((toast) => (
+        <ToastNotification
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          duration={toast.duration}
+          showProgress={toast.showProgress}
+          allowCancel={toast.allowCancel}
+          onClose={() => removeToast(toast.id)}
+        />
+      ))}
     </div>
   );
 };
 
-export default RideBooking;
+export default RideBookingFixed;

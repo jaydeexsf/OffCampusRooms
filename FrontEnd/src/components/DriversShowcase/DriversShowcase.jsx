@@ -273,7 +273,7 @@ const DriversShowcase = () => {
   return (
     <>
       <section className="py-16 bg-gray-950">
-        <div className="container mx-auto px-3 sm:px-4">
+        <div className="container mx-auto px-2 sm:px-4">
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-12" data-aos="fade-up">
@@ -282,7 +282,6 @@ const DriversShowcase = () => {
                   Trusted Drivers
                 </span>
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
               <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
                 Safe, reliable, and experienced drivers ready to take you anywhere around campus
               </p>
@@ -293,7 +292,7 @@ const DriversShowcase = () => {
               {drivers.length > 0 ? (
                 <div className="relative">
                   {/* Custom Slider Container */}
-                  <div className="px-2 sm:px-4 md:px-6 lg:px-12">
+                  <div className="px-1 sm:px-2 md:px-4 lg:px-6">
                     {/* Navigation Buttons - Responsive positioning */}
                     <div className="absolute top-0 right-0 z-10 flex gap-2 mb-4">
                       <button
@@ -326,7 +325,7 @@ const DriversShowcase = () => {
                         {drivers.map((driver, index) => (
                           <div 
                             key={driver._id} 
-                            className="px-3 sm:px-4 flex-shrink-0"
+                            className="px-1 sm:px-2 flex-shrink-0"
                             style={{ flex: `0 0 ${100 / Math.max(itemsPerView, 1)}%`, minWidth: itemsPerView === 1 ? '280px' : undefined }}
                           >
                             {/* Driver Card - Enhanced Design */}
@@ -426,23 +425,6 @@ const DriversShowcase = () => {
                       </div>
                     </div>
 
-                    {/* Enhanced Dots Navigation */}
-                    {Math.ceil(drivers.length / Math.max(itemsPerView, 1)) > 1 && (
-                      <div className="flex justify-center gap-3 mt-8">
-                        {Array.from({ length: Math.ceil(drivers.length / Math.max(itemsPerView, 1)) }, (_, index) => (
-                          <button
-                            key={index}
-                            onClick={() => goToSlide(index)}
-                            className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-300 ${
-                              currentSlide === index
-                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 scale-125 shadow-lg shadow-blue-500/50'
-                                : 'bg-gray-600 hover:bg-gray-500 hover:scale-110'
-                            }`}
-                            title={`Go to slide ${index + 1}`}
-                          />
-                        ))}
-                      </div>
-                    )}
                   </div>
                 </div>
               ) : (

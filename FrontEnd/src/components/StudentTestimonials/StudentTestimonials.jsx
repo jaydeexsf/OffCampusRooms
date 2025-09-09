@@ -166,7 +166,7 @@ const StudentTestimonials = () => {
             {testimonials.map((testimonial, index) => (
               <div 
                 key={testimonial.id} 
-                className="px-3 sm:px-4 flex-shrink-0"
+                className="px-1 sm:px-2 flex-shrink-0"
                 style={{ 
                   flex: `0 0 ${100 / Math.max(itemsPerView, 1)}%`, 
                   minWidth: itemsPerView === 1 ? '280px' : undefined 
@@ -236,7 +236,7 @@ const StudentTestimonials = () => {
 
   return (
     <section className="py-16 bg-gray-950">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2 sm:px-4">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12" data-aos="fade-up">
@@ -245,7 +245,6 @@ const StudentTestimonials = () => {
                 Students
               </span> Say
             </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mx-auto mb-4"></div>
             <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-2xl mx-auto">
               Real reviews from University of Limpopo students who found their perfect accommodation
             </p>
@@ -275,25 +274,8 @@ const StudentTestimonials = () => {
               </div>
 
               {/* Slider Container */}
-              <div className="px-12 lg:px-16">
+              <div className="px-1 sm:px-2 md:px-4 lg:px-6">
                 {renderContent()}
-                                 {/* Dots Navigation */}
-                 {Math.ceil(testimonials.length / 3) > 1 && !loading && (
-                   <div className="flex justify-center gap-2 mt-6">
-                     {Array.from({ length: Math.ceil(testimonials.length / 3) }, (_, index) => (
-                       <button
-                         key={index}
-                         onClick={() => goToSlide(index)}
-                         className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                           currentSlide === index
-                             ? 'bg-blue-400 scale-125'
-                             : 'bg-gray-600 hover:bg-gray-500'
-                         }`}
-                         title={`Go to slide ${index + 1}`}
-                       />
-                     ))}
-                   </div>
-                 )}
               </div>
             </div>
           </div>

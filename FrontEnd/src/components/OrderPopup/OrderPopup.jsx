@@ -134,8 +134,10 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
               </button>
             </div>
 
-            {/* Scrollable content */}
-            <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar">
+            {/* Scrollable content with scroll indicator */}
+            <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar relative">
+              {/* Scroll indicator - fade gradient at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent pointer-events-none z-10"></div>
               {!showLocation && !showRatings && !showRateForm ? (
                 <>
                   {/* Image Gallery with Price Overlay */}
@@ -316,37 +318,47 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
             {/* Sticky bottom actions */}
             <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-r from-gray-900 to-gray-800 border-t border-gray-700/50 p-4 space-y-3 flex-shrink-0">
-              {/* Location Button */}
-              <button
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 border border-blue-500/30"
-                onClick={() => setShowLocation(true)}
-              >
-                <FiMap className="w-5 h-5" />
-                <span className="text-sm">View Location</span>
-              </button>
-
-              {/* Rating Action Buttons */}
-              <div className="flex gap-3">
-                {/* View Ratings Button - Only show if there are reviews */}
-                {totalRatings > 0 && (
-                  <button
-                    onClick={() => setShowRatings(true)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600/80 to-blue-500/80 hover:from-blue-600 hover:to-blue-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl border border-blue-500/30"
-                  >
-                    <FiEye size={16} />
-                    <span className="text-sm">Reviews</span>
-                  </button>
-                )}
-
-                {/* Rate Room Button */}
+              {/* Location Button - Hide when viewing location */}
+              {!showLocation && (
                 <button
-                  onClick={() => setShowRateForm(true)}
-                  className={`${totalRatings > 0 ? 'flex-1' : 'w-full'} flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600/80 to-purple-500/80 hover:from-purple-600 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl border border-purple-500/30`}
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 border border-blue-500/30"
+                  onClick={() => setShowLocation(true)}
                 >
-                  <FiStar size={16} />
-                  <span className="text-sm">Rate Room</span>
+                  <FiMap className="w-5 h-5" />
+                  <span className="text-sm">View Location</span>
                 </button>
-              </div>
+              )}
+
+              {/* Rating Action Buttons - Hide when in rating views */}
+              {!showRatings && !showRateForm && (
+                <div className="flex gap-3">
+                  {/* View Ratings Button - Only show if there are reviews */}
+                  {totalRatings > 0 && (
+                    <button
+                      onClick={() => {
+                        setShowRatings(true);
+                        setShowRateForm(false);
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600/80 to-blue-500/80 hover:from-blue-600 hover:to-blue-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl border border-blue-500/30"
+                    >
+                      <FiEye size={16} />
+                      <span className="text-sm">Reviews</span>
+                    </button>
+                  )}
+
+                  {/* Rate Room Button */}
+                  <button
+                    onClick={() => {
+                      setShowRateForm(true);
+                      setShowRatings(false);
+                    }}
+                    className={`${totalRatings > 0 ? 'flex-1' : 'w-full'} flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600/80 to-purple-500/80 hover:from-purple-600 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl border border-purple-500/30`}
+                  >
+                    <FiStar size={16} />
+                    <span className="text-sm">Rate Room</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

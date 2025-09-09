@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser, useAuth } from '@clerk/clerk-react';
-import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX, FiMap } from 'react-icons/fi';
+import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiMessageSquare, FiStar, FiEdit3, FiTrash2, FiSave, FiX, FiMap, FiClock, FiCheckCircle, FiAlertCircle, FiCalendar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../config/api';
 import { API_ENDPOINTS, getRoomUrl } from '../config/api';
@@ -8,7 +8,7 @@ import { API_ENDPOINTS, getRoomUrl } from '../config/api';
 const StudentDashboard = () => {
   const { user, isSignedIn } = useUser();
   const { getToken, isSignedIn: authSignedIn } = useAuth();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('rides');
   const [savedRooms, setSavedRooms] = useState([]);
   const [userFeedback, setUserFeedback] = useState(null);
   const [myComments, setMyComments] = useState([]);
@@ -20,6 +20,11 @@ const StudentDashboard = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [roomLoading, setRoomLoading] = useState(false);
   const [roomError, setRoomError] = useState(null);
+  
+  // Rides state
+  const [userRides, setUserRides] = useState([]);
+  const [ridesLoading, setRidesLoading] = useState(false);
+  const [selectedRideCategory, setSelectedRideCategory] = useState('all');
 
   // Fetch real data from backend
   useEffect(() => {
@@ -28,6 +33,7 @@ const StudentDashboard = () => {
       fetchUserFeedback();
       fetchMyComments();
       fetchMyRatings();
+      fetchUserRides();
     }
   }, [isSignedIn]);
 
@@ -184,16 +190,37 @@ const StudentDashboard = () => {
     }
   };
 
+  // Fetch user rides
+  const fetchUserRides = async () => {
+    try {
+      if (!user) return;
+      setRidesLoading(true);
+      const token = await getToken();
+      const response = await apiClient.get('/api/rides/my-rides', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data.success) {
+        setUserRides(response.data.rides || []);
+      } else {
+        console.error('[Dashboard] Failed to fetch rides:', response.data.message);
+      }
+    } catch (error) {
+      console.error('[Dashboard] Error fetching rides:', error);
+    } finally {
+      setRidesLoading(false);
+    }
+  };
+
   const dashboardStats = {
     savedRooms: savedRooms.length,
     feedbackSubmitted: userFeedback ? 1 : 0,
-    averagePrice: savedRooms.length > 0 
-      ? Math.round(savedRooms.reduce((sum, room) => sum + room.price, 0) / savedRooms.length)
-      : 0
+    totalRides: userRides.length,
+    confirmedRides: userRides.filter(ride => ride.status === 'confirmed').length
   };
 
   const tabs = [
-    { id: 'overview', name: 'Overview', icon: <FiHome /> },
+    { id: 'rides', name: 'My Rides', icon: <FiMap /> },
     { id: 'saved', name: 'Saved Rooms', icon: <FiHeart /> },
     { id: 'ratings', name: 'My Ratings', icon: <FiStar /> },
     { id: 'feedback', name: 'My Feedback', icon: <FiMessageSquare /> }
@@ -231,46 +258,46 @@ const StudentDashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-4 hover:border-blue-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{dashboardStats.savedRooms}</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{dashboardStats.savedRooms}</p>
                 <p className="text-gray-300 text-sm font-medium">Saved Rooms</p>
               </div>
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl">
-                <FiHeart className="w-6 h-6 text-white" />
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-xl">
+                <FiHeart className="w-5 h-5 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition-all duration-300">
+          <div className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-4 hover:border-green-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">{dashboardStats.feedbackSubmitted}</p>
-                <p className="text-gray-300 text-sm font-medium">Feedback Submitted</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">{dashboardStats.totalRides}</p>
+                <p className="text-gray-300 text-sm font-medium">Total Rides</p>
               </div>
-              <div className="bg-gradient-to-r from-green-500 to-blue-500 p-3 rounded-xl">
-                <FiMessageSquare className="w-6 h-6 text-white" />
+              <div className="bg-gradient-to-r from-green-500 to-blue-500 p-2 rounded-xl">
+                <FiMap className="w-5 h-5 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-2xl p-6 hover:border-purple-400/50 transition-all duration-300">
+          <div className="bg-gradient-to-br from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-2xl p-4 hover:border-yellow-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">R{dashboardStats.averagePrice}</p>
-                <p className="text-gray-300 text-sm font-medium">Avg. Price</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">{dashboardStats.confirmedRides}</p>
+                <p className="text-gray-300 text-sm font-medium">Confirmed Rides</p>
               </div>
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-xl">
-                <FiDollarSign className="w-6 h-6 text-white" />
+              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-2 rounded-xl">
+                <FiCheckCircle className="w-5 h-5 text-white" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 mb-8">
+        <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-4 mb-6">
           <div className="flex flex-wrap gap-2 mb-6">
             {tabs.map((tab) => (
               <button
