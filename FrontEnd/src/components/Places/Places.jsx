@@ -56,7 +56,7 @@ const Places = ({ handleOrderPopup }) => {
       <section data-aos="fade-up" className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-left mb-12">
+          <div className="text-left mb-12 flex justify-between items-center">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
               Best <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Rooms

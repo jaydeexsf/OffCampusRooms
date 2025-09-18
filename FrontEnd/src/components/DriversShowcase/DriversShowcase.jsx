@@ -159,9 +159,9 @@ const DriversShowcase = () => {
                   Trusted Drivers
                 </span>
               </h2>
-              <p className="text-gray-400 text-sm md:text-base mb-2">
+              {/* <p className="text-gray-400 text-sm md:text-base mb-2">
                 Professional drivers ready to assist you
-              </p>
+              </p> */}
               <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"></div>
             </div>
             
