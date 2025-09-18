@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiHome, FiMapPin, FiDollarSign, FiSearch, FiZap, FiShield, FiMessageCircle } from "react-icons/fi";
+import { FiHome, FiMapPin, FiDollarSign, FiSearch, FiShield, FiMessageCircle } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import PlaceCard from "../Places/PlaceCard";
 import { FaAngleDown } from "react-icons/fa";

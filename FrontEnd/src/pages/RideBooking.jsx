@@ -68,7 +68,6 @@ const RideBooking = () => {
   const [showBookedRoutes, setShowBookedRoutes] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [showRoutePopup, setShowRoutePopup] = useState(false);
-  const [map, setMap] = useState(null);
 
   // Get Google Maps API key
   const googleMapsApiKey = getGoogleMapsApiKey();

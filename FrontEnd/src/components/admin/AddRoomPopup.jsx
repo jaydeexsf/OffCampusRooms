@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiX, FiUpload, FiMapPin, FiDollarSign, FiClock, FiWifi, FiShower, FiBed, FiTable, FiZap } from 'react-icons/fi';
+import { FiX } from 'react-icons/fi';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
 import { useToast } from '../../hooks/useToast';
 import ToastContainer from '../ToastContainer';

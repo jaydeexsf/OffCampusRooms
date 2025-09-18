@@ -51,15 +51,15 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
               </div>
               <div>
                 <p className="text-sm font-medium text-white">Welcome!</p>
-                <p className="text-xs text-gray-400">
-                  {!isLoaded ? (
+                {!isLoaded ? (
+                  <div className="flex items-center">
                     <div className="w-4 h-4 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
-                  ) : user ? (
-                    `${user.firstName} ${user.lastName || ''}`
-                  ) : (
-                    "Guest User"
-                  )}
-                </p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400">
+                    {user ? `${user.firstName} ${user.lastName || ''}` : "Guest User"}
+                  </p>
+                )}
               </div>
             </div>
           </div>

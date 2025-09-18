@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { FiUpload, FiX, FiMapPin, FiDollarSign, FiHome, FiUsers, FiWifi, FiTv, FiWind, FiShield, FiCamera, FiCheck, FiAlertCircle, FiLoader } from 'react-icons/fi';
+// Removed unused Fi icons - using IoArrowBack from react-icons/io instead
 import { GlobalContext } from '../GlobalContext';
 import { apiClient, API_ENDPOINTS } from '../../config/api';
 import { useToast } from '../../hooks/useToast';

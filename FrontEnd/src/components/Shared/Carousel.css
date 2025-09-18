@@ -21,8 +21,8 @@
 }
 
 .carousel-arrow {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: rgba(55, 65, 81, 0.8);
+  border: 1px solid rgba(75, 85, 99, 0.5);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -31,13 +31,14 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  color: white;
 }
 
 .carousel-arrow:hover {
-  background: #f3f4f6;
+  background: rgba(75, 85, 99, 0.9);
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
 
 .carousel-arrow:active {
@@ -74,7 +75,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #d1d5db;
+  background-color: rgba(75, 85, 99, 0.5);
   border: none;
   padding: 0;
   cursor: pointer;
@@ -82,7 +83,7 @@
 }
 
 .carousel-dot:hover {
-  background-color: #9ca3af;
+  background-color: rgba(107, 114, 128, 0.7);
 }
 
 .carousel-dot.active {
