@@ -16,6 +16,7 @@ const ratingRoutes = require('./routes/ratingRoutes');
 const statisticsRoutes = require('./routes/statisticsRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const savedRoomRoutes = require('./routes/savedRoomRoutes');
+const driverRatingRoutes = require('./routes/driverRatingRoutes');
 
 dotenv.config();
 
@@ -199,6 +200,20 @@ app.use('/api/rides', (req, res, next) => {
   // Apply auth middleware for all other ride routes
   return authMiddleware(req, res, next);
 }, rideRoutes);
+
+// Driver rating routes
+app.use('/api/driver-ratings', (req, res, next) => {
+  // Skip auth for public routes (getting driver ratings)
+  if (req.method === 'GET' && req.path.startsWith('/driver/')) {
+    return next();
+  }
+  // Always allow CORS preflight
+  if (isPreflight(req)) {
+    return next();
+  }
+  // Apply auth middleware for all other driver rating routes
+  return authMiddleware(req, res, next);
+}, driverRatingRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 5000;

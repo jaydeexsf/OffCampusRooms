@@ -144,10 +144,17 @@ export const API_ENDPOINTS = {
   GET_ALL_DRIVERS: `${API_BASE_URL}/api/drivers/all`,
   GET_AVAILABLE_DRIVERS: `${API_BASE_URL}/api/drivers/available`,
   GET_DRIVERS_COUNT: `${API_BASE_URL}/api/drivers/count`,
+  GET_DRIVER_CONTACTS: `${API_BASE_URL}/api/drivers`,
   ADD_DRIVER: `${API_BASE_URL}/api/drivers/add`,
   UPDATE_DRIVER: `${API_BASE_URL}/api/drivers/update`,
   DELETE_DRIVER: `${API_BASE_URL}/api/drivers/delete`,
   TOGGLE_DRIVER_AVAILABILITY: `${API_BASE_URL}/api/drivers/toggle-availability`,
+
+  // Driver Ratings
+  GET_DRIVER_RATINGS: `${API_BASE_URL}/api/driver-ratings/driver`,
+  GET_USER_DRIVER_RATING: `${API_BASE_URL}/api/driver-ratings/user`,
+  ADD_DRIVER_RATING: `${API_BASE_URL}/api/driver-ratings`,
+  DELETE_DRIVER_RATING: `${API_BASE_URL}/api/driver-ratings`,
 
   // Rides
   CALCULATE_RIDE: `${API_BASE_URL}/api/rides/calculate`,

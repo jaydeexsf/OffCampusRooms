@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiPhone, FiStar, FiMapPin, FiClock, FiDollarSign, FiUser } from 'react-icons/fi';
+import { FiStar, FiEye, FiUser } from 'react-icons/fi';
 
 const DriverCard = ({ driver, onDriverClick }) => {
   return (
@@ -60,16 +60,17 @@ const DriverCard = ({ driver, onDriverClick }) => {
           )}
         </div>
         
-        {/* Contact Button */}
-        <a 
-          href={`tel:${driver.phone}`}
-          className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-full transition-all duration-200 text-sm md:text-base group shadow-lg hover:shadow-xl"
+        {/* View Details Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDriverClick && onDriverClick(driver);
+          }}
+          className="w-full inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 sm:py-3 sm:px-5 rounded-lg transition-all duration-200 text-xs sm:text-sm group shadow-md hover:shadow-lg active:scale-95"
         >
-          Book Ride Now
-          <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </a>
+          <FiEye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span>View Details</span>
+        </button>
       </div>
     </div>
   );

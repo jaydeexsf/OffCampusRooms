@@ -59,6 +59,37 @@ const getAvailableDrivers = async (req, res) => {
   }
 };
 
+// Get driver contacts (public endpoint)
+const getDriverContacts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const driver = await Driver.findById(id).select('contactNumber email fullName');
+    
+    if (!driver) {
+      return res.status(404).json({
+        success: false,
+        message: 'Driver not found'
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      contacts: {
+        phone: driver.contactNumber,
+        email: driver.email,
+        name: driver.fullName
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching driver contacts',
+      error: error.message
+    });
+  }
+};
+
 // Get drivers count for public statistics (no authentication required)
 const getDriversCount = async (req, res) => {
   try {
@@ -311,5 +342,6 @@ module.exports = {
   updateDriver,
   deleteDriver,
   toggleAvailability,
+  getDriverContacts,
   upload
 };

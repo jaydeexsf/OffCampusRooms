@@ -8,14 +8,17 @@ const {
   updateDriver, 
   deleteDriver, 
   toggleAvailability,
+  getDriverContacts,
   upload 
 } = require('../controllers/driverController');
 
 // Public routes
 router.get('/available', getAvailableDrivers);
 router.get('/count', getDriversCount);
+router.get('/:id/contacts', getDriverContacts);
 
 // Admin routes (should be protected with admin middleware)
+// Note: /all must come after /:id/contacts to avoid route conflicts
 router.get('/all', getAllDrivers);
 router.post('/add', upload.fields([
   { name: 'profileImage', maxCount: 1 },
