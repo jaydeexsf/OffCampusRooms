@@ -98,7 +98,7 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
                   Share Feedback
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link 
                   to="/ride-booking" 
                   onClick={() => setShowMenu(false)} 
@@ -106,7 +106,7 @@ const ResponsiveMenu = ({ showMenu, setShowMenu }) => {
                 >
                   🚗 Book a Ride
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link 
                   to="/contact" 

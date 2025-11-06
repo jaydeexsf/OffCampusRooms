@@ -2,6 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const axios = require("axios");
 const connectDB = require("./configDb");
 const { createClerkClient } = require("@clerk/clerk-sdk-node");
 
@@ -203,4 +204,22 @@ app.use('/api/rides', (req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  
+  // Ping statistics endpoint every 14 minutes (840000 milliseconds)
+  const pingStatistics = async () => {
+    try {
+      const response = await axios.get('https://statistics-pinger.onrender.com/statistics-pinger');
+      console.log(`[Statistics Pinger] Pinged successfully at ${new Date().toISOString()}`);
+    } catch (error) {
+      console.error(`[Statistics Pinger] Error pinging endpoint:`, error.message);
+    }
+  };
+  
+  // Ping immediately on server start
+  pingStatistics();
+  
+  // Then ping every 14 minutes
+  setInterval(pingStatistics, 14 * 60 * 1000); // 14 minutes = 840000 milliseconds
+  
+  console.log('[Statistics Pinger] Initialized - will ping every 14 minutes');
 });

@@ -259,37 +259,37 @@ const StudentDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-4 hover:border-blue-400/50 transition-all duration-300">
+          <div className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-4 hover:border-blue-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{dashboardStats.savedRooms}</p>
+                <p className="text-2xl font-bold text-blue-400">{dashboardStats.savedRooms}</p>
                 <p className="text-gray-300 text-sm font-medium">Saved Rooms</p>
               </div>
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-xl">
+              <div className="bg-blue-500 p-2 rounded-xl">
                 <FiHeart className="w-5 h-5 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-4 hover:border-green-400/50 transition-all duration-300">
+          <div className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-4 hover:border-blue-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">{dashboardStats.totalRides}</p>
+                <p className="text-2xl font-bold text-blue-400">{dashboardStats.totalRides}</p>
                 <p className="text-gray-300 text-sm font-medium">Total Rides</p>
               </div>
-              <div className="bg-gradient-to-r from-green-500 to-blue-500 p-2 rounded-xl">
+              <div className="bg-blue-500 p-2 rounded-xl">
                 <FiMap className="w-5 h-5 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-2xl p-4 hover:border-yellow-400/50 transition-all duration-300">
+          <div className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-4 hover:border-blue-400/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">{dashboardStats.confirmedRides}</p>
+                <p className="text-2xl font-bold text-blue-400">{dashboardStats.confirmedRides}</p>
                 <p className="text-gray-300 text-sm font-medium">Confirmed Rides</p>
               </div>
-              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-2 rounded-xl">
+              <div className="bg-blue-500 p-2 rounded-xl">
                 <FiCheckCircle className="w-5 h-5 text-white" />
               </div>
             </div>
@@ -305,8 +305,8 @@ const StudentDashboard = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-purple-600/20'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white hover:bg-blue-600/20'
                 }`}
               >
                 {tab.icon}
@@ -323,9 +323,9 @@ const StudentDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <button
                     onClick={() => setActiveTab('saved')}
-                    className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300 group"
+                    className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300 group"
                   >
-                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                    <div className="bg-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
                       <FiHome className="w-6 h-6 text-white" />
                     </div>
                     <h4 className="text-white font-bold mb-2 text-lg">View Bookings</h4>
@@ -334,9 +334,9 @@ const StudentDashboard = () => {
 
                   <button
                     onClick={() => setActiveTab('ratings')}
-                    className="bg-gradient-to-br from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-2xl p-6 hover:border-yellow-400/50 transition-all duration-300 group"
+                    className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300 group"
                   >
-                    <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                    <div className="bg-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
                       <FiStar className="w-6 h-6 text-white" />
                     </div>
                     <h4 className="text-white font-bold mb-2 text-lg">My Ratings</h4>
@@ -345,9 +345,9 @@ const StudentDashboard = () => {
 
                   <button
                     onClick={() => setActiveTab('feedback')}
-                    className="bg-gradient-to-br from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition-all duration-300 group"
+                    className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300 group"
                   >
-                    <div className="bg-gradient-to-r from-green-500 to-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                    <div className="bg-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
                       <FiMessageSquare className="w-6 h-6 text-white" />
                     </div>
                     <h4 className="text-white font-bold mb-2 text-lg">My Feedback</h4>
@@ -356,16 +356,16 @@ const StudentDashboard = () => {
 
                   <Link 
                     to="/all-rooms"
-                    className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-2xl p-6 hover:border-purple-400/50 transition-all duration-300 group"
+                    className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition-all duration-300 group"
                   >
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
+                    <div className="bg-blue-500 p-3 rounded-xl w-fit mb-4 group-hover:shadow-lg transition-all duration-300">
                       <FiEye className="w-6 h-6 text-white" />
                     </div>
                     <h4 className="text-white font-bold mb-2 text-lg">Browse Rooms</h4>
                     <p className="text-gray-300 text-sm">Find accommodation</p>
                   </Link>
 
-                  <Link 
+                  {/* <Link 
                     to="/ride-booking"
                     className="bg-gradient-to-br from-orange-600/20 to-red-600/20 border border-orange-500/30 rounded-2xl p-6 hover:border-orange-400/50 transition-all duration-300 group"
                   >
@@ -374,7 +374,7 @@ const StudentDashboard = () => {
                     </div>
                     <h4 className="text-white font-bold mb-2 text-lg">Book Ride</h4>
                     <p className="text-gray-300 text-sm">Get transportation</p>
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             )}
@@ -435,7 +435,7 @@ const StudentDashboard = () => {
                     <p className="text-gray-400 mb-4">You haven't rated any rooms yet</p>
                     <Link 
                       to="/all-rooms"
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 inline-block"
+                      className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 inline-block"
                     >
                       Browse Rooms to Rate
                     </Link>
@@ -518,7 +518,7 @@ const StudentDashboard = () => {
                                     // This would open the rating modal for editing
                                     // You can implement this functionality
                                   }}
-                                  className="px-3 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm"
+                                  className="px-3 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm"
                                 >
                                   Edit Rating
                                 </button>
@@ -573,7 +573,7 @@ const StudentDashboard = () => {
                       <div className="flex gap-4 mt-6">
                         <Link 
                           to="/feedback"
-                          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200"
+                          className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200"
                         >
                           Edit Feedback
                         </Link>
@@ -586,7 +586,7 @@ const StudentDashboard = () => {
                     <p className="text-gray-400 mb-4">You haven't submitted any feedback yet</p>
                     <Link 
                       to="/feedback"
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 inline-block"
+                      className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 inline-block"
                     >
                       Share Your Experience
                     </Link>
@@ -625,7 +625,7 @@ const StudentDashboard = () => {
                                     maxLength="300"
                                   />
                                   <div className="flex gap-2">
-                                    <button onClick={() => saveEditedComment(comment._id)} className="px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded flex items-center gap-2 text-sm">
+                                    <button onClick={() => saveEditedComment(comment._id)} className="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded flex items-center gap-2 text-sm">
                                       <FiSave /> Save
                                     </button>
                                     <button onClick={cancelEditingComment} className="px-3 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded flex items-center gap-2 text-sm">
@@ -662,7 +662,7 @@ const StudentDashboard = () => {
                 <h3 className="text-xl font-bold text-white mb-4">Profile Settings</h3>
                 <div className="bg-gradient-to-br from-black/40 to-gray-900/40 border border-white/10 rounded-2xl p-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                       <FiUser className="w-8 h-8 text-white" />
                     </div>
                     <div>
@@ -672,13 +672,13 @@ const StudentDashboard = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <button className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
                       Edit Profile
                     </button>
-                    <button className="w-full bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 border border-white/20 hover:border-white/30">
+                    <button className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 border border-white/20 hover:border-white/30">
                       Change Password
                     </button>
-                    <button className="w-full bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 border border-white/20 hover:border-white/30">
+                    <button className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 border border-white/20 hover:border-white/30">
                       Notification Settings
                     </button>
                   </div>
@@ -694,7 +694,7 @@ const StudentDashboard = () => {
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700/50 flex-shrink-0">
                 <h3 className="text-lg font-bold text-white">{selectedRoom?.title || 'Room Details'}</h3>
-                <button onClick={closeRoomModal} className="p-2 bg-gradient-to-r from-red-600/20 to-red-500/20 hover:from-red-600/30 hover:to-red-500/30 border border-red-500/30 rounded-xl text-red-400 hover:text-red-300 transition-all duration-200">
+                <button onClick={closeRoomModal} className="p-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600/50 rounded-xl text-gray-300 hover:text-white transition-all duration-200">
                   <FiX className="w-5 h-5" />
                 </button>
               </div>
@@ -790,8 +790,8 @@ const StudentDashboard = () => {
                           )}
                           {selectedRoom.contact.email && (
                             <div className="flex items-center gap-2">
-                              <div className="p-1.5 bg-purple-500/20 border border-purple-500/30 rounded-lg">
-                                <FiUser className="text-purple-400 w-3 h-3" />
+                              <div className="p-1.5 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                                <FiUser className="text-blue-400 w-3 h-3" />
                               </div>
                               <span className="text-white text-xs sm:text-sm">{selectedRoom.contact.email}</span>
                             </div>

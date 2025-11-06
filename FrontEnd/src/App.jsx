@@ -23,7 +23,7 @@ import Comments from "./pages/Comments";
 import StudentDashboard from "./pages/StudentDashboard";
 import StudentResources from "./pages/StudentResources";
 import FeedbackForm from "./components/Feedback/FeedbackForm";
-import RideBooking from "./pages/RideBooking";
+// import RideBooking from "./pages/RideBooking";
 import MyRides from "./pages/MyRides";
 import AdminDashboard from "./pages/AdminDashboard";
 import ScrollToTop from "./components/ScrollToTop";
@@ -60,7 +60,7 @@ const App = () => {
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="resources" element={<StudentResources />} />
             <Route path="feedback" element={<FeedbackForm />} />
-            <Route path="ride-booking" element={<RideBooking />} />
+            {/* <Route path="ride-booking" element={<RideBooking />} /> */}
             <Route path="my-rides" element={<MyRides />} />
             
             <Route path="admin" element={

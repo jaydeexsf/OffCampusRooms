@@ -29,10 +29,10 @@ const DropdownLinks = [
     name: "Student Resources",
     link: "/resources",
   },
-  {
-    name: "Book a Ride",
-    link: "/ride-booking",
-  },
+  // {
+  //   name: "Book a Ride",
+  //   link: "/ride-booking",
+  // },
   {
     name: "Share Feedback",
     link: "/feedback",
