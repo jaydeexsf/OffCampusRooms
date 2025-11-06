@@ -23,9 +23,9 @@ const WhyChooseUs = () => {
       icon: <FiDollarSign className="w-6 h-6" />,
       title: "No Booking Fees",
       description: "We don't charge any booking fees or hidden costs. What you see is what you pay - transparent pricing.",
-      color: "from-purple-500 to-purple-600",
-      bgColor: "from-purple-500/20 to-purple-600/20",
-      borderColor: "border-purple-500/30"
+      color: "from-blue-500 to-blue-600",
+      bgColor: "from-blue-500/20 to-blue-600/20",
+      borderColor: "border-blue-500/30"
     },
     {
       icon: <FiUsers className="w-6 h-6" />,
@@ -64,9 +64,6 @@ const WhyChooseUs = () => {
                 StudentRooms
               </span>
             </h2>
-            <p className="text-gray-400 text-xs sm:text-sm md:text-lg max-w-2xl mx-auto px-2">
-              We're committed to making your student accommodation search easy, safe, and affordable
-            </p>
           </div>
 
           {/* Features Grid */}
@@ -110,7 +107,7 @@ const WhyChooseUs = () => {
             </div>
             
             <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg sm:rounded-xl p-3 sm:p-6 text-center">
-              <div className="text-lg sm:text-2xl md:text-3xl font-bold text-purple-400 mb-1 sm:mb-2">0%</div>
+              <div className="text-lg sm:text-2xl md:text-3xl font-bold text-blue-400 mb-1 sm:mb-2">0%</div>
               <div className="text-white font-semibold text-xs sm:text-sm md:text-base mb-1">Booking Fees</div>
               <div className="text-gray-400 text-xs sm:text-xs md:text-sm">No hidden costs or charges</div>
             </div>
@@ -118,7 +115,7 @@ const WhyChooseUs = () => {
 
           {/* Call to Action */}
           <div className="text-center" data-aos="fade-up" data-aos-delay="700">
-            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-8 max-w-3xl mx-auto">
+            <div className="bg-blue-600/20 border border-blue-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-8 max-w-3xl mx-auto">
               <h3 className="text-sm sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-4">
                 Ready to Find Your Perfect Student Accommodation?
               </h3>

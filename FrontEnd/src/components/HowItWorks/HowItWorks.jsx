@@ -49,9 +49,6 @@ const HowItWorks = () => {
                 Works
               </span>
             </h2>
-            <p className="text-gray-400 text-xs md:text-md md:text-base max-w-2xl mx-auto">
-              Finding your perfect student accommodation is simple with our streamlined process
-            </p>
           </div>
 
           {/* Steps Grid */}
@@ -95,7 +92,7 @@ const HowItWorks = () => {
 
            {/* Call to Action */}
            <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="600">
-            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
+            <div className="bg-blue-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-lg md:text-xl font-bold text-white mb-4">
                 Ready to Find Your Perfect Room?
               </h3>

@@ -132,9 +132,6 @@ const StudentTestimonials = () => {
                   Students
                 </span> Say
               </h2>
-              <p className="text-gray-400 text-sm md:text-base mb-2">
-                {averageRating.toFixed(1)}/5 from {totalCount} reviews
-              </p>
               <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"></div>
             </div>
             

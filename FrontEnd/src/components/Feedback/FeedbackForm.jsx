@@ -199,7 +199,7 @@ const FeedbackForm = () => {
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12" data-aos="fade-up">
             <h1 className="text-2xl md:text-4xl font-bold text-white mb-6">
-              Share Your <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Share Your <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Experience
               </span>
             </h1>
@@ -210,10 +210,10 @@ const FeedbackForm = () => {
 
           {/* Message Display */}
           {message.text && (
-            <div className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-xl border ${
+            <div className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg border ${
               message.type === 'success' 
-                ? 'bg-green-500/10 border-green-500/30 text-green-400' 
-                : 'bg-red-500/10 border-red-500/30 text-red-400'
+                ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' 
+                : 'bg-gray-700/50 border-gray-600/50 text-gray-300'
             }`} data-aos="fade-up">
               <div className="flex items-center gap-2 text-sm sm:text-base">
                 {message.type === 'success' ? <FiCheck /> : <FiAlertCircle />}
@@ -236,7 +236,7 @@ const FeedbackForm = () => {
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="p-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-lg text-red-400 transition-all duration-200"
+                    className="p-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600/50 rounded-lg text-gray-300 hover:text-white transition-all duration-200"
                   >
                     <FiTrash2 />
                   </button>
@@ -417,7 +417,7 @@ const FeedbackForm = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
+                  className="flex-1 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -63,9 +63,6 @@ const LatestNews = () => {
                 Student Tips
               </span> & News
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Stay updated with the latest student accommodation tips, campus life, and helpful guides
-            </p>
           </div>
 
           {/* Featured Article */}
