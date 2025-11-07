@@ -321,7 +321,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
               {/* Location Button - Hide when viewing location */}
               {!showLocation && (
                 <button
-                  className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
+                  className="rounded-tl-none rounded-tr-none rounded-br-none w-full sm:flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
                   onClick={() => setShowLocation(true)}
                 >
                   <FiMap className="w-4 h-4" />
@@ -354,7 +354,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                       setShowRateForm(true);
                       setShowRatings(false);
                     }}
-                    className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
+                    className="rounded-tr-none rounded-tl-none rounded-bl-none w-full sm:flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
                   >
                     <FiStar className="w-4 h-4" />
                     <span>Rate Room</span>

@@ -20,6 +20,7 @@ export const GlobalProvider = ({ children }) => {
     const [faqs, setFaqs] = useState([]);
     const [isFaqLoading, setIsFaqLoading] = useState(false);
     const [isPostingFaq, setIsPostingFaq] = useState(false);
+    const [isUsingDummyRooms, setIsUsingDummyRooms] = useState(false);
 
     const [isAddingRoom, setIsAddingRoom] = useState(false);
     const [isUpdatingRoom, setIsUpdatingRoom] = useState(false);
@@ -44,13 +45,100 @@ export const GlobalProvider = ({ children }) => {
     // }, [])
 
 
+    const dummyRooms = [
+        {
+            _id: 'dummy-room-1',
+            title: 'XXXXX Test Residence - Not Real',
+            description: 'Dummy listing for testing the rooms page. This is not a real property.',
+            location: 'gate 1',
+            price: 1500,
+            minutesAway: 8,
+            images: ['https://via.placeholder.com/800x600.png?text=Dummy+Room+1'],
+            amenities: {
+                wifi: true,
+                shower: true,
+                bathtub: false,
+                table: true,
+                bed: true,
+                electricity: true,
+            },
+            averageRating: 0,
+            totalRatings: 0,
+            contact: {
+                phone: '000-XXX-ROOM',
+                whatsapp: '000-XXX-ROOM',
+                email: 'dummy-room1@placeholder.xxx',
+            },
+            coordinates: { lat: -23.8962, long: 29.4473 },
+        },
+        {
+            _id: 'dummy-room-2',
+            title: 'XXXXX Sample Apartment - Testing',
+            description: 'This dummy data entry appears when the API request fails.',
+            location: 'gate 2',
+            price: 1800,
+            minutesAway: 12,
+            images: ['https://via.placeholder.com/800x600.png?text=Dummy+Room+2'],
+            amenities: {
+                wifi: true,
+                shower: true,
+                bathtub: true,
+                table: true,
+                bed: true,
+                electricity: true,
+            },
+            averageRating: 0,
+            totalRatings: 0,
+            contact: {
+                phone: '000-TEST-DATA',
+                whatsapp: '000-TEST-DATA',
+                email: 'dummy-room2@placeholder.xxx',
+            },
+            coordinates: { lat: -23.9001, long: 29.4487 },
+        },
+        {
+            _id: 'dummy-room-3',
+            title: 'XXXXX Demo Lodge - Placeholder',
+            description: 'Placeholder accommodation used for testing purposes only.',
+            location: 'motintane',
+            price: 1600,
+            minutesAway: 15,
+            images: ['https://via.placeholder.com/800x600.png?text=Dummy+Room+3'],
+            amenities: {
+                wifi: false,
+                shower: true,
+                bathtub: false,
+                table: true,
+                bed: true,
+                electricity: true,
+            },
+            averageRating: 0,
+            totalRatings: 0,
+            contact: {
+                phone: '000-FAKE-LINE',
+                whatsapp: '000-FAKE-LINE',
+                email: 'dummy-room3@placeholder.xxx',
+            },
+            coordinates: { lat: -23.9045, long: 29.4502 },
+        },
+    ];
+
      const fetchAllRooms = async () => {
         setGolbalLoader(true);
             try {
                 const response = await apiClient.get(API_ENDPOINTS.ALL_ROOMS);
-                setAllRooms(response.data.rooms);
+                const rooms = Array.isArray(response?.data?.rooms) ? response.data.rooms : [];
+                if (rooms.length === 0) {
+                    setAllRooms(dummyRooms);
+                    setIsUsingDummyRooms(true);
+                } else {
+                    setAllRooms(rooms);
+                    setIsUsingDummyRooms(false);
+                }
             } catch (error) {
                 console.error('Error fetching all rooms:', error);
+                setAllRooms(dummyRooms);
+                setIsUsingDummyRooms(true);
             } finally {
                 setGolbalLoader(false);
             }
@@ -232,6 +320,7 @@ export const GlobalProvider = ({ children }) => {
                 addComment,
                 getRoomComments,
                 getStatistics,
+                isUsingDummyRooms,
             }}
         >
             {children}

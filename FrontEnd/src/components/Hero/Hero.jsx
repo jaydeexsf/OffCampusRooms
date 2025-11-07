@@ -52,7 +52,7 @@ const Hero = ({ handleOrderPopup }) => {
 
   return (
     <div className="gradient-dark pt-20 pb-16 h-full flex items-center justify-center">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 sm:pt-12">
         <div className="max-w-4xl mx-auto">
           {!searchResults ? (
             <>

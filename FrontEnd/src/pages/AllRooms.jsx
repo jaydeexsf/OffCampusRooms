@@ -10,7 +10,7 @@ import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
 
 const AllRooms = () => {
-  const { fetchAllRooms, allRooms } = useContext(GlobalContext);
+  const { fetchAllRooms, allRooms, isUsingDummyRooms } = useContext(GlobalContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedLocation, setSelectedLocation] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
@@ -367,6 +367,17 @@ const AllRooms = () => {
                </form>
             </div>
           </div>
+
+          {isUsingDummyRooms && (
+            <div className="container mx-auto px-4 mt-6">
+              <div className="bg-red-600/20 border border-red-500/40 text-red-100 rounded-2xl p-4 sm:p-5 shadow-lg">
+                <h2 className="text-sm sm:text-base font-semibold">Dummy Listings For Testing</h2>
+                <p className="text-xs sm:text-sm mt-1 leading-relaxed">
+                  The rooms shown below are placeholder entries (marked with XXXXX) because the live API request failed. If you are a real user, please try again later—these listings are not real accommodations.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Main Content Section */}
           <section className="max-w-[1600px] mx-auto px-4 py-8 w-full">
