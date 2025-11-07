@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"; 
+import SEO from "../components/SEO";
 import Hero from "../components/Hero/Hero";
 import NatureVid from "../assets/video/main.mp4";
 import Places from "../components/Places/Places";
@@ -32,6 +33,12 @@ const Home = () => {
 
   return (
     <>
+      <SEO
+        title="Off-Campus Rooms near University of Limpopo | Mankweng/Turfloop, Polokwane"
+        description="Find and compare student rooms near UL. See prices, distance to campus, amenities, and reviews in Mankweng/Turfloop and Polokwane."
+        canonical="https://off-campus-rooms.vercel.app/"
+        image="/vite.svg"
+      />
       <div className="gradient-dark bg-gray-950">
         {/* Hero Section with Video Background */}
         <div className="relative">

@@ -8,6 +8,7 @@ import Loader from './Loader';
 import { FiFilter, FiX, FiSearch, FiLoader } from "react-icons/fi";
 import { apiClient } from '../config/api';
 import { API_ENDPOINTS } from '../config/api';
+import SEO from "../components/SEO";
 
 const AllRooms = () => {
   const { fetchAllRooms, allRooms, isUsingDummyRooms } = useContext(GlobalContext);
@@ -294,6 +295,12 @@ const AllRooms = () => {
     <div className="bg-gray-50 dark:bg-gray-900 py-10 gradient-dark">
     
         <>
+          <SEO
+            title="All Rooms near University of Limpopo | Browse Off-Campus Rooms"
+            description="Browse off-campus rooms near UL in Mankweng/Turfloop, Polokwane. Filter by location, amenities, and distance to campus."
+            canonical="https://off-campus-rooms.vercel.app/all-rooms"
+            image="/vite.svg"
+          />
           {/* Sticky Apply Filters Button - Always visible when filters are selected */}
           {hasActiveFilters && (
             <div className="bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden lg:fixed">

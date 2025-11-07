@@ -1,10 +1,16 @@
 import React from 'react';
+import SEO from '../components/SEO';
 import { AiOutlineMail, AiOutlinePhone, AiOutlineEnvironment, AiFillLinkedin, AiFillTwitterCircle } from 'react-icons/ai';
 import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
 
 const Contact = () => {
   return (
     <div className="gradient-dark bg-gray-950 min-h-screen pt-20">
+      <SEO
+        title="Contact Off-Campus Rooms | UL Student Accommodation Support"
+        description="Contact Off-Campus Rooms for help with student accommodation near University of Limpopo (Mankweng/Turfloop, Polokwane)."
+        canonical="https://off-campus-rooms.vercel.app/contact"
+      />
       <div className="container mx-auto px-2 sm:px-4 py-8 sm:py-16">
         {/* Hero Section */}
         <div className="text-center mb-6 sm:mb-12" data-aos="fade-up">

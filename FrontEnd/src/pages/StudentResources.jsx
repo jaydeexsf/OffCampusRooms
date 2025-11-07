@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEO from '../components/SEO';
 import { FiGrid, FiMapPin, FiFileText, FiPhone, FiMail, FiClock, FiShield, FiHome, FiUsers, FiDollarSign } from 'react-icons/fi';
 import { AiOutlineLock, AiOutlineClockCircle, AiOutlineEye, AiOutlinePhone, AiOutlineWarning } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
@@ -129,6 +130,12 @@ const StudentResources = () => {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
+      <SEO
+        title="Student Resources | Safety, Budget, and Contacts near UL"
+        description="Safety tips, budgeting tools, and important contacts for University of Limpopo students living off-campus in Mankweng/Turfloop, Polokwane."
+        canonical="https://off-campus-rooms.vercel.app/student-resources"
+        image="/vite.svg"
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">

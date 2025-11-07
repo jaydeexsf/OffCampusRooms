@@ -1,10 +1,16 @@
 import React from "react";
+import SEO from "../components/SEO";
 import Location from "../components/Location/Location";
 import { FiPhone, FiMail, FiMapPin, FiGlobe } from "react-icons/fi";
 
 const About = () => {
   return (
     <>
+      <SEO
+        title="About Off-Campus Rooms | University of Limpopo Accommodation"
+        description="Learn about Off-Campus Rooms helping UL students find safe, affordable accommodation around Mankweng/Turfloop, Polokwane."
+        canonical="https://off-campus-rooms.vercel.app/about"
+      />
       <div className="container pt-4 gradient-dark" >
         <div className="py-10">
           <h1 className="my-8 text-3xl font-bold text-white mb-3">
