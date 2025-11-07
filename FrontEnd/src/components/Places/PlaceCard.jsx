@@ -138,14 +138,14 @@ const PlaceCard = ({
       className="group cursor-pointer h-full overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] backdrop-blur-xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.09] hover:shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
       onClick={handleOrderPopup}
     >
-      {/* Image Container */}
-      <div className="relative mb-4 overflow-hidden rounded-xl">
+      {/* Image (edge-to-edge) */}
+      <div className="relative -mx-5 -mt-5 mb-5 overflow-hidden">
         <img
           src={images[0]}
           alt={title}
-          className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="block h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-64 md:h-60"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-70" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/0" />
 
         {/* Price Badge */}
         <div className="absolute right-3 top-3">
@@ -153,6 +153,13 @@ const PlaceCard = ({
             <span className="text-blue-400">R{price.toLocaleString()}</span>
             <span className="ml-1 text-xs text-gray-300">/mo</span>
           </div>
+        </div>
+
+        {/* Title Overlay */}
+        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+          <h3 className="text-base font-semibold text-white sm:text-lg line-clamp-2 drop-shadow-md">
+            {title}
+          </h3>
         </div>
 
         {/* Save Button - Only show if user is signed in */}
@@ -175,10 +182,8 @@ const PlaceCard = ({
 
       {/* Content */}
       <div className="flex flex-1 flex-col">
-        {/* Title */}
-        <h3 className="mb-2 line-clamp-1 text-lg font-semibold text-white transition-colors duration-200 group-hover:text-blue-300">
-          {title}
-        </h3>
+        {/* Accessible title for screen readers */}
+        <h3 className="sr-only">{title}</h3>
 
         {/* Location & Distance */}
         <div className="mb-3 flex items-center gap-3 text-sm text-gray-300">

@@ -84,7 +84,7 @@ const Places = ({ handleOrderPopup }) => {
               <p className="mt-6 text-gray-300 font-medium">Loading best rooms...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {bestRooms && bestRooms.length > 0 ? (
                 bestRooms.map((item, index) => (
                   <div
