@@ -134,9 +134,6 @@ const Statistics = () => {
                 </svg>
               </button> */}
             </div>
-            <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
-              Join thousands of students who have found their perfect accommodation through our platform
-            </p>
           </div>
 
          {/* Statistics Grid */}

@@ -131,13 +131,13 @@ const StudentResources = () => {
     <div className="min-h-screen bg-gray-950 text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-10 sm:mb-14">
+          <h1 className="mt-24 sm:mt-28 text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
             Student <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Resources
             </span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto px-2">
             Essential tools, guides, and information to help you succeed at University of Limpopo
           </p>
         </div>
@@ -153,7 +153,7 @@ const StudentResources = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             {/* Input Form */}
-                          <div className="space-y-4">
+            <div className="space-y-4">
                 <div>
                   <label className="block text-white font-medium mb-2 text-sm sm:text-base">Monthly Income (R)</label>
                   <input
@@ -165,7 +165,7 @@ const StudentResources = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-white font-medium mb-2 text-sm sm:text-base">Rent (R)</label>
                   <input
@@ -206,7 +206,7 @@ const StudentResources = () => {
                     placeholder="0"
                   />
                 </div>
-                <div>
+                <div className="min-[380px]:col-span-1">
                   <label className="block text-white font-medium mb-2 text-sm sm:text-base">Books (R)</label>
                   <input
                     type="number"
@@ -216,7 +216,7 @@ const StudentResources = () => {
                     placeholder="0"
                   />
                 </div>
-                <div>
+                <div className="min-[380px]:col-span-1">
                   <label className="block text-white font-medium mb-2 text-sm sm:text-base">Entertainment (R)</label>
                   <input
                     type="number"
@@ -304,22 +304,20 @@ const StudentResources = () => {
         {/* Safety Tips */}
         <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8 mb-8 sm:mb-12" data-aos="fade-up">
           <div className="text-center mb-8 sm:mb-12">
-            <FiShield className="w-8 h-8 sm:w-12 sm:h-12 text-green-400 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-              Student Safety <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
-                Tips
-              </span>
+            <FiShield className="w-8 h-8 sm:w-12 sm:h-12 text-blue-500 mx-auto mb-3 sm:mb-4" />
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
+              Student Safety Tips
             </h2>
-            <p className="text-gray-400 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
+            <p className="text-gray-300 text-xs sm:text-sm lg:text-base max-w-2xl mx-auto px-2">
               Your safety is our priority! Follow these essential tips to stay safe while on and off campus.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {safetyTips.map((tip, index) => (
-              <div key={index} className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-4 sm:p-6 hover:border-blue-500/30 transition-all duration-300 group">
+              <div key={index} className="bg-gradient-to-br from-blue-600/20 to-purple-500/10 border border-blue-500/25 rounded-2xl p-4 sm:p-6 hover:border-blue-400/40 transition-all duration-300 group">
                 <div className="flex items-start gap-3 sm:gap-4">
-                  <div className="text-blue-400 mt-1 group-hover:text-blue-300 transition-colors duration-300">
+                  <div className="text-blue-300 mt-1 group-hover:text-blue-200 transition-colors duration-300">
                     {tip.icon}
                   </div>
                   <div className="flex-1">

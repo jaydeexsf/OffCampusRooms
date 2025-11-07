@@ -56,7 +56,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
       <nav className="fixed top-0 right-0 w-full z-50 bg-black/90 backdrop-blur-xl border-b border-white/10 shadow-2xl">
         {/* Top banner with gradient */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-500">
-          <div className="container py-2 sm:block hidden">
+          <div className="lg:container px-6 py-4 py-2 sm:block hidden">
             <div className="flex text-sm items-center justify-between text-white">
               <div className="flex items-center gap-2">
                 <FiGift className="text-white" />
@@ -71,7 +71,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
         </div>
         
         {/* Main navigation */}
-        <div className="container py-4">
+        <div className="lg:container px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <div className="flex items-center gap-3">
