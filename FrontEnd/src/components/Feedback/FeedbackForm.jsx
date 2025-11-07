@@ -176,13 +176,13 @@ const FeedbackForm = () => {
       <div className="min-h-screen bg-gray-950 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 lg:p-12">
+            <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12">
               <FiAlertCircle className="w-12 h-12 sm:w-16 sm:h-16 text-blue-400 mx-auto mb-4 sm:mb-6" />
               <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Sign In Required</h2>
               <p className="text-gray-400 mb-6 sm:mb-8 text-sm sm:text-base">
                 Please sign in to share your feedback and help other students find great accommodation.
               </p>
-              <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base">
+              <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base">
                 Sign In to Continue
               </button>
             </div>
@@ -194,15 +194,16 @@ const FeedbackForm = () => {
 
   return (
     <div className="min-h-screen bg-gray-950 py-8 sm:py-12 lg:py-16">
-      <div className="container mx-auto px-4">
+      <div className="container pt-8 sm:pt-16 mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12" data-aos="fade-up">
-            <h1 className="text-2xl md:text-4xl font-bold text-white mb-6">
+            <h1 className="text-2xl md:text-4xl font-bold text-white mb-4">
               Share Your <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Experience
               </span>
             </h1>
+            <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mx-auto mb-6"></div>
             <p className="text-gray-400 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto">
               Help other University of Limpopo students by sharing your accommodation experience and rating our platform.
             </p>
@@ -210,7 +211,7 @@ const FeedbackForm = () => {
 
           {/* Message Display */}
           {message.text && (
-            <div className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg border ${
+            <div className={`mb-6 sm:mb-8 p-3 sm:p-4 rounded-md sm:rounded-lg border ${
               message.type === 'success' 
                 ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' 
                 : 'bg-gray-700/50 border-gray-600/50 text-gray-300'
@@ -224,19 +225,19 @@ const FeedbackForm = () => {
 
           {/* Existing Feedback Display */}
           {existingFeedback && !isEditing && (
-            <div className="mb-6 sm:mb-8 bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8" data-aos="fade-up">
+            <div className="mb-6 sm:mb-8 bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8" data-aos="fade-up">
               <div className="flex justify-between items-start mb-4 sm:mb-6">
                 <h3 className="text-lg sm:text-xl font-bold text-white">Your Feedback</h3>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="p-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-lg text-blue-400 transition-all duration-200"
+                    className="p-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-md sm:rounded-lg text-blue-400 transition-all duration-200"
                   >
                     <FiEdit3 />
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="p-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600/50 rounded-lg text-gray-300 hover:text-white transition-all duration-200"
+                    className="p-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600/50 rounded-md sm:rounded-lg text-gray-300 hover:text-white transition-all duration-200"
                   >
                     <FiTrash2 />
                   </button>
@@ -280,7 +281,7 @@ const FeedbackForm = () => {
 
           {/* Feedback Form */}
           {(!existingFeedback || isEditing) && (
-            <form onSubmit={handleSubmit} className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8" data-aos="fade-up">
+            <form onSubmit={handleSubmit} className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8" data-aos="fade-up">
               {/* Website Rating */}
               <div className="mb-6 sm:mb-8">
                 <label className="block text-white font-semibold mb-3 sm:mb-4 text-base sm:text-lg">
@@ -309,7 +310,7 @@ const FeedbackForm = () => {
                   required
                   rows={5}
                   placeholder="Share your experience with our platform and accommodation search..."
-                  className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 resize-none text-sm sm:text-base"
+                  className="w-full bg-white/5 border border-white/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 resize-none text-sm sm:text-base"
                 />
               </div>
 
@@ -328,7 +329,7 @@ const FeedbackForm = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="e.g., Gate 1, Gate 2, Ga-motintane"
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
+                    className="w-full bg-white/5 border border-white/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
 
@@ -346,7 +347,7 @@ const FeedbackForm = () => {
                     required
                     min="0"
                     placeholder="e.g., 2500"
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
+                    className="w-full bg-white/5 border border-white/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
 
@@ -361,7 +362,7 @@ const FeedbackForm = () => {
                     value={formData.studyYear}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
+                    className="w-full bg-white/5 border border-white/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   >
                     <option value="">Select your year</option>
                     {studyYears.map(year => (
@@ -400,7 +401,7 @@ const FeedbackForm = () => {
                     value={formData.roomType}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-white/5 border border-white/20 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
+                    className="w-full bg-white/5 border border-white/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm sm:text-base"
                   >
                     <option value="">Select room type</option>
                     {roomTypes.map(type => (
@@ -417,7 +418,7 @@ const FeedbackForm = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
+                  className="flex-1 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -445,7 +446,7 @@ const FeedbackForm = () => {
                         roomType: existingFeedback.roomType
                       });
                     }}
-                    className="px-4 sm:px-6 py-2 sm:py-4 bg-gray-600/20 hover:bg-gray-600/30 border border-gray-500/30 rounded-xl text-gray-300 font-semibold transition-all duration-200 text-sm sm:text-base"
+                    className="px-4 sm:px-6 py-2 sm:py-4 bg-gray-600/20 hover:bg-gray-600/30 border border-gray-500/30 rounded-lg sm:rounded-xl text-gray-300 font-semibold transition-all duration-200 text-sm sm:text-base"
                   >
                     Cancel
                   </button>

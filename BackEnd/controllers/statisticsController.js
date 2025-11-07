@@ -144,7 +144,82 @@ const getRoomStatistics = async (req, res) => {
   }
 };
 
+// Get average price by popular locations
+const getAveragePriceByLocation = async (req, res) => {
+  try {
+    const limitParam = parseInt(req.query.limit, 10);
+    const minRoomsParam = parseInt(req.query.minRooms, 10);
+
+    const limit = Number.isNaN(limitParam) ? 5 : Math.min(Math.max(limitParam, 1), 20);
+    const minRooms = Number.isNaN(minRoomsParam) ? 2 : Math.max(minRoomsParam, 1);
+
+    const pipeline = [
+      {
+        $match: {
+          location: { $exists: true, $ne: null, $ne: '' },
+          price: { $exists: true, $ne: null, $gt: 0 }
+        }
+      },
+      {
+        $group: {
+          _id: { $toLower: { $trim: { input: '$location' } } },
+          location: { $first: { $trim: { input: '$location' } } },
+          averagePrice: { $avg: '$price' },
+          roomCount: { $sum: 1 },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' }
+        }
+      }
+    ];
+
+    if (minRooms > 1) {
+      pipeline.push({
+        $match: {
+          roomCount: { $gte: minRooms }
+        }
+      });
+    }
+
+    pipeline.push(
+      {
+        $project: {
+          _id: 0,
+          location: 1,
+          roomCount: 1,
+          averagePrice: { $round: ['$averagePrice', 0] },
+          minPrice: 1,
+          maxPrice: 1
+        }
+      },
+      {
+        $sort: {
+          roomCount: -1,
+          averagePrice: 1
+        }
+      },
+      {
+        $limit: limit
+      }
+    );
+
+    const results = await Room.aggregate(pipeline);
+
+    res.status(200).json({
+      locations: results,
+      meta: {
+        limit,
+        minRooms,
+        total: results.length
+      }
+    });
+  } catch (error) {
+    console.error('Error getting average price by location:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getStatistics,
-  getRoomStatistics
+  getRoomStatistics,
+  getAveragePriceByLocation
 };

@@ -116,8 +116,8 @@ const Statistics = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12" data-aos="fade-up">
-            <div className="flex items-center gap-4 mb-4">
+          <div className="text-left mb-12" data-aos="fade-up">
+            <div className="flex items-center gap-4 mb-3">
               <h2 className="text-2xl md:text-3xl font-bold text-white">
                 Trusted by <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                   University of Limpopo
@@ -134,6 +134,7 @@ const Statistics = () => {
                 </svg>
               </button> */}
             </div>
+            <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"></div>
           </div>
 
          {/* Statistics Grid */}

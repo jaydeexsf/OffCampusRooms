@@ -57,12 +57,13 @@ const LatestNews = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-16" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <div className="text-left mb-16" data-aos="fade-up">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
               Latest <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Student Tips
               </span> & News
             </h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mt-4"></div>
           </div>
 
           {/* Featured Article */}

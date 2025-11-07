@@ -44,11 +44,12 @@ const FeaturedLocations = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-left mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
               Popular <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Locations
               </span> Near UL
             </h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mt-4"></div>
           </div>
 
           {/* Locations Grid */}
