@@ -317,11 +317,11 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-6 border-t border-white/10">
+            <div className="pt-6 border-t border-white/10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
               {/* Location Button - Hide when viewing location */}
               {!showLocation && (
                 <button
-                  className="flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
+                  className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
                   onClick={() => setShowLocation(true)}
                 >
                   <FiMap className="w-4 h-4" />
@@ -331,7 +331,9 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
               {/* Rating Action Buttons - Hide when in rating views */}
               {!showRatings && !showRateForm && (
-                <>
+                <div
+                  className={`w-full ${totalRatings > 0 ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-1 gap-2'} sm:flex sm:flex-1 sm:gap-4`}
+                >
                   {/* View Ratings Button - Only show if there are reviews */}
                   {totalRatings > 0 && (
                     <button
@@ -339,7 +341,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                         setShowRatings(true);
                         setShowRateForm(false);
                       }}
-                      className="flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
+                      className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
                     >
                       <FiEye className="w-4 h-4" />
                       <span>Reviews</span>
@@ -352,12 +354,12 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                       setShowRateForm(true);
                       setShowRatings(false);
                     }}
-                    className={`${totalRatings > 0 ? 'flex-1' : 'w-full'} inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95`}
+                    className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
                   >
                     <FiStar className="w-4 h-4" />
                     <span>Rate Room</span>
                   </button>
-                </>
+                </div>
               )}
             </div>
           </div>
