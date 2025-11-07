@@ -135,115 +135,108 @@ const PlaceCard = ({
   };
   return (
     <div
-      className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 group cursor-pointer overflow-hidden h-full flex flex-col hover:bg-white/15 transition-all duration-300 shadow-xl hover:shadow-2xl"
+      className="group cursor-pointer h-full overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] backdrop-blur-xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.09] hover:shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
       onClick={handleOrderPopup}
     >
       {/* Image Container */}
-      <div className="relative overflow-hidden rounded-xl mb-4">
+      <div className="relative mb-4 overflow-hidden rounded-xl">
         <img
           src={images[0]}
           alt={title}
-          className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-110"
+          className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-70" />
+
         {/* Price Badge */}
-        <div className="absolute top-3 right-3">
-          <div className="bg-black/80 backdrop-blur-sm text-white px-3 py-2 rounded-full text-sm font-bold border border-white/20">
+        <div className="absolute right-3 top-3">
+          <div className="rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md">
             <span className="text-blue-400">R{price.toLocaleString()}</span>
-            <span className="text-gray-300 text-xs">/mo</span>
+            <span className="ml-1 text-xs text-gray-300">/mo</span>
           </div>
         </div>
 
         {/* Save Button - Only show if user is signed in */}
         {isSignedIn && (
-          <div className="absolute top-3 left-3">
+          <div className="absolute left-3 top-3">
             <button
               onClick={handleSaveToggle}
               disabled={isLoading}
-              className={`p-2 rounded-full backdrop-blur-sm border transition-all duration-200 ${
+              className={`rounded-full border px-2.5 py-2 text-white backdrop-blur-md transition-all duration-200 ${
                 isSaved
-                  ? 'bg-red-500/80 border-red-400/50 text-white hover:bg-red-400/80'
-                  : 'bg-black/60 border-white/20 text-white hover:bg-white/20'
-              } ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'}`}
+                  ? 'border-red-400/50 bg-red-500/80 hover:bg-red-400/80'
+                  : 'border-white/20 bg-black/60 hover:bg-white/20'
+              } ${isLoading ? 'cursor-not-allowed opacity-50' : 'hover:scale-[1.03]'}`}
             >
-              <FiHeart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+              <FiHeart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
             </button>
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex flex-1 flex-col">
         {/* Title */}
-        <h3 className="font-bold text-lg text-white mb-3 line-clamp-1 group-hover:text-blue-300 transition-colors duration-200">
+        <h3 className="mb-2 line-clamp-1 text-lg font-semibold text-white transition-colors duration-200 group-hover:text-blue-300">
           {title}
         </h3>
 
         {/* Location & Distance */}
-        <div className="flex items-center gap-4 text-sm text-gray-300 mb-4">
-          <div className="flex items-center gap-2">
+        <div className="mb-3 flex items-center gap-3 text-sm text-gray-300">
+          <div className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1">
             <FiMapPin className="text-blue-400" />
             <span className="text-white">{capitalizeFirstLetter(location)}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1">
             <FiClock className="text-green-400" />
-            <span className="text-white">{minutesAway}min to UL</span>
+            <span className="text-white">{minutesAway} min to UL</span>
           </div>
         </div>
 
         {/* Rating Display */}
         {averageRating > 0 && (
-          <div className="flex items-center gap-2 mb-4">
+          <div className="mb-4 flex items-center gap-2">
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <FiStar
                   key={star}
                   className={`${
-                    star <= averageRating
-                      ? 'text-yellow-400 fill-current'
-                      : 'text-gray-400'
-                  } text-sm`}
+                    star <= averageRating ? 'text-yellow-400 fill-current' : 'text-gray-500'
+                  } text-[15px]`}
                 />
               ))}
             </div>
-            <span className="text-white text-sm font-medium">
-              {averageRating.toFixed(1)}
-            </span>
-            <span className="text-gray-400 text-sm">
-              ({totalRatings} reviews)
-            </span>
+            <span className="text-sm font-medium text-white">{averageRating.toFixed(1)}</span>
+            <span className="text-sm text-gray-400">({totalRatings} reviews)</span>
           </div>
         )}
 
         {/* Amenities */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {Object.keys(amenities).slice(0, 4).map((amenity) => 
-            amenities[amenity] ? (
-              <div 
-                key={amenity} 
-                className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg text-xs border border-white/20 backdrop-blur-sm"
-              >
-                {amenitiesIcons[amenity]}
-                <span className="text-white font-medium">{amenitiesLabels[amenity]}</span>
-              </div>
-            ) : null
-          )}
-          {Object.keys(amenities).filter(key => amenities[key]).length > 4 && (
-            <div className="flex items-center bg-white/10 px-3 py-2 rounded-lg text-xs border border-white/20 backdrop-blur-sm">
-              <span className="text-gray-300 font-medium">
-                +{Object.keys(amenities).filter(key => amenities[key]).length - 4} more
-              </span>
+        <div className="mb-6 flex flex-wrap gap-2">
+          {Object.keys(amenities)
+            .slice(0, 4)
+            .map((amenity) =>
+              amenities[amenity] ? (
+                <div
+                  key={amenity}
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/8 px-3 py-1.5 text-xs backdrop-blur-sm"
+                >
+                  {amenitiesIcons[amenity]}
+                  <span className="font-medium text-white">{amenitiesLabels[amenity]}</span>
+                </div>
+              ) : null
+            )}
+          {Object.keys(amenities).filter((key) => amenities[key]).length > 4 && (
+            <div className="inline-flex items-center rounded-lg border border-white/15 bg-white/8 px-3 py-1.5 text-xs text-gray-300 backdrop-blur-sm">
+              +{Object.keys(amenities).filter((key) => amenities[key]).length - 4} more
             </div>
           )}
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Button */}
         <div className="mt-auto">
-          {/* View Details Button */}
           <button
             onClick={handleOrderPopup}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/40 bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-3 font-semibold text-white shadow-lg shadow-blue-900/30 transition-all duration-200 hover:from-blue-500 hover:to-blue-400 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-400/60"
           >
             <FiEye className="text-lg" />
             <span>View Details</span>

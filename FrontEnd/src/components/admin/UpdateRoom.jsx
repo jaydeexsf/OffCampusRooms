@@ -18,6 +18,7 @@ const UpdateRoom = ({ room, onCancel }) => {
         amenities: room.amenities,
         images: room.images || [],
         bestRoom: room.bestRoom,
+        primaryImageIndex: Number.isInteger(room.primaryImageIndex) ? room.primaryImageIndex : 0,
     });
 
     const [previewImages, setPreviewImages] = useState(updatedRoom.images);
@@ -221,8 +222,17 @@ const UpdateRoom = ({ room, onCancel }) => {
                                             className="w-full h-16 sm:h-20 md:h-24 object-cover rounded-lg sm:rounded-xl cursor-pointer group-hover:opacity-80 transition-opacity duration-200"
                                             onClick={() => handleImageClick(image)}
                                         />
-                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg sm:rounded-xl flex items-center justify-center">
-                                            <FiEye className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
+                                        <div className="absolute inset-0 rounded-lg sm:rounded-xl flex items-end justify-between p-1 sm:p-2">
+                                            <span className={`text-[10px] sm:text-xs px-1.5 py-0.5 rounded ${updatedRoom.primaryImageIndex === index ? 'bg-blue-600 text-white' : 'bg-black/60 text-white'}`}>
+                                                {updatedRoom.primaryImageIndex === index ? 'Primary' : 'Preview'}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => setUpdatedRoom(prev => ({ ...prev, primaryImageIndex: index }))}
+                                                className={`text-[10px] sm:text-xs px-2 py-1 rounded border transition-colors ${updatedRoom.primaryImageIndex === index ? 'border-blue-400 bg-blue-500 text-white' : 'border-white/30 bg-black/50 text-white hover:bg-black/60'}`}
+                                            >
+                                                Set as primary
+                                            </button>
                                         </div>
                                     </div>
                                 ))}

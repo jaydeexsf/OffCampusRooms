@@ -21,6 +21,7 @@ const roomSchema = new mongoose.Schema({
     email: String,
   },
   images: [String],
+  primaryImageIndex: { type: Number, default: 0 },
   availableRooms: Number,
   bestRoom: Boolean, 
   coordinates: {

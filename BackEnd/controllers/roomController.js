@@ -167,7 +167,8 @@ const updateRoom = async (req, res) => {
       images,
       availableRooms,
       bestRoom,
-      coordinates
+      coordinates,
+      primaryImageIndex
   } = req.body; 
 
   const roomId = req.params.id
@@ -188,6 +189,7 @@ const updateRoom = async (req, res) => {
               availableRooms,
               bestRoom,
               coordinates,
+              primaryImageIndex,
           },
           { new: true, runValidators: true }
       );
