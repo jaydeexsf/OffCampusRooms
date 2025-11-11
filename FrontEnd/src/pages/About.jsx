@@ -13,7 +13,7 @@ const About = () => {
       />
       <div className="container pt-4 gradient-dark" >
         <div className="py-10">
-          <h1 className="my-8 text-3xl font-bold text-white mb-3">
+          <h1 className="my-8 text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">
             About Us
           </h1>
           <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-4"></div>

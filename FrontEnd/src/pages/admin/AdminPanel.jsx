@@ -275,7 +275,7 @@ const AdminPanel = () => {
         <div className="mb-4 sm:mb-6 lg:mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
             <div>
-              <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">
+              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2">
                 Admin <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Dashboard
                 </span>

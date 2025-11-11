@@ -140,7 +140,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
   return (
     <>
       {orderPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-3 sm:p-6" onClick={() => setOrderPopup(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-6" onClick={() => setOrderPopup(false)}>
           <div className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-950 shadow-[0_24px_80px_rgba(15,23,42,0.75)]" onClick={(e) => e.stopPropagation()}>
             
             {/* Header with Back Button */}
@@ -305,46 +305,46 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   </div>
 
                   {/* Amenities & Contact */}
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-                    <div className="rounded-lg border border-slate-800 bg-slate-900 p-3 shadow-inner sm:rounded-xl sm:p-5">
+                  <div className="flex flex-col md:flex-row gap-3 sm:gap-[40px] md:items-start">
+                    <div className="md:flex-shrink-0">
                       <h3 className="mb-2 text-xs font-semibold text-white sm:mb-3 sm:text-sm">Amenities</h3>
-                      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {Object.keys(amenities).map((amenity) =>
                           amenities[amenity] ? (
                             <div
                               key={amenity}
-                              className="flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-800/80 px-2.5 py-1.5 text-[11px] text-white sm:px-3 sm:py-2 sm:text-xs lg:text-sm"
+                              className="inline-flex items-center gap-1 rounded-md border border-slate-700 bg-slate-800/80 px-1.5 py-1 text-[10px] text-white sm:px-2 sm:py-1 sm:text-xs"
                             >
                               {amenitiesIcons[amenity]}
-                              <span className="leading-tight font-medium">{amenitiesLabels[amenity]}</span>
+                              <span className="leading-tight font-medium whitespace-nowrap">{amenitiesLabels[amenity]}</span>
                             </div>
                           ) : null
                         )}
                       </div>
                     </div>
-                    <div className="w-full rounded-lg border border-blue-500/30 bg-slate-900 p-3 shadow-lg lg:ml-auto sm:rounded-xl sm:p-5">
+                    <div className="md:flex-shrink-0">
                       <h3 className="mb-2 text-xs font-semibold text-white sm:mb-3 sm:text-sm">Contact</h3>
-                      <div className="space-y-2.5 sm:space-y-3">
+                      <div className="space-y-2 sm:space-y-2.5">
                         {contact.phone && (
-                          <div className="flex items-center gap-2.5 sm:gap-3">
-                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1.5 sm:rounded-lg sm:p-2">
-                              <FiPhone className="h-3.5 w-3.5 text-blue-300 sm:h-4 sm:w-4" />
+                          <div className="flex items-center gap-2 sm:gap-2.5">
+                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5">
+                              <FiPhone className="h-3 w-3 text-blue-300 sm:h-3.5 sm:w-3.5" />
                             </div>
                             <span className="text-xs font-medium text-white sm:text-sm">{contact.phone}</span>
                           </div>
                         )}
                         {contact.whatsapp && (
-                          <div className="flex items-center gap-2.5 sm:gap-3">
-                            <div className="rounded-md border border-green-500/40 bg-slate-800 p-1.5 sm:rounded-lg sm:p-2">
-                              <FiMessageCircle className="h-3.5 w-3.5 text-green-300 sm:h-4 sm:w-4" />
+                          <div className="flex items-center gap-2 sm:gap-2.5">
+                            <div className="rounded-md border border-green-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5">
+                              <FiMessageCircle className="h-3 w-3 text-green-300 sm:h-3.5 sm:w-3.5" />
                             </div>
                             <span className="text-xs font-medium text-white sm:text-sm">{contact.whatsapp}</span>
                           </div>
                         )}
                         {contact.email && (
-                          <div className="flex items-center gap-2.5 sm:gap-3">
-                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1.5 sm:rounded-lg sm:p-2">
-                              <FiMail className="h-3.5 w-3.5 text-blue-300 sm:h-4 sm:w-4" />
+                          <div className="flex items-center gap-2 sm:gap-2.5">
+                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5">
+                              <FiMail className="h-3 w-3 text-blue-300 sm:h-3.5 sm:w-3.5" />
                             </div>
                             <span className="break-all text-xs font-medium text-white sm:text-sm">{contact.email}</span>
                           </div>

@@ -426,13 +426,13 @@ const DriversShowcase = () => {
 
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-800/50 border border-white/10 rounded-xl p-4">
-                  <h4 className="text-gray-400 font-semibold mb-2">Total Rides</h4>
-                  <p className="text-white text-2xl font-bold">{selectedDriver.totalRides || '156'}</p>
+                <div className="bg-gray-800/50 rounded-xl p-3 sm:p-4">
+                  <h4 className="text-gray-400 font-semibold mb-1 sm:mb-2 text-xs sm:text-sm">Total Rides</h4>
+                  <p className="text-white text-lg sm:text-xl font-bold">{selectedDriver.totalRides || '156'}</p>
                 </div>
-                <div className="bg-gray-800/50 border border-white/10 rounded-xl p-4">
-                  <h4 className="text-gray-400 font-semibold mb-2">Experience</h4>
-                  <p className="text-white text-2xl font-bold">{selectedDriver.experience || '5+'} years</p>
+                <div className="bg-gray-800/50 rounded-xl p-3 sm:p-4">
+                  <h4 className="text-gray-400 font-semibold mb-1 sm:mb-2 text-xs sm:text-sm">Experience</h4>
+                  <p className="text-white text-lg sm:text-xl font-bold">{selectedDriver.experience || '5+'} years</p>
                 </div>
               </div>
 
@@ -467,16 +467,16 @@ const DriversShowcase = () => {
                   <button
                     onClick={handleGetContacts}
                     disabled={loadingContacts}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
+                    className="flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-semibold py-2 px-3 sm:py-2.5 sm:px-4 rounded-lg transition-all duration-200 text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95"
                   >
                     {loadingContacts ? (
                       <>
-                        <FiLoader className="w-4 h-4 animate-spin" />
+                        <FiLoader className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
                         <span>Loading...</span>
                       </>
                     ) : (
                       <>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                         <span>Get Contacts</span>
@@ -486,15 +486,15 @@ const DriversShowcase = () => {
                 ) : (
                   <button
                     onClick={() => setShowRatingModal(true)}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg active:scale-95"
+                    className="flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-3 sm:py-2.5 sm:px-4 rounded-lg transition-all duration-200 text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95"
                   >
-                    <FiStar className="w-4 h-4" />
+                    <FiStar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span>{userRating ? 'Update Rating' : 'Rate Driver'}</span>
                   </button>
                 )}
                 <button
                   onClick={closeDriverPopup}
-                  className="px-4 py-2.5 sm:px-6 sm:py-3 bg-gray-700/50 hover:bg-gray-700 text-white font-medium text-sm sm:text-base rounded-lg transition-all duration-200 border border-gray-600/50 hover:border-gray-600 active:scale-95"
+                  className="px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-700/50 hover:bg-gray-700 text-white font-medium text-xs sm:text-sm rounded-lg transition-all duration-200 border border-gray-600/50 hover:border-gray-600 active:scale-95"
                 >
                   Close
                 </button>

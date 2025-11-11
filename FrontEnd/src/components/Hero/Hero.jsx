@@ -58,7 +58,7 @@ const Hero = ({ handleOrderPopup }) => {
             <>
               {/* Hero Header */}
               <div className="text-center mb-12" data-aos="fade-up">
-                <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-6 text-white leading-tight">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white leading-tight">
                   Find Your Perfect{" "}
                   <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                     Student Room

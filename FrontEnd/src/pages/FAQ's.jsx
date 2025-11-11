@@ -33,7 +33,7 @@ const FaqPage = () => {
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="text-center mb-12" data-aos="fade-up">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-white leading-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-white leading-tight">
             Frequently Asked{" "}
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Questions

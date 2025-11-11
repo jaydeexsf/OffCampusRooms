@@ -118,7 +118,7 @@ const FeaturedLocations = () => {
             ))}
           </div>
 
-          {/* Call to Action */}
+          {/* Call to Action 
           <div className="text-center mt-16" data-aos="fade-up" data-aos-delay="600">
             <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
@@ -129,7 +129,7 @@ const FeaturedLocations = () => {
               </p>
             
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
     </div>

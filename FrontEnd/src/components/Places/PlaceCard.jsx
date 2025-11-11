@@ -135,7 +135,7 @@ const PlaceCard = ({
   };
   return (
     <div
-      className="group cursor-pointer h-full overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] backdrop-blur-xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.09] hover:shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
+      className="group cursor-pointer h-full overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] backdrop-blur-xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
       onClick={handleOrderPopup}
     >
       {/* Image (edge-to-edge) */}
@@ -143,7 +143,7 @@ const PlaceCard = ({
         <img
           src={images[0]}
           alt={title}
-          className="block h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-64 md:h-60"
+          className="block h-72 w-full object-cover sm:h-64 md:h-60"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/0" />
 
@@ -241,9 +241,9 @@ const PlaceCard = ({
         <div className="mt-auto">
           <button
             onClick={handleOrderPopup}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/40 bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-3 font-semibold text-white shadow-lg shadow-blue-900/30 transition-all duration-200 hover:from-blue-500 hover:to-blue-400 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-400/60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold px-4 py-3 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-400/60 text-sm"
           >
-            <FiEye className="text-lg" />
+            <FiEye className="text-base" />
             <span>View Details</span>
           </button>
         </div>

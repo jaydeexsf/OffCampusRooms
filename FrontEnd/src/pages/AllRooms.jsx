@@ -334,7 +334,7 @@ const AllRooms = () => {
               className="w-full h-[200px] md:h-[250px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 flex items-center justify-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-white">Browse All Rooms</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Browse All Rooms</h1>
             </div>
           </div>
 

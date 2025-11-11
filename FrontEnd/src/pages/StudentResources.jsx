@@ -139,7 +139,7 @@ const StudentResources = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
-          <h1 className="mt-24 sm:mt-28 text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
+          <h1 className="mt-24 sm:mt-28 text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
             Student <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Resources
             </span>
@@ -154,7 +154,7 @@ const StudentResources = () => {
         <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 lg:p-8 mb-8 sm:mb-12">
           <div className="text-center mb-6 sm:mb-8">
                          <FiGrid className="w-8 h-8 sm:w-12 sm:h-12 text-blue-400 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">Student Budget Calculator</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">Student Budget Calculator</h2>
             <p className="text-gray-400 text-sm sm:text-base">Plan your monthly expenses and track your budget</p>
           </div>
 
@@ -281,7 +281,7 @@ const StudentResources = () => {
         <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 sm:p-6 lg:p-8 mb-8 sm:mb-12">
           <div className="text-center mb-6 sm:mb-8">
             <FiPhone className="w-8 h-8 sm:w-12 sm:h-12 text-red-400 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">Emergency Contacts</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">Emergency Contacts</h2>
             <p className="text-gray-400 text-sm sm:text-base">Important numbers to keep handy</p>
           </div>
 
@@ -312,7 +312,7 @@ const StudentResources = () => {
         <div className="bg-black/50 backdrop-blur-sm border border-white/10 rounded-3xl p-4 sm:p-6 lg:p-8 mb-8 sm:mb-12" data-aos="fade-up">
           <div className="text-center mb-8 sm:mb-12">
             <FiShield className="w-8 h-8 sm:w-12 sm:h-12 text-blue-500 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
               Student Safety Tips
             </h2>
             <p className="text-gray-300 text-xs sm:text-sm lg:text-base max-w-2xl mx-auto px-2">
@@ -340,7 +340,7 @@ const StudentResources = () => {
         {/* Call to Action */}
         <div className="text-center">
           <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-4 sm:p-6 lg:p-8 max-w-2xl mx-auto">
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 sm:mb-4">
               Need More Help?
             </h3>
             <p className="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
