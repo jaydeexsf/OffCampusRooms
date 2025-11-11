@@ -13,12 +13,29 @@ import SEO from "../components/SEO";
 const AllRooms = () => {
   const { fetchAllRooms, allRooms, isUsingDummyRooms } = useContext(GlobalContext);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedLocation, setSelectedLocation] = useState([]);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  // Temporary filter states (for UI - not applied until user clicks Apply)
+  const [tempLocation, setTempLocation] = useState([]);
+  const [tempAmenities, setTempAmenities] = useState([]);
+  const [tempDistance, setTempDistance] = useState(null);
+  const [tempPriceRange, setTempPriceRange] = useState(null);
+  const [tempRentPeriod, setTempRentPeriod] = useState('month');
+  const [tempPriceType, setTempPriceType] = useState('under');
+  const [tempSecurity, setTempSecurity] = useState([]);
+  const [tempBestRoom, setTempBestRoom] = useState(false);
+  
+  // Applied filter states (actually used for filtering)
+  const [appliedLocation, setAppliedLocation] = useState([]);
+  const [appliedAmenities, setAppliedAmenities] = useState([]);
+  const [appliedDistance, setAppliedDistance] = useState(null);
+  const [appliedPriceRange, setAppliedPriceRange] = useState(null);
+  const [appliedRentPeriod, setAppliedRentPeriod] = useState('month');
+  const [appliedPriceType, setAppliedPriceType] = useState('under');
+  const [appliedSecurity, setAppliedSecurity] = useState([]);
+  const [appliedBestRoom, setAppliedBestRoom] = useState(false);
+  
   const [orderPopup, setOrderPopup] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDistance, setSelectedDistance] = useState(null);
   const [roomsData, setRooomsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -53,7 +70,17 @@ const AllRooms = () => {
       
       const mappedLocation = locationMap[locationParam.toLowerCase()];
       if (mappedLocation) {
-        setSelectedLocation([mappedLocation]);
+        setTempLocation([mappedLocation]);
+        setAppliedLocation([mappedLocation]);
+        // Auto-apply if coming from URL
+        setTimeout(() => {
+          const filters = {
+            location: [mappedLocation],
+            amenities: [],
+            distance: null
+          };
+          fetchFilteredRooms(filters);
+        }, 100);
       }
     }
   }, [searchParams]);
@@ -69,18 +96,6 @@ const AllRooms = () => {
       setLoading(false); 
     }
   }, [allRooms]);
-
-  // Auto-apply filters when location is set from URL
-  useEffect(() => {
-    if (selectedLocation.length > 0 && allRooms) {
-      const filters = {
-        location: selectedLocation,
-        amenities: selectedAmenities,
-        distance: selectedDistance
-      };
-      fetchFilteredRooms(filters);
-    }
-  }, [selectedLocation, allRooms]);
 
   // Function to fetch filtered rooms from API
   const fetchFilteredRooms = async (filters) => {
@@ -185,25 +200,61 @@ const AllRooms = () => {
     return roomsData.filter((room) => {
       // Location match: if no locations selected, show all (default behavior)
       // If locations selected, show rooms that match ANY of the selected locations (OR logic)
-      const locationMatch = selectedLocation.length === 0 || selectedLocation.includes(room.location);
+      const locationMatch = appliedLocation.length === 0 || appliedLocation.includes(room.location);
       
       // Amenities match: if no amenities selected, show all
       // If amenities selected, show rooms that have ANY of the selected amenities (OR logic)
-      const amenitiesMatch = selectedAmenities.length === 0 || selectedAmenities.some(
-        (amenity) => room.amenities[amenity]
+      const amenitiesMatch = appliedAmenities.length === 0 || appliedAmenities.some(
+        (amenity) => room.amenities && room.amenities[amenity]
       );
       
       // Search match: if no search term, show all
       const searchMatch = !searchTerm.trim() || 
-        room.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        room.description.toLowerCase().includes(searchTerm.toLowerCase());
+        room.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        room.description?.toLowerCase().includes(searchTerm.toLowerCase());
       
       // Distance match: if no distance selected, show all
-      const distanceMatch = selectedDistance === null || room.minutesAway <= selectedDistance;
+      const distanceMatch = appliedDistance === null || (room.minutesAway && room.minutesAway <= appliedDistance);
 
-      return locationMatch && amenitiesMatch && searchMatch && distanceMatch;
+      // Price range match
+      let priceMatch = true;
+      if (appliedPriceRange && room.price) {
+        const price = room.price;
+        let calculatedPrice = price;
+        if (appliedRentPeriod === '6months') {
+          calculatedPrice = price * 6;
+        } else if (appliedRentPeriod === 'year') {
+          calculatedPrice = price * 12;
+        }
+        
+        if (appliedPriceType === 'under') {
+          priceMatch = calculatedPrice <= appliedPriceRange;
+        } else if (appliedPriceType === 'over') {
+          priceMatch = calculatedPrice >= appliedPriceRange;
+        }
+      }
+
+      // Security match
+      const securityMatch = appliedSecurity.length === 0 || 
+        (room.securityStrength && appliedSecurity.includes(room.securityStrength));
+
+      // Best room match
+      const bestRoomMatch = !appliedBestRoom || room.bestRoom === true;
+
+      return locationMatch && amenitiesMatch && searchMatch && distanceMatch && priceMatch && securityMatch && bestRoomMatch;
     });
   };
+
+  // Update displayed rooms when applied filters change
+  useEffect(() => {
+    if (roomsData) {
+      const filtered = getFilteredRooms();
+      const initialRooms = filtered.slice(0, ROOMS_PER_PAGE);
+      setDisplayedRooms(initialRooms);
+      setCurrentPage(1);
+      setHasMore(filtered.length > ROOMS_PER_PAGE);
+    }
+  }, [appliedLocation, appliedAmenities, appliedDistance, appliedPriceRange, appliedRentPeriod, appliedPriceType, appliedSecurity, appliedBestRoom, roomsData]);
 
   const loadMoreRooms = () => {
     setLoadingMore(true);
@@ -223,35 +274,63 @@ const AllRooms = () => {
 
   const applyFilters = () => {
     setShowMobileFilters(false);
+    
+    // Apply temporary filters to actual filter states
+    setAppliedLocation([...tempLocation]);
+    setAppliedAmenities([...tempAmenities]);
+    setAppliedDistance(tempDistance);
+    setAppliedPriceRange(tempPriceRange);
+    setAppliedRentPeriod(tempRentPeriod);
+    setAppliedPriceType(tempPriceType);
+    setAppliedSecurity([...tempSecurity]);
+    setAppliedBestRoom(tempBestRoom);
+    
     const filters = {
-      location: selectedLocation,
-      amenities: selectedAmenities,
-      distance: selectedDistance
+      location: tempLocation,
+      amenities: tempAmenities,
+      distance: tempDistance
     };
     
     // Check if any filters are actually selected
-    const hasAnyFilters = selectedLocation.length > 0 || selectedAmenities.length > 0 || selectedDistance !== null;
+    const hasAnyFilters = tempLocation.length > 0 || tempAmenities.length > 0 || tempDistance !== null || tempPriceRange !== null || tempSecurity.length > 0 || tempBestRoom;
     
     if (!hasAnyFilters) {
       // If no filters selected, just fetch all rooms
       fetchAllRooms();
     } else {
-      // Apply the selected filters
+      // Apply the selected filters via API (for location, amenities, distance)
+      // Price, security, and bestRoom filters are handled client-side
       fetchFilteredRooms(filters);
     }
   };
 
   const clearAllFilters = () => {
-    setSelectedLocation([]);
-    setSelectedAmenities([]);
-    setSelectedDistance(null);
+    // Clear both temporary and applied filters
+    setTempLocation([]);
+    setTempAmenities([]);
+    setTempDistance(null);
+    setTempPriceRange(null);
+    setTempRentPeriod('month');
+    setTempPriceType('under');
+    setTempSecurity([]);
+    setTempBestRoom(false);
+    
+    setAppliedLocation([]);
+    setAppliedAmenities([]);
+    setAppliedDistance(null);
+    setAppliedPriceRange(null);
+    setAppliedRentPeriod('month');
+    setAppliedPriceType('under');
+    setAppliedSecurity([]);
+    setAppliedBestRoom(false);
+    
     setSearchTerm("");
     // Reset to all rooms
     fetchAllRooms();
   };
 
   const handleLocationChange = (location) => {
-    setSelectedLocation((prev) =>
+    setTempLocation((prev) =>
       prev.includes(location)
         ? prev.filter((loc) => loc !== location)
         : [...prev, location]
@@ -259,7 +338,7 @@ const AllRooms = () => {
   };
 
   const handleAmenityChange = (amenity) => {
-    setSelectedAmenities((prev) =>
+    setTempAmenities((prev) =>
       prev.includes(amenity)
         ? prev.filter((a) => a !== amenity)
         : [...prev, amenity]
@@ -267,7 +346,7 @@ const AllRooms = () => {
   };
 
   const handleDistanceChange = (distance) => {
-    setSelectedDistance(distance);
+    setTempDistance(distance);
   };
 
   const handleOrderPopup = (room) => {
@@ -288,8 +367,11 @@ const AllRooms = () => {
 
   const totalFilteredRooms = roomsData ? roomsData.length : 0;
   
-  // Check if any filters are selected
-  const hasActiveFilters = selectedLocation.length > 0 || selectedAmenities.length > 0 || selectedDistance !== null;
+  // Check if any temporary filters are selected (for button state)
+  const hasTempFilters = tempLocation.length > 0 || tempAmenities.length > 0 || tempDistance !== null || tempPriceRange !== null || tempSecurity.length > 0 || tempBestRoom;
+  
+  // Check if any filters are actually applied
+  const hasActiveFilters = appliedLocation.length > 0 || appliedAmenities.length > 0 || appliedDistance !== null || appliedPriceRange !== null || appliedSecurity.length > 0 || appliedBestRoom;
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 py-10 gradient-dark">
@@ -302,7 +384,7 @@ const AllRooms = () => {
             image="/vite.svg"
           />
           {/* Sticky Apply Filters Button - Always visible when filters are selected */}
-          {hasActiveFilters && (
+          {hasTempFilters && (
             <div className="bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden lg:fixed">
               <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-full shadow-2xl border-2 border-white/20 backdrop-blur-lg">
                 <button
@@ -318,7 +400,7 @@ const AllRooms = () => {
                   ) : (
                     <>
                       <FiFilter className="text-lg" />
-                      <span>Apply Filters ({selectedLocation.length + selectedAmenities.length + (selectedDistance ? 1 : 0)} selected)</span>
+                      <span>Apply Filters ({tempLocation.length + tempAmenities.length + (tempDistance ? 1 : 0) + (tempPriceRange ? 1 : 0) + tempSecurity.length + (tempBestRoom ? 1 : 0)} selected)</span>
                     </>
                   )}
                 </button>
@@ -389,24 +471,25 @@ const AllRooms = () => {
           {/* Main Content Section */}
           <section className="max-w-[1600px] mx-auto px-4 py-8 w-full">
             <div className="flex flex-col lg:flex-row gap-6">
-              {/* Filter Sidebar - Hidden on mobile/tablet */}
+              {/* Filter Sidebar - Desktop only */}
               <div className="hidden lg:block lg:w-1/4">
-                <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 sticky top-6">
-                  <h2 className="text-xl font-bold text-white mb-6">Filters</h2>
+                <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg p-4 lg:p-5 sticky top-6 flex flex-col">
+                  <div className="flex-1 overflow-y-auto max-h-[calc(100vh-12rem)]">
+                  <h2 className="text-base lg:text-lg font-bold text-white mb-4">Filters</h2>
                   
                   {/* Location Filter */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-white mb-3">Location</h3>
-                    <div className="space-y-2">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-white mb-2">Location</h3>
+                    <div className="space-y-1.5">
                       {["gate 1", "gate 2", "gate 3", "motintane"].map((loc) => (
-                        <label key={loc} className="flex items-center gap-3 cursor-pointer">
+                        <label key={loc} className="flex items-center gap-2 cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={selectedLocation.includes(loc)}
+                            checked={tempLocation.includes(loc)}
                             onChange={() => handleLocationChange(loc)}
-                            className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                            className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
                           />
-                          <span className="text-gray-200">
+                          <span className="text-sm text-gray-200">
                             {loc.charAt(0).toUpperCase() + loc.slice(1)}
                           </span>
                         </label>
@@ -414,23 +497,87 @@ const AllRooms = () => {
                     </div>
                   </div>
 
+                  {/* Price/Rent Filter */}
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-white mb-2">Rent Price</h3>
+                    <div className="mb-2 flex gap-2">
+                      <select
+                        value={tempRentPeriod}
+                        onChange={(e) => {
+                          setTempRentPeriod(e.target.value);
+                          // Reset price range when period changes to avoid confusion
+                          setTempPriceRange(null);
+                        }}
+                        className="flex-1 text-xs bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      >
+                        <option value="month">Per Month</option>
+                        <option value="6months">Per 6 Months</option>
+                        <option value="year">Per Year</option>
+                      </select>
+                      <select
+                        value={tempPriceType}
+                        onChange={(e) => setTempPriceType(e.target.value)}
+                        className="flex-1 text-xs bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      >
+                        <option value="under">Under</option>
+                        <option value="over">Over</option>
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      {(() => {
+                        // Base monthly prices
+                        const basePrices = [1000, 2000, 3000, 4000, 5000, 7500, 10000];
+                        // Calculate multiplier based on period
+                        const multiplier = tempRentPeriod === '6months' ? 6 : tempRentPeriod === 'year' ? 12 : 1;
+                        
+                        return [
+                          ...basePrices.map(basePrice => {
+                            const adjustedPrice = basePrice * multiplier;
+                            const formattedPrice = adjustedPrice >= 1000 
+                              ? `R${(adjustedPrice / 1000).toFixed(adjustedPrice % 1000 === 0 ? 0 : 1)}k`
+                              : `R${adjustedPrice}`;
+                            return {
+                              label: formattedPrice.replace('.0k', 'k'),
+                              value: basePrice, // Store base monthly price
+                              displayValue: adjustedPrice // For display
+                            };
+                          }),
+                          { label: "Any price", value: null, displayValue: null }
+                        ];
+                      })().map((range) => (
+                        <label key={range.value || 'any'} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="priceRange"
+                            checked={tempPriceRange === range.value}
+                            onChange={() => setTempPriceRange(range.value)}
+                            className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                          />
+                          <span className="text-sm text-gray-200">
+                            {range.value ? `${tempPriceType === 'under' ? 'Under' : 'Over'} ${range.label}` : range.label}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Amenities Filter */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-white mb-3">Amenities</h3>
-                    <div className="space-y-2">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-white mb-2">Amenities</h3>
+                    <div className="space-y-1.5">
                       {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map(
                         (amenity) => (
                           <label
                             key={amenity}
-                            className="flex items-center gap-3 cursor-pointer"
+                            className="flex items-center gap-2 cursor-pointer"
                           >
                             <input
                               type="checkbox"
-                              checked={selectedAmenities.includes(amenity)}
+                              checked={tempAmenities.includes(amenity)}
                               onChange={() => handleAmenityChange(amenity)}
-                              className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                              className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
                             />
-                            <span className="text-gray-200">
+                            <span className="text-sm text-gray-200">
                               {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
                             </span>
                           </label>
@@ -440,88 +587,134 @@ const AllRooms = () => {
                   </div>
 
                   {/* Distance Filter */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-white mb-3">Distance to Campus</h3>
-                    <div className="space-y-2">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-white mb-2">Distance to Campus</h3>
+                    <div className="space-y-1.5">
                       {[5, 10, 20, 30, 40, 50].map((distance) => (
-                        <label key={distance} className="flex items-center gap-3 cursor-pointer">
+                        <label key={distance} className="flex items-center gap-2 cursor-pointer">
                           <input
                             type="radio"
                             name="distance"
-                            checked={selectedDistance === distance}
+                            checked={tempDistance === distance}
                             onChange={() => handleDistanceChange(distance)}
-                            className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                            className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
                           />
-                          <span className="text-gray-200">{distance} minutes or less</span>
+                          <span className="text-sm text-gray-200">{distance} min or less</span>
                         </label>
                       ))}
-                      <label className="flex items-center gap-3 cursor-pointer">
+                      <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
                           name="distance"
-                          checked={selectedDistance === null}
+                          checked={tempDistance === null}
                           onChange={() => handleDistanceChange(null)}
-                          className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                          className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
                         />
-                        <span className="text-gray-200">Any distance</span>
+                        <span className="text-sm text-gray-200">Any distance</span>
                       </label>
                     </div>
                   </div>
 
-                                     {/* Apply Filters Button */}
-                   <div className="sticky bottom-0 pt-4 bg-gray-900/95 backdrop-blur-lg border-t border-white/10 -mx-6 -mb-6 px-6 pb-6">
-                     <button
-                       onClick={applyFilters}
-                       disabled={filterLoading || !hasActiveFilters}
-                       className={`w-full font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 ${
-                         hasActiveFilters 
-                           ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white' 
-                           : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                       }`}
-                     >
-                       {filterLoading ? (
-                         <>
-                           <FiLoader className="animate-spin text-lg" />
-                           <span>Applying Filters...</span>
-                         </>
-                       ) : (
-                         <>
-                           <FiFilter className="text-lg" />
-                           <span>
-                             {hasActiveFilters 
-                               ? `Apply Filters (${selectedLocation.length + selectedAmenities.length + (selectedDistance ? 1 : 0)} selected)`
-                               : 'Select filters to apply'
-                             }
-                           </span>
-                         </>
-                       )}
-                     </button>
-                     
-                     {/* Clear Filters Button */}
-                     {hasActiveFilters && (
-                       <button
-                         onClick={clearAllFilters}
-                         className="w-full mt-3 text-gray-400 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:bg-white/5"
-                       >
-                         Clear All Filters
-                       </button>
-                     )}
-                   </div>
+                  {/* Security Filter */}
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-white mb-2">Security Level</h3>
+                    <div className="space-y-1.5">
+                      {["Highly Secured", "Secured", "Moderately Secured", "Not Secured"].map(
+                        (security) => (
+                          <label
+                            key={security}
+                            className="flex items-center gap-2 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={tempSecurity.includes(security)}
+                              onChange={() => {
+                                setTempSecurity(prev =>
+                                  prev.includes(security)
+                                    ? prev.filter(s => s !== security)
+                                    : [...prev, security]
+                                );
+                              }}
+                              className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                            />
+                            <span className="text-sm text-gray-200">{security}</span>
+                          </label>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Best Room Filter */}
+                  <div className="mb-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={tempBestRoom}
+                        onChange={(e) => setTempBestRoom(e.target.checked)}
+                        className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                      />
+                      <span className="text-sm font-semibold text-white">Featured Rooms Only</span>
+                    </label>
+                  </div>
+                  </div>
+
+                  {/* Apply Filters Button - Always visible at bottom */}
+                  <div className="pt-3 border-t border-white/10 mt-4 flex-shrink-0">
+                    <button
+                      onClick={applyFilters}
+                      disabled={filterLoading || !hasTempFilters}
+                      className={`w-full text-sm font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
+                        hasTempFilters 
+                          ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white' 
+                          : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      {filterLoading ? (
+                        <>
+                          <FiLoader className="animate-spin text-sm" />
+                          <span>Applying...</span>
+                        </>
+                      ) : (
+                        <>
+                          <FiFilter className="text-sm" />
+                          <span>
+                            {hasTempFilters 
+                              ? `Apply (${tempLocation.length + tempAmenities.length + (tempDistance ? 1 : 0) + (tempPriceRange ? 1 : 0) + tempSecurity.length + (tempBestRoom ? 1 : 0)})`
+                              : 'Select filters'
+                            }
+                          </span>
+                        </>
+                      )}
+                    </button>
+                    
+                    {/* Clear Filters Button - Always visible */}
+                    <button
+                      onClick={clearAllFilters}
+                      disabled={!hasActiveFilters && !hasTempFilters}
+                      className={`w-full mt-2 text-xs font-medium py-1.5 px-3 rounded transition-all duration-200 ${
+                        hasActiveFilters || hasTempFilters
+                          ? 'text-gray-400 hover:text-white hover:bg-white/5'
+                          : 'text-gray-600 cursor-not-allowed'
+                      }`}
+                    >
+                      Clear All
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Room Cards Grid */}
-              <div className="lg:w-3/4">
+              <div className="w-full lg:w-3/4">
                 <div className="mb-4 flex justify-between items-center">
-                  <p className="text-gray-300">
+                  <p className="text-sm text-gray-300">
                     Showing {displayedRooms.length} of {totalFilteredRooms} room{totalFilteredRooms !== 1 ? 's' : ''}
                   </p>
                   {/* Mobile/Tablet Filter Toggle Button */}
                   <button
-                    className="lg:hidden flex items-center gap-2 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg px-4 py-2 text-white hover:bg-white/20 transition-all duration-200"
+                    className="lg:hidden flex items-center gap-2 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg px-3 py-1.5 text-sm text-white hover:bg-white/20 transition-all duration-200"
                     onClick={() => setShowMobileFilters(true)}
                   >
-                    <FiFilter />
+                    <FiFilter className="text-sm" />
                     <span>Filters</span>
                   </button>
                 </div>
@@ -602,30 +795,30 @@ const AllRooms = () => {
               <div className={`lg:hidden fixed right-0 top-0 z-50 h-screen w-full max-w-md bg-gray-900/95 backdrop-blur-xl border-l border-white/20 transform transition-transform duration-300 overflow-y-auto ${
                 showMobileFilters ? 'translate-x-0' : 'translate-x-full'
               }`}>
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-white">Filters</h2>
+                <div className="p-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-base font-bold text-white">Filters</h2>
                     <button
-                      className="p-2 rounded-lg bg-white/10 border border-white/20 text-gray-300 hover:text-white hover:bg-white/20 transition-all duration-200"
+                      className="p-1.5 rounded-lg bg-white/10 border border-white/20 text-gray-300 hover:text-white hover:bg-white/20 transition-all duration-200"
                       onClick={() => setShowMobileFilters(false)}
                     >
-                      <FiX size={20} />
+                      <FiX size={18} />
                     </button>
                   </div>
                 
                 {/* Location Filter */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-white mb-3">Location</h3>
-                  <div className="space-y-2">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-white mb-2">Location</h3>
+                  <div className="space-y-1.5">
                     {["gate 1", "gate 2", "gate 3", "motintane"].map((loc) => (
-                      <label key={loc} className="flex items-center gap-3 cursor-pointer">
+                      <label key={loc} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={selectedLocation.includes(loc)}
+                          checked={tempLocation.includes(loc)}
                           onChange={() => handleLocationChange(loc)}
-                          className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                          className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
                         />
-                        <span className="text-gray-200">
+                        <span className="text-sm text-gray-200">
                           {loc.charAt(0).toUpperCase() + loc.slice(1)}
                         </span>
                       </label>
@@ -633,23 +826,87 @@ const AllRooms = () => {
                   </div>
                 </div>
 
+                {/* Price/Rent Filter */}
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-white mb-2">Rent Price</h3>
+                  <div className="mb-2 flex gap-2">
+                    <select
+                      value={tempRentPeriod}
+                      onChange={(e) => {
+                        setTempRentPeriod(e.target.value);
+                        // Reset price range when period changes to avoid confusion
+                        setTempPriceRange(null);
+                      }}
+                      className="flex-1 text-xs bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="month">Per Month</option>
+                      <option value="6months">Per 6 Months</option>
+                      <option value="year">Per Year</option>
+                    </select>
+                    <select
+                      value={tempPriceType}
+                      onChange={(e) => setTempPriceType(e.target.value)}
+                      className="flex-1 text-xs bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="under">Under</option>
+                      <option value="over">Over</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1.5">
+                    {(() => {
+                      // Base monthly prices
+                      const basePrices = [1000, 2000, 3000, 4000, 5000, 7500, 10000];
+                      // Calculate multiplier based on period
+                      const multiplier = tempRentPeriod === '6months' ? 6 : tempRentPeriod === 'year' ? 12 : 1;
+                      
+                      return [
+                        ...basePrices.map(basePrice => {
+                          const adjustedPrice = basePrice * multiplier;
+                          const formattedPrice = adjustedPrice >= 1000 
+                            ? `R${(adjustedPrice / 1000).toFixed(adjustedPrice % 1000 === 0 ? 0 : 1)}k`
+                            : `R${adjustedPrice}`;
+                          return {
+                            label: formattedPrice.replace('.0k', 'k'),
+                            value: basePrice, // Store base monthly price
+                            displayValue: adjustedPrice // For display
+                          };
+                        }),
+                        { label: "Any price", value: null, displayValue: null }
+                      ];
+                    })().map((range) => (
+                      <label key={range.value || 'any'} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="priceRangeMobile"
+                          checked={tempPriceRange === range.value}
+                          onChange={() => setTempPriceRange(range.value)}
+                          className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-gray-200">
+                          {range.value ? `${tempPriceType === 'under' ? 'Under' : 'Over'} ${range.label}` : range.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Amenities Filter */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-white mb-3">Amenities</h3>
-                  <div className="space-y-2">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-white mb-2">Amenities</h3>
+                  <div className="space-y-1.5">
                     {["wifi", "shower", "bathtub", "table", "bed", "electricity"].map(
                       (amenity) => (
                         <label
                           key={amenity}
-                          className="flex items-center gap-3 cursor-pointer"
+                          className="flex items-center gap-2 cursor-pointer"
                         >
                           <input
                             type="checkbox"
-                            checked={selectedAmenities.includes(amenity)}
+                            checked={tempAmenities.includes(amenity)}
                             onChange={() => handleAmenityChange(amenity)}
-                            className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                            className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
                           />
-                          <span className="text-gray-200">
+                          <span className="text-sm text-gray-200">
                             {amenity.charAt(0).toUpperCase() + amenity.slice(1)}
                           </span>
                         </label>
@@ -658,74 +915,119 @@ const AllRooms = () => {
                   </div>
                 </div>
 
-                  {/* Distance Filter */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-white mb-3">Distance to Campus</h3>
-                    <div className="space-y-2">
-                      {[5, 10, 20, 30, 40, 50].map((distance) => (
-                        <label key={distance} className="flex items-center gap-3 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="distance"
-                            checked={selectedDistance === distance}
-                            onChange={() => handleDistanceChange(distance)}
-                            className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
-                          />
-                          <span className="text-gray-200">{distance} minutes or less</span>
-                        </label>
-                      ))}
-                      <label className="flex items-center gap-3 cursor-pointer">
+                {/* Distance Filter */}
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-white mb-2">Distance to Campus</h3>
+                  <div className="space-y-1.5">
+                    {[5, 10, 20, 30, 40, 50].map((distance) => (
+                      <label key={distance} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
-                          name="distance"
-                          checked={selectedDistance === null}
-                          onChange={() => handleDistanceChange(null)}
-                          className="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                          name="distanceMobile"
+                          checked={tempDistance === distance}
+                          onChange={() => handleDistanceChange(distance)}
+                          className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
                         />
-                        <span className="text-gray-200">Any distance</span>
+                        <span className="text-sm text-gray-200">{distance} min or less</span>
                       </label>
-                    </div>
+                    ))}
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="distanceMobile"
+                        checked={tempDistance === null}
+                        onChange={() => handleDistanceChange(null)}
+                        className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 focus:ring-primary-500"
+                      />
+                      <span className="text-sm text-gray-200">Any distance</span>
+                    </label>
                   </div>
+                </div>
+
+                {/* Security Filter */}
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-white mb-2">Security Level</h3>
+                  <div className="space-y-1.5">
+                    {["Highly Secured", "Secured", "Moderately Secured", "Not Secured"].map(
+                      (security) => (
+                        <label
+                          key={security}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={tempSecurity.includes(security)}
+                            onChange={() => {
+                              setTempSecurity(prev =>
+                                prev.includes(security)
+                                  ? prev.filter(s => s !== security)
+                                  : [...prev, security]
+                              );
+                            }}
+                            className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                          />
+                          <span className="text-sm text-gray-200">{security}</span>
+                        </label>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {/* Best Room Filter */}
+                <div className="mb-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={tempBestRoom}
+                      onChange={(e) => setTempBestRoom(e.target.checked)}
+                      className="w-3.5 h-3.5 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                    />
+                    <span className="text-sm font-semibold text-white">Featured Rooms Only</span>
+                  </label>
+                </div>
                   
-                                     {/* Apply Button */}
-                   <div className="mt-8 pt-6 border-t border-white/20">
-                     <button
-                       onClick={applyFilters}
-                       disabled={filterLoading || !hasActiveFilters}
-                       className={`w-full font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 ${
-                         hasActiveFilters 
-                           ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white' 
-                           : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                       }`}
-                     >
-                       {filterLoading ? (
-                         <>
-                           <FiLoader className="animate-spin text-lg" />
-                           <span>Applying Filters...</span>
-                         </>
-                       ) : (
-                         <>
-                           <FiFilter className="text-lg" />
-                           <span>
-                             {hasActiveFilters 
-                               ? `Apply Filters (${selectedLocation.length + selectedAmenities.length + (selectedDistance ? 1 : 0)} selected)`
-                               : 'Select filters to apply'
-                             }
-                           </span>
-                         </>
-                       )}
-                     </button>
-                     
-                     {/* Clear Filters Button */}
-                     {hasActiveFilters && (
-                       <button
-                         onClick={clearAllFilters}
-                         className="w-full mt-3 text-gray-400 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:bg-white/5"
-                       >
-                         Clear All Filters
-                       </button>
-                     )}
-                   </div>
+                {/* Apply Button - Always visible at bottom */}
+                <div className="mt-6 pt-4 border-t border-white/20 -mx-4 px-4 pb-4">
+                  <button
+                    onClick={applyFilters}
+                    disabled={filterLoading || !hasTempFilters}
+                    className={`w-full text-sm font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
+                      hasTempFilters 
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white' 
+                        : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    {filterLoading ? (
+                      <>
+                        <FiLoader className="animate-spin text-sm" />
+                        <span>Applying...</span>
+                      </>
+                    ) : (
+                      <>
+                        <FiFilter className="text-sm" />
+                        <span>
+                          {hasTempFilters 
+                            ? `Apply (${tempLocation.length + tempAmenities.length + (tempDistance ? 1 : 0) + (tempPriceRange ? 1 : 0) + tempSecurity.length + (tempBestRoom ? 1 : 0)})`
+                            : 'Select filters'
+                          }
+                        </span>
+                      </>
+                    )}
+                  </button>
+                  
+                  {/* Clear Filters Button - Always visible */}
+                  <button
+                    onClick={clearAllFilters}
+                    disabled={!hasActiveFilters && !hasTempFilters}
+                    className={`w-full mt-2 text-xs font-medium py-1.5 px-3 rounded transition-all duration-200 ${
+                      hasActiveFilters || hasTempFilters
+                        ? 'text-gray-400 hover:text-white hover:bg-white/5'
+                        : 'text-gray-600 cursor-not-allowed'
+                    }`}
+                  >
+                    Clear All
+                  </button>
+                </div>
                 </div>
               </div>
             </>
