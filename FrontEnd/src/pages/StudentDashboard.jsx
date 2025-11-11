@@ -4,6 +4,7 @@ import { FiHeart, FiEye, FiSettings, FiUser, FiHome, FiMapPin, FiDollarSign, FiM
 import { Link } from 'react-router-dom';
 import { apiClient } from '../config/api';
 import { API_ENDPOINTS, getRoomUrl } from '../config/api';
+import OrderPopup from '../components/OrderPopup/OrderPopup';
 
 const StudentDashboard = () => {
   const { user, isSignedIn } = useUser();
@@ -16,10 +17,8 @@ const StudentDashboard = () => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingCommentText, setEditingCommentText] = useState('');
   const [loading, setLoading] = useState(false);
-  const [roomModalOpen, setRoomModalOpen] = useState(false);
+  const [orderPopup, setOrderPopup] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [roomLoading, setRoomLoading] = useState(false);
-  const [roomError, setRoomError] = useState(null);
   
 
   // Fetch real data from backend
@@ -56,38 +55,39 @@ const StudentDashboard = () => {
     }
   };
 
-  // Open inline Room Detail without navigating to /room/:id
-  const openRoomModal = async (roomId, fallbackRoom = null) => {
+  // Open OrderPopup with room details
+  const handleOrderPopup = async (roomId, fallbackRoom = null) => {
     try {
-      setRoomError(null);
-      setRoomLoading(true);
-      setRoomModalOpen(true);
+      // If we have fallback room data, use it immediately
       if (fallbackRoom) {
-        // Show something immediately
         setSelectedRoom(fallbackRoom);
+        setOrderPopup(true);
       }
+      
       // Normalize roomId which may be an object or string
       const normalizedId = typeof roomId === 'string'
         ? roomId
         : (roomId?._id || roomId?.id || (typeof roomId === 'number' ? String(roomId) : undefined));
-      if (!normalizedId) {
-        throw new Error('Invalid room id');
+      
+      if (normalizedId) {
+        // Fetch full room details
+        const res = await apiClient.get(getRoomUrl(normalizedId));
+        const room = res.data?.room || res.data; // support either shape
+        setSelectedRoom(room);
+        setOrderPopup(true);
+      } else if (fallbackRoom) {
+        // Use fallback if no ID available
+        setSelectedRoom(fallbackRoom);
+        setOrderPopup(true);
       }
-      const res = await apiClient.get(getRoomUrl(normalizedId));
-      const room = res.data?.room || res.data; // support either shape
-      setSelectedRoom(room);
     } catch (e) {
       console.error('[Dashboard] Failed to load room details:', e);
-      setRoomError('Failed to load room details');
-    } finally {
-      setRoomLoading(false);
+      // If we have fallback, still show it
+      if (fallbackRoom) {
+        setSelectedRoom(fallbackRoom);
+        setOrderPopup(true);
+      }
     }
-  };
-
-  const closeRoomModal = () => {
-    setRoomModalOpen(false);
-    setSelectedRoom(null);
-    setRoomError(null);
   };
 
   const fetchUserFeedback = async () => {
@@ -354,12 +354,12 @@ const StudentDashboard = () => {
                           <h4 className="text-white font-semibold mb-1 sm:mb-2 text-sm sm:text-base truncate">{room.title}</h4>
                           <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
                             <span className="text-blue-400 font-medium truncate">{room.location}</span>
-                            <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent font-bold whitespace-nowrap">R{room.price}/month</span>
+                            <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent font-bold whitespace-nowrap">R{room.price}/month</span>
                           </div>
                           <p className="text-gray-400 text-[11px] sm:text-xs mt-2">Saved on {new Date(room.savedDate).toLocaleDateString()}</p>
                           <div className="mt-3 flex justify-end">
                             <button
-                              onClick={() => openRoomModal(room.roomId || room._id || room.id, room)}
+                              onClick={() => handleOrderPopup(room.roomId || room._id || room.id, room)}
                               className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors text-xs sm:text-sm"
                             >
                               <FiEye className="w-4 h-4" /> View Room
@@ -466,7 +466,7 @@ const StudentDashboard = () => {
                               
                               <div className="flex gap-2 flex-wrap">
                                 <button 
-                                  onClick={() => openRoomModal(rating.roomId, rating.room)}
+                                  onClick={() => handleOrderPopup(rating.roomId, rating.room)}
                                   className="px-3 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm inline-flex items-center gap-2"
                                 >
                                   <FiEye className="w-4 h-4" /> View Room
@@ -645,131 +645,13 @@ const StudentDashboard = () => {
             )}
           </div>
         </div>
-        {/* Room Detail Modal (inline) - Enhanced to match OrderPopup */}
-        {roomModalOpen && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={closeRoomModal}>
-            <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-gray-700/50 rounded-2xl w-full max-w-[500px] lg:max-w-[600px] max-h-[95vh] shadow-2xl overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
-              {/* Header */}
-              <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700/50 flex-shrink-0">
-                <h3 className="text-lg font-bold text-white">{selectedRoom?.title || 'Room Details'}</h3>
-                <button onClick={closeRoomModal} className="p-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600/50 rounded-xl text-gray-300 hover:text-white transition-all duration-200">
-                  <FiX className="w-5 h-5" />
-                </button>
-              </div>
-              
-              {/* Scrollable Body */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-6">
-                {roomLoading && (
-                  <div className="text-center py-12 text-gray-400">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-                    Loading room details...
-                  </div>
-                )}
-                {!roomLoading && roomError && (
-                  <div className="text-center py-12 text-red-400">{roomError}</div>
-                )}
-                {!roomLoading && !roomError && selectedRoom && (
-                  <>
-                    {/* Image Gallery with Price Overlay */}
-                    <div className="relative">
-                      {selectedRoom.images && selectedRoom.images.length > 0 ? (
-                        <div className="relative">
-                          <img 
-                            src={selectedRoom.images[0]} 
-                            alt={selectedRoom.title || 'Room'} 
-                            className="w-full h-48 sm:h-56 md:h-64 object-cover rounded-xl border border-gray-600/30" 
-                          />
-                          {/* Price Badge */}
-                          <div className="absolute top-3 right-3">
-                            <div className="bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 shadow-lg">
-                              <p className="text-white font-bold text-sm sm:text-base">
-                                R{selectedRoom.price?.toLocaleString() || 'N/A'}
-                                <span className="text-gray-300 font-normal text-xs sm:text-sm ml-1">/month</span>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="w-full h-48 sm:h-56 bg-gray-800 rounded-xl border border-gray-600/30 flex items-center justify-center text-gray-500">
-                          <FiHome className="w-12 h-12" />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Location & Distance */}
-                    <div>
-                      <h3 className="text-sm sm:text-base font-semibold text-white mb-3">Location & Distance</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-                          <div className="flex items-center gap-2 mb-2">
-                            <FiMapPin className="text-blue-400 text-sm" />
-                            <span className="text-gray-400 text-xs">Closest Gate</span>
-                          </div>
-                          <p className="text-white font-medium text-sm capitalize">{selectedRoom.location || 'Not specified'}</p>
-                        </div>
-                        <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-                          <div className="flex items-center gap-2 mb-2">
-                            <FiSettings className="text-green-400 text-sm" />
-                            <span className="text-gray-400 text-xs">Distance</span>
-                          </div>
-                          <p className="text-white font-medium text-sm">{selectedRoom.minutesAway || 'N/A'} min to UL</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Amenities */}
-                    {selectedRoom.amenities && (
-                      <div>
-                        <h3 className="text-sm sm:text-base font-semibold text-white mb-3">Amenities</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {Object.keys(selectedRoom.amenities).map((amenity) =>
-                            selectedRoom.amenities[amenity] ? (
-                              <div key={amenity} className="flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-sm px-3 py-2 rounded-lg text-xs sm:text-sm">
-                                <span className="text-white font-medium capitalize">{amenity}</span>
-                              </div>
-                            ) : null
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Contact Information */}
-                    {selectedRoom.contact && (
-                      <div>
-                        <h3 className="text-sm sm:text-base font-semibold text-white mb-3">Contact</h3>
-                        <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 border border-gray-600/30 rounded-xl p-3 space-y-2">
-                          {selectedRoom.contact.phone && (
-                            <div className="flex items-center gap-2">
-                              <div className="p-1.5 bg-blue-500/20 border border-blue-500/30 rounded-lg">
-                                <FiSettings className="text-blue-400 w-3 h-3" />
-                              </div>
-                              <span className="text-white text-xs sm:text-sm">{selectedRoom.contact.phone}</span>
-                            </div>
-                          )}
-                          {selectedRoom.contact.email && (
-                            <div className="flex items-center gap-2">
-                              <div className="p-1.5 bg-blue-500/20 border border-blue-500/30 rounded-lg">
-                                <FiUser className="text-blue-400 w-3 h-3" />
-                              </div>
-                              <span className="text-white text-xs sm:text-sm">{selectedRoom.contact.email}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Description */}
-                    {selectedRoom.description && (
-                      <div>
-                        <h3 className="text-sm sm:text-base font-semibold text-white mb-3">Description</h3>
-                        <p className="text-gray-300 text-sm bg-white/5 border border-white/10 rounded-xl p-3 leading-relaxed">{selectedRoom.description}</p>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+        {/* OrderPopup for room details */}
+        {orderPopup && selectedRoom && (
+          <OrderPopup
+            roomDetails={selectedRoom}
+            setOrderPopup={setOrderPopup}
+            orderPopup={orderPopup}
+          />
         )}
       </div>
     </div>

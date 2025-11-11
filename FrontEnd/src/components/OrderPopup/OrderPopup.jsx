@@ -115,7 +115,7 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
 
   if (!roomDetails) return null;
 
-  const { title, price, amenities, images, contact, coordinates, primaryImageIndex } = roomDetails;
+  const { title, price, amenities = {}, images = [], contact = {}, coordinates, primaryImageIndex } = roomDetails;
 
   // Mobile and desktop carousels manage navigation inline
 
@@ -309,16 +309,20 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                     <div className="flex-1">
                       <h3 className="mb-2 text-xs font-semibold text-white sm:mb-3 sm:text-sm">Amenities</h3>
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                        {Object.keys(amenities).map((amenity) =>
-                          amenities[amenity] ? (
-                            <div
-                              key={amenity}
-                              className="inline-flex items-center gap-1 rounded-md border border-slate-700 bg-slate-800/80 px-1.5 py-1 text-[10px] text-white sm:px-2 sm:py-1 sm:text-xs"
-                            >
-                              {amenitiesIcons[amenity]}
-                              <span className="leading-tight font-medium whitespace-nowrap">{amenitiesLabels[amenity]}</span>
-                            </div>
-                          ) : null
+                        {amenities && Object.keys(amenities).length > 0 ? (
+                          Object.keys(amenities).map((amenity) =>
+                            amenities[amenity] ? (
+                              <div
+                                key={amenity}
+                                className="inline-flex items-center gap-1 rounded-md border border-slate-700 bg-slate-800/80 px-1.5 py-1 text-[10px] text-white sm:px-2 sm:py-1 sm:text-xs"
+                              >
+                                {amenitiesIcons[amenity]}
+                                <span className="leading-tight font-medium whitespace-nowrap">{amenitiesLabels[amenity]}</span>
+                              </div>
+                            ) : null
+                          )
+                        ) : (
+                          <span className="text-gray-400 text-xs">No amenities listed</span>
                         )}
                       </div>
                     </div>

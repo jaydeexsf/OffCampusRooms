@@ -84,7 +84,7 @@ const Navbar = ({ handleBookRoomPopup }) => {
                   <img 
                     src={Logo} 
                     alt="StudentRooms Logo" 
-                    className="h-10 w-auto transition-transform duration-200 group-hover:scale-105" 
+                    className="h-10 w-auto transition-transform duration-200" 
                   />
                   <div className="absolute inset-0 bg-blue-500/20 rounded-lg blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                 </div>

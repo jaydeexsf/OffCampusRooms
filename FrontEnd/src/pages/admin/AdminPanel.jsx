@@ -149,11 +149,11 @@ const AdminPanel = () => {
           <FiPlus className="w-5 h-5 text-blue-400" />
           Quick Actions
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Add Room Button */}
           <button
             onClick={() => setShowAddRoomPopup(true)}
-            className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 border border-blue-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
+            className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 border border-blue-500/30 rounded-xl p-4 text-left transition-all duration-200 group"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-blue-500/20 rounded-lg">
@@ -170,7 +170,7 @@ const AdminPanel = () => {
           {/* Add FAQ Button */}
           <button
             onClick={() => setShowAddFaqPopup(true)}
-            className="bg-gradient-to-r from-purple-500/20 to-purple-600/20 hover:from-purple-500/30 hover:to-purple-600/30 border border-purple-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
+            className="bg-gradient-to-r from-purple-500/20 to-purple-600/20 hover:from-purple-500/30 hover:to-purple-600/30 border border-purple-500/30 rounded-xl p-4 text-left transition-all duration-200 group"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-purple-500/20 rounded-lg">
@@ -187,7 +187,7 @@ const AdminPanel = () => {
           {/* Add Driver Button */}
           <button
             onClick={() => setActiveTab('drivers')}
-            className="bg-gradient-to-r from-green-500/20 to-green-600/20 hover:from-green-500/30 hover:to-green-600/30 border border-green-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
+            className="bg-gradient-to-r from-green-500/20 to-green-600/20 hover:from-green-500/30 hover:to-green-600/30 border border-green-500/30 rounded-xl p-4 text-left transition-all duration-200 group"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-green-500/20 rounded-lg">
@@ -204,7 +204,7 @@ const AdminPanel = () => {
           {/* Manage Rooms Button */}
           <button
             onClick={() => setActiveTab('rooms')}
-            className="bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 hover:from-cyan-500/30 hover:to-cyan-600/30 border border-cyan-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
+            className="bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 hover:from-cyan-500/30 hover:to-cyan-600/30 border border-cyan-500/30 rounded-xl p-4 text-left transition-all duration-200 group"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-cyan-500/20 rounded-lg">

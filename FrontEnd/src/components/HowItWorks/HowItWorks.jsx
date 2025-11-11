@@ -82,10 +82,6 @@ const HowItWorks = () => {
                   </p>
                 </div>
 
-                {/* Connecting Line */}
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transform -translate-y-1/2 z-0"></div>
-                )}
               </div>
             ))}
           </div>
