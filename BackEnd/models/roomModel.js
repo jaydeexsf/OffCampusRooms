@@ -28,6 +28,9 @@ const roomSchema = new mongoose.Schema({
     lat: Number,
     long: Number,
   },
+  securityStrength: { type: String, enum: ['Highly Secured', 'Secured', 'Moderately Secured', 'Not Secured'], default: null },
+  problems: String,
+  positive: String,
 });
 
 const Room = mongoose.model("Room", roomSchema);

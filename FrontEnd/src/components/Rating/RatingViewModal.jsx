@@ -256,53 +256,71 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle, embedded = false 
             </div>
           ) : (
             <>
-              {/* Rating Summary */}
-              <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
-                <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
-                  {/* Average Rating */}
-                  <div className="text-center lg:text-left">
-                    <div className="text-4xl sm:text-5xl font-bold text-white mb-2">
-                      {averageRating.toFixed(1)}
-                    </div>
-                    <div className="flex items-center justify-center lg:justify-start gap-1 mb-2">
-                      {renderStars(Math.round(averageRating))}
-                    </div>
-                    <p className="text-gray-300 text-sm sm:text-base">
-                      Based on {totalRatings} review{totalRatings !== 1 ? 's' : ''}
-                    </p>
+              {/* Mobile: Rating Summary at Top */}
+              <div className="md:hidden bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-4 mb-4">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-white mb-2">
+                    {averageRating.toFixed(1)}
                   </div>
-
-                  {/* Rating Distribution */}
-                  {totalRatings > 0 && (
-                    <div className="flex-1">
-                      <h4 className="text-white font-semibold mb-3 text-sm sm:text-base">Rating Distribution</h4>
-                      {Object.entries(getRatingDistribution()).reverse().map(([stars, count]) => (
-                        <div key={stars} className="flex items-center gap-2 sm:gap-3 mb-2">
-                          <span className="text-gray-300 text-xs sm:text-sm w-6 sm:w-8">{stars}★</span>
-                          <div className="flex-1 bg-gray-600 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${totalRatings > 0 ? (count / totalRatings) * 100 : 0}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-gray-400 text-xs sm:text-sm w-6 sm:w-8">{count}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <div className="flex items-center justify-center gap-1 mb-2">
+                    {renderStars(Math.round(averageRating))}
+                  </div>
+                  <p className="text-gray-300 text-sm">
+                    Based on {totalRatings} review{totalRatings !== 1 ? 's' : ''}
+                  </p>
                 </div>
               </div>
 
-              {/* Reviews List */}
-              {totalRatings === 0 ? (
-                <div className="text-center py-12">
-                  <FiMessageCircle className="text-gray-400 text-5xl mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-white mb-2">No reviews yet</h3>
-                  <p className="text-gray-400">Be the first to share your experience!</p>
+              {/* Desktop/Tablet: Side-by-side Layout */}
+              <div className="hidden md:flex gap-6">
+                {/* Rating Summary - Left Side (Sticky) */}
+                <div className="w-80 flex-shrink-0">
+                  <div className="sticky top-0 bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-6">
+                    {/* Average Rating */}
+                    <div className="text-center mb-6">
+                      <div className="text-5xl font-bold text-white mb-3">
+                        {averageRating.toFixed(1)}
+                      </div>
+                      <div className="flex items-center justify-center gap-1 mb-3">
+                        {renderStars(Math.round(averageRating))}
+                      </div>
+                      <p className="text-gray-300 text-base">
+                        Based on {totalRatings} review{totalRatings !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+
+                    {/* Rating Distribution */}
+                    {totalRatings > 0 && (
+                      <div className="border-t border-gray-600 pt-6">
+                        <h4 className="text-white font-semibold mb-4 text-base">Rating Distribution</h4>
+                        {Object.entries(getRatingDistribution()).reverse().map(([stars, count]) => (
+                          <div key={stars} className="flex items-center gap-3 mb-3">
+                            <span className="text-gray-300 text-sm w-8">{stars}★</span>
+                            <div className="flex-1 bg-gray-600 rounded-full h-2">
+                              <div
+                                className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
+                                style={{ width: `${totalRatings > 0 ? (count / totalRatings) * 100 : 0}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-gray-400 text-sm w-8">{count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              ) : (
-                <>
-                  <div className="space-y-3 sm:space-y-4">
+
+                {/* Reviews List - Right Side */}
+                <div className="flex-1 min-w-0">
+                  {totalRatings === 0 ? (
+                    <div className="text-center py-12">
+                      <FiMessageCircle className="text-gray-400 text-5xl mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-white mb-2">No reviews yet</h3>
+                      <p className="text-gray-400">Be the first to share your experience!</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-4">
                     {currentRatings.map((rating, index) => (
                       <div
                         key={rating._id || index}
@@ -354,11 +372,129 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle, embedded = false 
                         </div>
                       </div>
                     ))}
-                  </div>
+                      </div>
 
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-2 sm:gap-4 mt-6 sm:mt-8 px-2">
+                      {/* Pagination */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-center gap-4 mt-8">
+                          <button
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded-lg transition-colors"
+                          >
+                            <FiChevronLeft size={14} />
+                            <span>Previous</span>
+                          </button>
+                          
+                          <div className="flex items-center gap-2">
+                            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                              let page;
+                              if (totalPages <= 5) {
+                                page = i + 1;
+                              } else if (currentPage <= 3) {
+                                page = i + 1;
+                              } else if (currentPage >= totalPages - 2) {
+                                page = totalPages - 4 + i;
+                              } else {
+                                page = currentPage - 2 + i;
+                              }
+                              
+                              return (
+                                <button
+                                  key={page}
+                                  onClick={() => setCurrentPage(page)}
+                                  className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                                    currentPage === page
+                                      ? 'bg-blue-600 text-white'
+                                      : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                  }`}
+                                >
+                                  {page}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          
+                          <button
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                            className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded-lg transition-colors"
+                          >
+                            <span>Next</span>
+                            <FiChevronRight size={14} />
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Mobile: Reviews List */}
+              <div className="md:hidden">
+                {totalRatings === 0 ? (
+                  <div className="text-center py-12">
+                    <FiMessageCircle className="text-gray-400 text-5xl mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-white mb-2">No reviews yet</h3>
+                    <p className="text-gray-400">Be the first to share your experience!</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-3 sm:space-y-4">
+                      {currentRatings.map((rating, index) => (
+                        <div
+                          key={rating._id || index}
+                          className="bg-gradient-to-r from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-3 sm:p-5 hover:from-gray-700 hover:to-gray-600 transition-all duration-300"
+                        >
+                          <div className="flex items-start gap-3 sm:gap-4">
+                            <div className="flex-shrink-0">
+                              <img
+                                src={rating.userImage || '/default-avatar.png'}
+                                alt={rating.userName || 'User'}
+                                className="w-10 h-10 sm:w-14 sm:h-14 rounded-full border-2 border-gray-500 object-cover"
+                                onError={(e) => {
+                                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(rating.userName || 'User')}&background=6366f1&color=fff&size=56`;
+                                }}
+                              />
+                            </div>
+                            
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 sm:mb-3 gap-2">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                  <h5 className="text-white font-semibold text-base sm:text-lg truncate">
+                                    {rating.userName || 'Anonymous Student'}
+                                  </h5>
+                                  <div className="flex items-center gap-1 flex-wrap">
+                                    {renderStars(rating.rating)}
+                                    <span className="text-white font-medium ml-1 sm:ml-2 text-sm sm:text-base">
+                                      {rating.rating}/5
+                                    </span>
+                                    <span className="text-gray-400 text-xs sm:text-sm ml-1 sm:ml-2">
+                                      • {getRatingText(rating.rating)}
+                                    </span>
+                                  </div>
+                                </div>
+                                <span className="text-xs sm:text-sm text-gray-400 flex-shrink-0">
+                                  {formatDate(rating.createdAt)}
+                                </span>
+                              </div>
+                              
+                              {rating.review && (
+                                <div className="bg-gray-900/50 rounded-lg p-3 sm:p-4 border border-gray-600">
+                                  <p className="text-gray-200 leading-relaxed text-sm sm:text-base break-words">
+                                    "{rating.review}"
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Pagination - Mobile */}
+                    {totalPages > 1 && (
+                      <div className="flex items-center justify-center gap-2 sm:gap-4 mt-6 sm:mt-8 px-2">
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
@@ -407,10 +543,11 @@ const RatingViewModal = ({ isOpen, onClose, roomId, roomTitle, embedded = false 
                         <span className="sm:hidden">Next</span>
                         <FiChevronRight size={14} />
                       </button>
-                    </div>
-                  )}
-                </>
-              )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </>
           )}
         </div>

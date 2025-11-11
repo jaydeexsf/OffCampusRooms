@@ -156,10 +156,15 @@ const PlaceCard = ({
         </div>
 
         {/* Title Overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-          <h3 className="text-base font-semibold text-white sm:text-lg line-clamp-2 drop-shadow-md">
+        <div className="absolute left-3 bottom-3 sm:left-4 sm:bottom-4">
+          <h3 className="text-base font-semibold text-white sm:text-lg line-clamp-2 drop-shadow-md mb-1">
             {title}
           </h3>
+          {/* Location */}
+          <div className="inline-flex items-center gap-1.5">
+            <FiMapPin className="text-blue-400 text-xs drop-shadow-md" />
+            <span className="text-white text-xs font-medium drop-shadow-md">{capitalizeFirstLetter(location)}</span>
+          </div>
         </div>
 
         {/* Save Button - Only show if user is signed in */}
@@ -174,7 +179,11 @@ const PlaceCard = ({
                   : 'border-white/20 bg-black/60 hover:bg-white/20'
               } ${isLoading ? 'cursor-not-allowed opacity-50' : 'hover:scale-[1.03]'}`}
             >
-              <FiHeart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+              {isLoading ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              ) : (
+                <FiHeart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+              )}
             </button>
           </div>
         )}
@@ -184,18 +193,6 @@ const PlaceCard = ({
       <div className="flex flex-1 flex-col">
         {/* Accessible title for screen readers */}
         <h3 className="sr-only">{title}</h3>
-
-        {/* Location & Distance */}
-        <div className="mb-3 flex items-center gap-3 text-sm text-gray-300">
-          <div className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1">
-            <FiMapPin className="text-blue-400" />
-            <span className="text-white">{capitalizeFirstLetter(location)}</span>
-          </div>
-          <div className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1">
-            <FiClock className="text-green-400" />
-            <span className="text-white">{minutesAway} min to UL</span>
-          </div>
-        </div>
 
         {/* Rating Display */}
         {averageRating > 0 && (

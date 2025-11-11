@@ -37,6 +37,9 @@ const AddRoomForm = () => {
             long: null,
         },
         bestRooms: false,
+        securityStrength: '',
+        problems: '',
+        positive: '',
     });
 
     const [imagePreviews, setImagePreviews] = useState([]);
@@ -457,7 +460,10 @@ const AddRoomForm = () => {
                 lat: parseFloat(newRoom.coordinates.lat),
                 long: parseFloat(newRoom.coordinates.long)
             },
-            bestRoom: newRoom.bestRooms || false
+            bestRoom: newRoom.bestRooms || false,
+            securityStrength: newRoom.securityStrength || null,
+            problems: newRoom.problems.trim() || null,
+            positive: newRoom.positive.trim() || null
         };
 
         console.log('🏠 Submitting room data:', {
@@ -712,6 +718,46 @@ const AddRoomForm = () => {
                                 </button>
                             </div>
                         )}
+
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="text-white font-medium text-xs sm:text-sm md:text-base">Security Strength</label>
+                            <select
+                                name="securityStrength"
+                                value={newRoom.securityStrength}
+                                onChange={(e) => setNewRoom({ ...newRoom, securityStrength: e.target.value })}
+                                className="w-full bg-white/10 border border-white/20 rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            >
+                                <option value="">Select Security Level</option>
+                                <option value="Highly Secured">Highly Secured</option>
+                                <option value="Secured">Secured</option>
+                                <option value="Moderately Secured">Moderately Secured</option>
+                                <option value="Not Secured">Not Secured</option>
+                            </select>
+                        </div>
+
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="text-white font-medium text-xs sm:text-sm md:text-base">Problems (e.g., next to a Tavern)</label>
+                            <input
+                                type="text"
+                                name="problems"
+                                placeholder="Enter any problems or concerns (optional)"
+                                value={newRoom.problems}
+                                onChange={(e) => setNewRoom({ ...newRoom, problems: e.target.value })}
+                                className="w-full bg-white/10 border border-white/20 rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            />
+                        </div>
+
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="text-white font-medium text-xs sm:text-sm md:text-base">Positive Points (e.g., next to mall)</label>
+                            <input
+                                type="text"
+                                name="positive"
+                                placeholder="Enter positive points (optional)"
+                                value={newRoom.positive}
+                                onChange={(e) => setNewRoom({ ...newRoom, positive: e.target.value })}
+                                className="w-full bg-white/10 border border-white/20 rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            />
+                        </div>
 
                         <div className="space-y-2 sm:space-y-3 md:space-y-4">
                             <label className="text-white font-medium text-xs sm:text-sm md:text-base">Room Features</label>

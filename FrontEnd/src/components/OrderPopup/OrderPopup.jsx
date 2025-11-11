@@ -305,8 +305,8 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                   </div>
 
                   {/* Amenities & Contact */}
-                  <div className="flex flex-col md:flex-row gap-3 sm:gap-[40px] md:items-start">
-                    <div className="md:flex-shrink-0">
+                  <div className="flex flex-col md:flex-row gap-3 sm:gap-4 md:items-start">
+                    <div className="flex-1">
                       <h3 className="mb-2 text-xs font-semibold text-white sm:mb-3 sm:text-sm">Amenities</h3>
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {Object.keys(amenities).map((amenity) =>
@@ -322,28 +322,28 @@ const OrderPopup = ({ orderPopup, setOrderPopup, roomDetails }) => {
                         )}
                       </div>
                     </div>
-                    <div className="md:flex-shrink-0">
+                    <div className="flex-1">
                       <h3 className="mb-2 text-xs font-semibold text-white sm:mb-3 sm:text-sm">Contact</h3>
                       <div className="space-y-2 sm:space-y-2.5">
                         {contact.phone && (
-                          <div className="flex items-center gap-2 sm:gap-2.5">
-                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5">
+                          <div className="flex items-start gap-2 sm:gap-2.5">
+                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5 flex-shrink-0">
                               <FiPhone className="h-3 w-3 text-blue-300 sm:h-3.5 sm:w-3.5" />
                             </div>
-                            <span className="text-xs font-medium text-white sm:text-sm">{contact.phone}</span>
+                            <span className="break-words text-xs font-medium text-white sm:text-sm">{contact.phone}</span>
                           </div>
                         )}
                         {contact.whatsapp && (
-                          <div className="flex items-center gap-2 sm:gap-2.5">
-                            <div className="rounded-md border border-green-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5">
+                          <div className="flex items-start gap-2 sm:gap-2.5">
+                            <div className="rounded-md border border-green-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5 flex-shrink-0">
                               <FiMessageCircle className="h-3 w-3 text-green-300 sm:h-3.5 sm:w-3.5" />
                             </div>
-                            <span className="text-xs font-medium text-white sm:text-sm">{contact.whatsapp}</span>
+                            <span className="break-words text-xs font-medium text-white sm:text-sm">{contact.whatsapp}</span>
                           </div>
                         )}
                         {contact.email && (
-                          <div className="flex items-center gap-2 sm:gap-2.5">
-                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5">
+                          <div className="flex items-start gap-2 sm:gap-2.5">
+                            <div className="rounded-md border border-blue-500/40 bg-slate-800 p-1 sm:rounded-lg sm:p-1.5 flex-shrink-0">
                               <FiMail className="h-3 w-3 text-blue-300 sm:h-3.5 sm:w-3.5" />
                             </div>
                             <span className="break-all text-xs font-medium text-white sm:text-sm">{contact.email}</span>

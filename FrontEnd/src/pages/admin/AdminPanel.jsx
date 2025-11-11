@@ -184,14 +184,31 @@ const AdminPanel = () => {
             <p className="text-gray-300 text-xs">Add frequently asked questions</p>
           </button>
           
-          {/* Manage Rooms Button */}
+          {/* Add Driver Button */}
           <button
-            onClick={() => setActiveTab('rooms')}
+            onClick={() => setActiveTab('drivers')}
             className="bg-gradient-to-r from-green-500/20 to-green-600/20 hover:from-green-500/30 hover:to-green-600/30 border border-green-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 bg-green-500/20 rounded-lg">
-                <FiSearch className="w-5 h-5 text-green-400" />
+                <FiTruck className="w-5 h-5 text-green-400" />
+              </div>
+              <div>
+                <p className="text-white font-semibold text-sm">Add Driver</p>
+                <p className="text-gray-400 text-xs">Register new driver</p>
+              </div>
+            </div>
+            <p className="text-gray-300 text-xs">Add a new driver to the platform</p>
+          </button>
+          
+          {/* Manage Rooms Button */}
+          <button
+            onClick={() => setActiveTab('rooms')}
+            className="bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 hover:from-cyan-500/30 hover:to-cyan-600/30 border border-cyan-500/30 rounded-xl p-4 text-left transition-all duration-200 group hover:scale-105"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-cyan-500/20 rounded-lg">
+                <FiSearch className="w-5 h-5 text-cyan-400" />
               </div>
               <div>
                 <p className="text-white font-semibold text-sm">Manage Rooms</p>
@@ -320,7 +337,7 @@ const AdminPanel = () => {
         </div>
 
         {/* Enhanced Content Area */}
-        <div className="bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl sm:rounded-2xl lg:rounded-3xl p-3 sm:p-4 lg:p-8 min-h-[500px] sm:min-h-[600px]">
+        <div className="rounded-xl sm:rounded-2xl lg:rounded-3xl min-h-[500px] sm:min-h-[600px]">
           {tabs.find(tab => tab.id === activeTab)?.component}
         </div>
       </div>

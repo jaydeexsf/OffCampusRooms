@@ -19,6 +19,9 @@ const UpdateRoom = ({ room, onCancel }) => {
         images: room.images || [],
         bestRoom: room.bestRoom,
         primaryImageIndex: Number.isInteger(room.primaryImageIndex) ? room.primaryImageIndex : 0,
+        securityStrength: room.securityStrength || '',
+        problems: room.problems || '',
+        positive: room.positive || '',
     });
 
     const [previewImages, setPreviewImages] = useState(updatedRoom.images);
@@ -273,6 +276,46 @@ const UpdateRoom = ({ room, onCancel }) => {
                                     </label>
                                 ))}
                             </div>
+                        </div>
+
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="text-white font-medium text-xs sm:text-sm md:text-base">Security Strength</label>
+                            <select
+                                name="securityStrength"
+                                value={updatedRoom.securityStrength || ''}
+                                onChange={handleChange}
+                                className="w-full bg-white/10 border border-white/20 rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            >
+                                <option value="">Select Security Level</option>
+                                <option value="Highly Secured">Highly Secured</option>
+                                <option value="Secured">Secured</option>
+                                <option value="Moderately Secured">Moderately Secured</option>
+                                <option value="Not Secured">Not Secured</option>
+                            </select>
+                        </div>
+
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="text-white font-medium text-xs sm:text-sm md:text-base">Problems (e.g., next to a Tavern)</label>
+                            <input
+                                type="text"
+                                name="problems"
+                                placeholder="Enter any problems or concerns (optional)"
+                                value={updatedRoom.problems || ''}
+                                onChange={handleChange}
+                                className="w-full bg-white/10 border border-white/20 rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            />
+                        </div>
+
+                        <div className="space-y-1 sm:space-y-2">
+                            <label className="text-white font-medium text-xs sm:text-sm md:text-base">Positive Points (e.g., next to mall)</label>
+                            <input
+                                type="text"
+                                name="positive"
+                                placeholder="Enter positive points (optional)"
+                                value={updatedRoom.positive || ''}
+                                onChange={handleChange}
+                                className="w-full bg-white/10 border border-white/20 rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            />
                         </div>
 
                         <div className="space-y-1 sm:space-y-2">
